@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: extra resources test
+templates:
+  - templates/extra-resources.yaml
+values:
+  - values.yaml
+tests:
+  - it: Extra pod manifest should match snapshot
+    asserts:
+      - containsDocument:
+          apiVersion: v1
+          kind: Pod
+          name: dnsutils
+          namespace: default

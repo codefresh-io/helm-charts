@@ -1,0 +1,134 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: rbac spec
+templates:
+  - templates/rbac.yaml
+  - templates/deployment.yaml
+tests:
+  - it: Test SA name in deployment
+    template: templates/rbac.yaml
+    values:
+      - values.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: RELEASE-NAME-cf-common-test
+        template: templates/deployment.yaml
+
+  - it: Test SA secret
+    template: templates/rbac.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+    asserts:
+      - contains:
+          path: secrets
+          content:
+            name: RELEASE-NAME-cf-common-test-sa-token
+
+  - it: Test Role should contains valid rules set
+    template: rbac.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+        rules:
+          - apiGroups:
+              - ""
+            resources:
+              - pods
+            verbs:
+              - get
+    documentIndex: 1
+    asserts:
+      - isNotEmpty:
+          path: rules
+      - contains:
+          path: rules
+          content:
+            apiGroups:
+            - ""
+            resources:
+            - pods
+            verbs:
+            - get
+
+  - it: Test RoleBinding should reference to the correct role and SA
+    template: rbac.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+        rules:
+          - apiGroups:
+              - ""
+            resources:
+              - pods
+            verbs:
+              - get
+    documentIndex: 2
+    asserts:
+      - isNotEmpty:
+          path: roleRef
+      - isNotEmpty:
+          path: subjects
+      - equal:
+          path: roleRef.name
+          value: RELEASE-NAME-cf-common-test
+      - equal:
+          path: subjects[0].name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test ServiceAccount with nameOverride should pass all kinds of assertion
+    template: rbac.yaml
+    values:
+      - values.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+          nameOverride: alice
+        rules:
+          - apiGroups:
+              - ""
+            resources:
+              - pods
+            verbs:
+              - get
+    asserts:
+      - equal:
+          path: metadata.name
+          value: alice
+        documentIndex: 0
+      - equal:
+          path: subjects[0].name
+          value: alice
+        documentIndex: 2
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: alice
+        template: templates/deployment.yaml
+
+  - it: Test Deployment should use a default SA if rbac is disabled
+    template: templates/rbac.yaml
+    values:
+      - values.yaml
+    set:
+      rbac:
+        enabled: false
+        serviceAccount:
+          enabled: false
+    asserts:
+      - equal:
+          path: spec.template.spec.serviceAccountName
+          value: default
+        template: templates/deployment.yaml

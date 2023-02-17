@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: deployment metadata
+templates:
+  - templates/deployment.yaml
+tests:
+  - it: Test deployment default metadata
+    values:
+      - values.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test deployment custom metadata
+    values:
+      - values.yaml
+    set:
+      controller:
+        labels:
+          alice: bob
+        annotations:
+          foo: bar
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - equal:
+          path: metadata.annotations
+          value:
+            foo: bar
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+            alice: bob
+
+  - it: Test pod labels and annotations
+    values:
+      - values.yaml
+    set:
+      podLabels:
+        alice: bob
+      podAnnotations:
+        foo: bar
+    asserts:
+      - equal:
+          path: spec.template.metadata.labels.alice
+          value: bob
+      - equal:
+          path: spec.template.metadata.annotations.foo
+          value: bar

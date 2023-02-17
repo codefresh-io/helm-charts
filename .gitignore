@@ -1,0 +1,17 @@
+reference_manifests
+**/__snapshot__
+
+.idea
+.DS_Store
+
+**/values-*.yaml
+
+# helm template
+**/dry-run/**
+
+# dependency charts
+**/charts/*.tgz
+*.tgz
+
+# lock files
+*.lock

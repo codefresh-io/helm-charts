@@ -1,0 +1,53 @@
+## Reference: https://github.com/helm/chart-releaser-action
+name: Publish Charts
+on:
+  push:
+    branches:
+      - master
+    paths:
+      - "charts/**"
+
+concurrency:
+  group: helm-release
+
+env:
+  HELM_VERSION: 3.9.2 # Also update in lint-test.yaml
+
+jobs:
+  publish:
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Configure Git
+        run: |
+          git config user.name "$GITHUB_ACTOR"
+          git config user.email "$GITHUB_ACTOR@users.noreply.github.com"
+
+      - name: Run chart-releaser
+        uses: helm/chart-releaser-action@v1.5.0
+        with:
+          charts_dir: charts
+          config: cr.yaml
+        env:
+          CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
+
+      - name: Upload to ChartMuseum
+        run: |
+          set -o xtrace
+          if [ -d .cr-release-packages ]; then
+            for CHART in $(find .cr-release-packages -type f -printf '%f\n'); do
+              CHART_NAME=$(echo $CHART | rev | cut -d '-' -f2- | rev )
+              curl --data-binary "@.cr-release-packages/$CHART" --user "${{ secrets.CHARTMUSEUM_PROD_USERNAME }}:${{ secrets.CHARTMUSEUM_PROD_PASSWORD }}" ${{ secrets.CHARTMUSEUM_PROD_URL }}/api/$CHART_NAME/charts
+            done
+          fi

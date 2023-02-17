@@ -1,0 +1,23 @@
+# mock deployment for HPA
+controller:
+  enabled: true
+  type: deployment
+  replicas: 2
+  deployment:
+    strategy: Recreate
+  revisionHistoryLimit: 5
+
+container:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: master
+    pullPolicy: Always
+
+### comment when you want to see templates with `helm template . -f tests/hpa/values.yaml --show-only templates/hpa.yaml`
+# hpa:
+#   enabled: true
+#   minReplicas: 2
+#   maxReplicas: 10
+#   targetMemoryUtilizationPercentage: 70
+#   targetCPUUtilizationPercentage: 70

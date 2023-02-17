@@ -1,0 +1,12 @@
+tests:
+- '**/*_test.yaml'
+
+library:
+- charts/cf-common/**/*
+
+docs:
+- README.md
+- CHANGELOG.md
+
+automation:
+- .github/**/*

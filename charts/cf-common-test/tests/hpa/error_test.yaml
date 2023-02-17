@@ -1,0 +1,32 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: hpa error handlers
+templates:
+  - templates/hpa.yaml
+tests:
+  - it: Test HPA no minReplicas
+    set:
+      hpa:
+        enabled: true
+        maxReplicas: 10
+        targetMemoryUtilizationPercentage: 70
+    asserts:
+      - failedTemplate:
+          errorMessage: "hpa.minReplicas is required!"
+  - it: Test HPA no maxReplicas
+    set:
+      hpa:
+        enabled: true
+        minReplicas: 2
+        targetMemoryUtilizationPercentage: 70
+    asserts:
+      - failedTemplate:
+          errorMessage: "hpa.maxReplicas is required!"
+  - it: Test HPA no targets
+    set:
+      hpa:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 10
+    asserts:
+      - failedTemplate:
+          errorMessage: "hpa.targetMemoryUtilizationPercentage or hpa.targetCPUUtilizationPercentage is required!"

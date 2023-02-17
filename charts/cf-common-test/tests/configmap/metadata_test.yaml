@@ -1,0 +1,58 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: configmap metadata
+templates:
+  - templates/configmap.yaml
+tests:
+  - it: Test default configmap metadata
+    set:
+      configMaps:
+        config:
+          enabled: true
+          data:
+            key: value
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test-config
+
+  - it: Test custom configmap metadata
+    set:
+      configMaps:
+        config:
+          enabled: true
+          annotations:
+            alice: bob
+          labels:
+            foo: bar
+          data:
+            key: value
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: metadata.annotations
+          value:
+            alice: bob
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+            foo: bar

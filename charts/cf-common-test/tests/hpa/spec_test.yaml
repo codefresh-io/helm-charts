@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: hpa spec
+templates:
+  - templates/hpa.yaml
+tests:
+  - it: Test HPA target ref
+    values:
+      - values.yaml
+    set:
+      hpa:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 10
+        targetMemoryUtilizationPercentage: 70
+    asserts:
+      - isNotEmpty:
+          path: spec.scaleTargetRef
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Deployment
+      - equal:
+          path: spec.scaleTargetRef.name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test HPA min and max replicas
+    set:
+      hpa:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 10
+        targetMemoryUtilizationPercentage: 70
+    asserts:
+      - equal:
+          path: spec.minReplicas
+          value: 2
+      - equal:
+          path: spec.maxReplicas
+          value: 10
+
+  - it: Test HPA basic metrics
+    set:
+      hpa:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 10
+        targetMemoryUtilizationPercentage: 70
+        targetCPUUtilizationPercentage: 70
+    asserts:
+      - lengthEqual:
+          path: spec.metrics
+          count: 2
+      - contains:
+          path: spec.metrics
+          content:
+            type: Resource
+            resource:
+              name: memory
+              target:
+                type: Utilization
+                averageUtilization: 70
+      - contains:
+          path: spec.metrics
+          content:
+            type: Resource
+            resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 70
+
+  - it: Test HPA custom metrics
+    set:
+      hpa:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 10
+        metrics:
+        - type: Object
+          object:
+            metric:
+              name: requests_per_pod
+            describedObject:
+              apiVersion: "v1"
+              kind: Service
+              name: production-cfapi-endpoints
+            target:
+              type: Value
+              value: 7
+    asserts:
+      - lengthEqual:
+          path: spec.metrics
+          count: 1

@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: configmap error handlers
+templates:
+  - templates/configmap.yaml
+tests:
+  - it: Test with no configMaps
+    set:
+      configMaps: {}
+    asserts:
+      - hasDocuments:
+          count: 0
+  - it: Test configmap with empty data
+    set:
+      configMaps:
+        config:
+          enabled: true
+          data: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "configMaps.config.data must be a map or multiline string!"
+  - it: Test configmap with invalid data items (not map or multiline sting)
+    set:
+      configMaps:
+        config:
+          enabled: true
+          data:
+            - ALICE: BOB
+    asserts:
+      - failedTemplate:
+          errorMessage: "configMaps.config.data must be a map or multiline string!"

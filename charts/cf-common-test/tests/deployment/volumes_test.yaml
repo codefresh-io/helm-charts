@@ -1,0 +1,43 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: depoyment volumes test
+templates:
+  - templates/deployment.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test volumes count in deployment
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.volumes
+          count: 3
+  - it: Test volumes array in deployment spec
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: config
+            configMap:
+              name: RELEASE-NAME-cf-common-test-config
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: secret
+            secret:
+              secretName: RELEASE-NAME-cf-common-test-secret
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: some-existing-volume
+            secret:
+              secretName: some-existing-volume
+  - it: Test invalid volume type
+    values:
+      - values.yaml
+    set:
+      volumes:
+        my-volume:
+          enabled: true
+          type: something
+    asserts:
+      - failedTemplate:
+          errorMessage: "something is invalid volume type for volume my-volume!"

@@ -1,0 +1,113 @@
+# mock values for tests
+global:
+  imagePullSecrets:
+    - global-pull-secret
+  volumeName: some-existing-volume
+
+
+imagePullSecrets:
+  - my-pull-secret
+
+controller:
+  enabled: true
+  type: deployment
+  labels: {}
+  annotations: {}
+  replicas: 2
+  deployment:
+    strategy: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: "50%"
+  revisionHistoryLimit: 5
+
+container:
+  image:
+    registry: 839151377425.dkr.ecr.us-east-1.amazonaws.com/codefresh-inc
+    repository: codefresh/cf-api
+    tag: master
+    pullPolicy: Always
+
+  command:
+    - "/bin/sh"
+  args:
+    - "-c"
+    - "sleep infinity"
+
+  env:
+    ALICE: BOB
+  envFrom:
+    - secretRef:
+        name: my-secret
+    - configMapRef:
+        name: my-config-map
+
+  volumeMounts:
+    config:
+      path:
+      - mountPath: /some/path/config.json
+        subPath: config.json
+    secret:
+      path:
+      - mountPath: /some/path/secret.key
+        subPath: secret.key
+        readOnly: true
+
+  probes:
+    liveness:
+      enabled: true
+      type: httpGet
+      httpGet:
+        path: /api/ping
+        port: http
+      spec:
+        initialDelaySeconds: 30
+        periodSeconds: 15
+        timeoutSeconds: 15
+        successThreshold: 1
+        failureThreshold: 2
+    readiness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - /usr/local/bin/healthcheck
+      spec:
+        initialDelaySeconds: 30
+        periodSeconds: 15
+        timeoutSeconds: 15
+        successThreshold: 1
+        failureThreshold: 2
+    startup:
+      enabled: false
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
+
+  containerSecurityContext:
+    allowPrivilegeEscalation: false
+
+  lifecycle:
+    preStop:
+      exec:
+        command:
+        - sh
+        - -c
+        - "sleep 5"
+
+volumes:
+  config:
+    enabled: true
+    type: configMap
+  secret:
+    enabled: true
+    type: secret
+  some-existing-volume:
+    enabled: true
+    type: secret
+    existingName: "{{ .Values.global.volumeName }}"

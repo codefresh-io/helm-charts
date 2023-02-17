@@ -1,0 +1,84 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: configmap data
+templates:
+  - templates/configmap.yaml
+tests:
+  - it: Test configmap data content
+    set:
+      configMaps:
+        config:
+          enabled: true
+          data:
+            json: |
+              {
+                "key": {}
+              }
+            key: value
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: data.key
+          value: value
+      - equal:
+          path: data.json
+          value: |
+            {
+              "key": {}
+            }
+
+  - it: Test configmap data TPL content
+    set:
+      global:
+        key: value
+        json: |
+          {
+            "key": {}
+          }
+      configMaps:
+        config:
+          enabled: true
+          data:
+            json: |
+              {{ .Values.global.json | nindent 2 }}
+            key: "{{ .Values.global.key }}"
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ConfigMap
+      - equal:
+          path: data.key
+          value: value
+      - matchRegex:
+          path: data.json
+          pattern: |
+            {
+              "key": {}
+            }
+
+  - it: Test with more than one config map
+    set:
+      configMaps:
+        config:
+          enabled: true
+          data:
+            key: value
+        config-foo:
+          enabled: true
+          data:
+            foo: bar
+    asserts:
+      - hasDocuments:
+          count: 2
+      - isKind:
+          of: ConfigMap
+        documentIndex: &secondCM 1  # documentIndex count starts from 0
+      - isNotNull:
+          path: metadata.name
+        documentIndex: *secondCM
+      - isNotNull:
+          path: data
+        documentIndex: *secondCM

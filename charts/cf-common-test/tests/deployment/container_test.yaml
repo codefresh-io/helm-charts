@@ -1,0 +1,206 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: deployment container spec
+templates:
+  - templates/deployment.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test main container is not empty
+    asserts:
+      - isNotEmpty:
+          path: spec.template.spec.containers[0]
+
+  - it: Test no extra container present
+    asserts:
+      - isNull:
+          path: spec.template.spec.containers[1]
+
+  - it: Test main container name
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test main container image
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: 839151377425.dkr.ecr.us-east-1.amazonaws.com/codefresh-inc/codefresh/cf-api:master
+
+  - it: Test main container imagePullPolicy
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].imagePullPolicy
+          value: Always
+
+  - it: Test main container command and args
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].command
+          content:
+            "/bin/sh"
+      - contains:
+         path: spec.template.spec.containers[0].args
+         content:
+            "-c"
+      - contains:
+         path: spec.template.spec.containers[0].args
+         content:
+            "sleep infinity"
+
+  - it: Test main container Env
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].env
+          count: 1
+      - equal:
+          path: spec.template.spec.containers[0].env[0].name
+          value: ALICE
+      - equal:
+          path: spec.template.spec.containers[0].env[0].value
+          value: BOB
+
+  - it: Test main container TPL Env
+    values:
+      - values.yaml
+    set:
+      global:
+        foo: value
+      container:
+        env:
+          FOO: "{{ .Values.global.foo }}"
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].env
+          count: 2
+      - equal:
+          path: spec.template.spec.containers[0].env[1].name
+          value: FOO
+      - equal:
+          path: spec.template.spec.containers[0].env[1].value
+          value: value
+
+  - it: Test main container EnvFrom
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].envFrom
+          content:
+            secretRef:
+              name: my-secret
+      - contains:
+          path: spec.template.spec.containers[0].envFrom
+          content:
+            configMapRef:
+              name: my-config-map
+
+  - it: Test main container EnvFrom
+    values:
+      - values.yaml
+    set:
+      global:
+        secretName: some-secret
+      container:
+        envFrom:
+          - secretRef:
+              name: "{{ .Values.global.secretName }}"
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].envFrom
+          content:
+            secretRef:
+              name: some-secret
+
+  - it: Test main container volumeMounts
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].volumeMounts
+          count: 2
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: secret
+            mountPath: /some/path/secret.key
+            subPath: secret.key
+            readOnly: true
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: config
+            mountPath: /some/path/config.json
+            subPath: config.json
+
+  - it: Test main container probes
+    asserts:
+      - isSubset:
+          path: spec.template.spec.containers[0].livenessProbe
+          content:
+            httpGet:
+              path: /api/ping
+              port: http
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 2
+      - isSubset:
+          path: spec.template.spec.containers[0].readinessProbe
+          content:
+            exec:
+              command:
+              - /usr/local/bin/healthcheck
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 15
+            successThreshold: 1
+            failureThreshold: 2
+      - isNull:
+          path: spec.template.spec.containers[0].startupProbe
+
+  - it: Test main container resources
+    asserts:
+      - isNotEmpty:
+          path: spec.template.spec.containers[0].resources
+      - isSubset:
+          path: spec.template.spec.containers[0].resources.requests
+          content:
+            cpu: 100m
+            memory: 128Mi
+      - isSubset:
+          path: spec.template.spec.containers[0].resources.limits
+          content:
+            cpu: 100m
+            memory: 128Mi
+
+  - it: Test main container security context
+    asserts:
+      - isNotEmpty:
+          path: spec.template.spec.containers[0].securityContext
+      - isSubset:
+          path: spec.template.spec.containers[0].securityContext
+          content:
+            allowPrivilegeEscalation: false
+
+  - it: Test main container lifecycle
+    asserts:
+      - isNotEmpty:
+          path: spec.template.spec.containers[0].lifecycle
+      - isSubset:
+          path: spec.template.spec.containers[0].lifecycle
+          content:
+            preStop:
+              exec:
+                command:
+                - sh
+                - -c
+                - "sleep 5"
+
+  - it: Test main container with image registry override
+    values:
+      - values.yaml
+    set:
+      global:
+        imageRegistry: "someprivatregistry.local"
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: someprivatregistry.local/codefresh/cf-api:master

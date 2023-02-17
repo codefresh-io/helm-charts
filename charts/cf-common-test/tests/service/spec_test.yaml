@@ -1,0 +1,171 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: service metadata
+templates:
+  - templates/service.yaml
+  - templates/deployment.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test main service type
+    template: templates/service.yaml
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+
+  - it: Test main service ports
+    template: templates/service.yaml
+    asserts:
+      - lengthEqual:
+          path: spec.ports
+          count: 2
+      - contains:
+          path: spec.ports
+          content:
+            port: 80
+            targetPort: 30080
+            name: http
+            protocol: TCP
+      - contains:
+          path: spec.ports
+          content:
+            port: 3000
+            targetPort: 40000
+            name: internal-api
+            protocol: TCP
+
+  - it: Test main service selector
+    template: templates/service.yaml
+    asserts:
+      - isNotEmpty:
+          path: spec.selector
+      - equal:
+          path: spec.selector
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: cf-common-test
+
+  - it: Test main service with extart selector label
+    template: templates/service.yaml
+    values:
+      - values.yaml
+    set:
+      services:
+        main:
+          extraSelectorLabels:
+            extra: label
+    asserts:
+      - isNotEmpty:
+          path: spec.selector
+      - equal:
+          path: spec.selector
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: cf-common-test
+            extra: label
+
+  - it: Test main service without target port specified
+    template: templates/service.yaml
+    values:
+      - values.yaml
+    set:
+      services:
+        main:
+          ports:
+            http:
+              port: 80
+              protocol: HTTP
+              targetPort: null
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            port: 80
+            targetPort: http
+            name: http
+            protocol: TCP
+          count: 1
+          any: true
+
+  - it: Test metrics service ports
+    template: templates/service.yaml
+    values:
+      - values.yaml
+    set:
+      services:
+        metrics:
+          enabled: true
+          type: ClusterIP
+          ports:
+            metrics:
+              port: 8082
+              protocol: HTTP
+    documentIndex: 1
+    asserts:
+      - contains:
+          path: spec.ports
+          content:
+            port: 8082
+            targetPort: metrics
+            name: metrics
+            protocol: TCP
+
+  - it: Test metrics service when no service type is specified
+    template: templates/service.yaml
+    values:
+      - values.yaml
+    documentIndex: 1
+    set:
+      services:
+        metrics:
+          enabled: true
+          ports:
+            metrics:
+              port: 8082
+              protocol: HTTP
+    asserts:
+      - equal:
+          path: spec.type
+          value: ClusterIP
+
+  - it: Test ports list in deployment
+    template: templates/deployment.yaml
+    values:
+      - values.yaml
+    set:
+      services:
+        metrics:
+          enabled: true
+          type: ClusterIP
+          ports:
+            metrics:
+              port: 8082
+              protocol: HTTP
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].ports
+          count: 3
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: http
+            containerPort: 30080
+            protocol: TCP
+          count: 1
+          any: true
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: internal-api
+            containerPort: 40000
+            protocol: TCP
+          count: 1
+          any: true
+      - contains:
+          path: spec.template.spec.containers[0].ports
+          content:
+            name: metrics
+            containerPort: 8082
+            protocol: TCP
+          count: 1
+          any: true

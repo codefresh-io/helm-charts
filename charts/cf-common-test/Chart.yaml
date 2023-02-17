@@ -1,0 +1,16 @@
+apiVersion: v2
+appVersion: v0.0.0
+description: Codefresh library chart - test chart - not for deployment!
+name: cf-common-test
+version: 0.0.0
+home: https://github.com/codefresh-sandbox/helm-charts/cf-common-test
+dependencies:
+  - name: cf-common
+    repository: file://../cf-common
+    version: "*"
+keywords:
+  - codefresh
+  - libs
+maintainers:
+  - name: codefresh
+    url: https://codefresh-io.github.io/

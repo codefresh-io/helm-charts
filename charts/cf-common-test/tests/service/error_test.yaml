@@ -1,0 +1,68 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: service error handler
+templates:
+  - templates/service.yaml
+tests:
+  - it: Test main service with invalid protocol
+    values:
+      - values.yaml
+    set:
+      services:
+        main:
+          ports:
+            http:
+              protocol: ICMP
+    asserts:
+      - failedTemplate:
+          errorMessage: "services.main.ports.http.protocol is invalid!"
+
+  - it: Test metrics service with no port specified
+    values:
+      - values.yaml
+    set:
+      services:
+        metrics:
+          enabled: true
+          ports:
+            metrics:
+              port: null
+              protocol: HTTP
+    asserts:
+      - failedTemplate:
+          errorMessage: "services.metrics.ports.metrics.port number is required!"
+
+  - it: Test invalid service type
+    values:
+      - values.yaml
+    set:
+      services:
+         main:
+          type: Something
+    asserts:
+      - failedTemplate:
+          errorMessage: "services.main.type is invalid service type!"
+
+  - it: Test disabled service
+    template: templates/service.yaml
+    set:
+      services:
+         main:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test services items as list (not map)
+    template: templates/service.yaml
+    set:
+      services:
+        - main:
+            primary: true
+            type: ClusterIP
+            ports:
+              http:
+                port: 80
+                protocol: HTTP
+    asserts:
+      - failedTemplate:
+          errorMessage: "services block must be a map!"

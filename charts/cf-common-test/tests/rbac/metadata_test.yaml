@@ -1,0 +1,135 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: rbac metadata
+templates:
+  - templates/rbac.yaml
+  - templates/deployment.yaml
+tests:
+  - it: Test SA default metadata
+    template: rbac.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ServiceAccount
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test SA custom metadata
+    template: rbac.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+          nameOverride: "alice"
+          annotations:
+            foo: bar
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ServiceAccount
+      - equal:
+          path: metadata.annotations
+          value:
+            foo: bar
+      - equal:
+          path: metadata.name
+          value: alice
+      - contains:
+          path: secrets
+          content:
+            name: RELEASE-NAME-cf-common-test-sa-token
+
+  - it: Test Role default metadata
+    template: rbac.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+        rules:
+          - apiGroups:
+              - ""
+            resources:
+              - pods
+            verbs:
+              - get
+    asserts:
+      - hasDocuments:
+          count: 3
+      - isKind:
+          of: ServiceAccount
+        documentIndex: 0
+      - isKind:
+          of: Role
+        documentIndex: 1
+      - isKind:
+          of: RoleBinding
+        documentIndex: 2
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+        documentIndex: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+        documentIndex: 1
+
+  - it: Test RoleBinding default metadata
+    template: rbac.yaml
+    set:
+      rbac:
+        enabled: true
+        serviceAccount:
+          enabled: true
+        rules:
+          - apiGroups:
+              - ""
+            resources:
+              - pods
+            verbs:
+              - get
+    asserts:
+      - hasDocuments:
+          count: 3
+      - isKind:
+          of: ServiceAccount
+        documentIndex: 0
+      - isKind:
+          of: Role
+        documentIndex: 1
+      - isKind:
+          of: RoleBinding
+        documentIndex: 2
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+        documentIndex: 2
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+        documentIndex: 2

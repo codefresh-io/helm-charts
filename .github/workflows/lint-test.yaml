@@ -1,0 +1,161 @@
+## Reference: https://github.com/helm/chart-testing-action
+## Reference: https://github.com/quintush/helm-unittest
+name: Lint and Test Charts
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - edited
+      - reopened
+      - ready_for_review
+      - synchronize
+    paths:
+      - "charts/**"
+
+concurrency:
+  group: ${{ github.head_ref }}-lint-test
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+
+env:
+  HELM_VERSION: 3.9.2 # Also update in release.yaml
+
+jobs:
+  lint-charts:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.list-changed.outputs.matrix }}
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: 3.9
+
+      - name: 'Set up jq'
+        uses: dcarbone/install-jq-action@v1.0.1
+
+      - name: Set up chart-testing
+        uses: helm/chart-testing-action@v2.1.0
+
+      - name: Run chart-testing (list-changed)
+        id: list-changed
+        run: |
+          set -o xtrace
+          changed=$(ct list-changed --config ct.yaml)
+          charts=$(echo "$changed" | tr '\n' ' ' | xargs)
+          if [[ -n "$changed" ]]; then
+            echo "changed=true" >> $GITHUB_OUTPUT
+            echo "changed_charts=$charts" >> $GITHUB_OUTPUT
+            echo "matrix=$(echo $charts | jq -R 'split(" ")' | jq '. | if index("charts/cf-common-test") then . else . += ["charts/cf-common-test"] end' | jq -c .)" >> $GITHUB_OUTPUT
+            echo $matrix
+          fi
+
+      - name: Run chart-testing (lint)
+        run: ct lint --config "ct.yaml" --lint-conf "lintconf.yaml" --debug --excluded-charts "cf-common-test"
+
+      - name: Run docs-testing (helm-docs)
+        id: helm-docs
+        run: |
+          ./scripts/helm-docs.sh
+          if [[ $(git diff --stat) != '' ]]; then
+            echo -e '\033[0;31mDocumentation outdated!\033[0m ❌ Run ./scripts/helm-docs.sh before commit!'
+            git diff --color
+            exit 1
+          else
+            echo -e '\033[0;32mDocumentation up to date\033[0m ✔'
+          fi
+
+      - name: Create kind cluster
+        uses: helm/kind-action@v1.5.0
+
+      - name: Run chart-testing (install)
+        run: |
+          changed=$(ct list-changed --config "ct.yaml")
+          if [[ "$changed" == "charts/cf-common" ]]; then
+            # Do not run `ct install` for cf-common (library chart)
+            exit 0
+          fi
+          ct install --config "ct.yaml"
+
+  unittest-charts:
+    needs:
+      - lint-charts
+    runs-on: ubuntu-latest
+    # There are no Unit Test suites in `charts/cf-common`. They are located in `charts/cf-common-test`. So `charts/cf-common` is excluded from this job.
+    if: ${{ needs.lint-charts.outputs.matrix != '[]' && needs.lint-charts.outputs.matrix != '["charts/cf-common"]' }}
+    strategy:
+      matrix:
+        chart: ${{ fromJSON(needs.lint-charts.outputs.matrix) }}
+        exclude:
+          - chart: charts/cf-common
+      fail-fast: true
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Set up Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: ${{ env.HELM_VERSION }}
+
+      - name: Run unit tests
+        run: |
+          echo ${{ matrix.chart }}
+          helm plugin install https://github.com/quintush/helm-unittest --version v0.2.11
+          helm dep update ${{ matrix.chart }}
+          helm unittest --helm3 --color --debug -f "tests/**/*_test.yaml" ${{ matrix.chart }}
+
+  push-charts-dev-cm:
+    needs:
+      - lint-charts
+      - unittest-charts
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        chart: ${{ fromJSON(needs.lint-charts.outputs.matrix) }}
+      fail-fast: true
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 0
+
+    - name: Set up Helm
+      uses: azure/setup-helm@v3
+      with:
+        version: v3.8.2
+
+    - name: Set up yq
+      uses: chrisdickinson/setup-yq@latest
+
+    - name: Set short SHA
+      run: echo "GITHUB_SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
+
+    - name: Push Helm Chart to Dev ChartMuseum
+      run: |
+        set -o xtrace
+        CHART_NAME=$(yq read ${{ matrix.chart }}/Chart.yaml name)
+        CHART_VERSION=$(yq read ${{ matrix.chart }}/Chart.yaml version)-$GITHUB_SHORT_SHA
+
+        helm plugin install https://github.com/chartmuseum/helm-push.git
+        helm repo add chartmuseum ${{ secrets.CHARTMUSEUM_DEV_URL }}/$CHART_NAME --username ${{ secrets.CHARTMUSEUM_DEV_USERNAME }} --password ${{ secrets.CHARTMUSEUM_DEV_PASSWORD }}
+        helm dependency update ${{ matrix.chart }}
+
+        helm cm-push ${{ matrix.chart }} chartmuseum --version $CHART_VERSION

@@ -1,0 +1,35 @@
+###
+global: {}
+
+controller: {}
+
+container: {}
+
+volumes: {}
+
+configMaps: {}
+
+secrets: {}
+
+services: {}
+
+hpa: {}
+
+pdb: {}
+
+rbac:
+  serviceAccount: {}
+
+podSecurityContext: {}
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+initContainers: []
+
+additionalContainers: []
+
+extraResources: []

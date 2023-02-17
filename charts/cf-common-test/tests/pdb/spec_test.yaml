@@ -1,0 +1,33 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: pdb spec
+templates:
+  - templates/pdb.yaml
+tests:
+  - it: Test PDB spec
+    set:
+      pdb:
+        enabled: true
+        minAvailable: "50%"
+        maxUnavailable: "50%"
+    asserts:
+      - equal:
+          path: spec.minAvailable
+          value: 50%
+      - equal:
+          path: spec.maxUnavailable
+          value: 50%
+
+  - it: Test PDB matchLabels
+    set:
+      pdb:
+        enabled: true
+        minAvailable: "50%"
+        maxUnavailable: "50%"
+    asserts:
+      - isNotEmpty:
+          path: spec.selector.matchLabels
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: cf-common-test

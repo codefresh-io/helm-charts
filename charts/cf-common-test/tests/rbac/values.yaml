@@ -1,0 +1,34 @@
+# mock deployment for HPA
+controller:
+  enabled: true
+  type: deployment
+  replicas: 2
+  deployment:
+    strategy: Recreate
+  revisionHistoryLimit: 5
+
+container:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: master
+    pullPolicy: Always
+
+### comment when you want to see templates with `helm template . -f tests/rbac/values.yaml --show-only templates/rbac.yaml`
+rbac:
+  enabled: true
+  serviceAccount:
+    enabled: true
+#     nameOverride: ""
+#     annotations:
+#       foo: bar
+#   rules:
+#     - apiGroups:
+#         - ""
+#       resources:
+#         - pods
+#       verbs:
+#         - get
+#         - list
+#         - watch
+#         - update

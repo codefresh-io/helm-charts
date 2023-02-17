@@ -1,0 +1,151 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: deployment spec
+templates:
+  - templates/deployment.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test deployment matchLabels
+    asserts:
+      - isNotEmpty:
+          path: spec.selector.matchLabels
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: cf-common-test
+
+  - it: Test deployment strategy
+    asserts:
+      - equal:
+          path: spec.strategy.type
+          value: RollingUpdate
+
+  - it: Test deployment replica number (no HPA)
+    set:
+      hpa:
+        enabled: false
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 2
+
+  - it: Test deployment revisionHistoryLimit
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 5
+
+  - it: Test deployment automount SA token
+    asserts:
+      - equal:
+          path: spec.template.spec.automountServiceAccountToken
+          value: true
+
+  - it: Test deployment imagePullSecrets
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.imagePullSecrets
+          count: 2
+
+  - it: Test deployment's initContainer is present and valid
+    values:
+      - values.yaml
+    set:
+      initContainers:
+      - name: init-myservice
+        image: busybox:1.28
+        command: ['sh', '-c', "sleep 60"]
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.initContainers
+          count: 1
+      - contains:
+          path: spec.template.spec.initContainers
+          content:
+            name: init-myservice
+            image: busybox:1.28
+            command: ['sh', '-c', "sleep 60"]
+
+  - it: Test deployments nodeSelector
+    values:
+      - values.yaml
+    set:
+      nodeSelector:
+        node-type: app
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector
+          value:
+            node-type: app
+
+  - it: Test deployments tolerations
+    values:
+      - values.yaml
+    set:
+      tolerations:
+        - effect: NoSchedule
+          key: codefresh.io
+          value: app
+    asserts:
+      - contains:
+          path: spec.template.spec.tolerations
+          content:
+            effect: NoSchedule
+            key: codefresh.io
+            value: app
+
+  - it: Test deployments affinity
+    values:
+      - values.yaml
+    set:
+      affinity:
+        nodeAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            nodeSelectorTerms:
+              - matchExpressions:
+                  - key: node-type
+                    operator: In
+                    values:
+                      - app
+    asserts:
+      - equal:
+          path: spec.template.spec.affinity
+          value:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: node-type
+                        operator: In
+                        values:
+                          - app
+
+  - it: Test deployment with sidecar container
+    values:
+      - values.yaml
+    set:
+      additionalContainers:
+        - name: sidecar-container
+          image: busybox
+          command: ["/bin/sh"]
+          args: ["-c", "while true; do echo echo $(date -u) 'Hi I am from Sidecar container' >> /var/log/index.html; sleep 5;done"]
+          resources: {}
+          volumeMounts:
+          - name: var-logs
+            mountPath: /var/log
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers
+          count: 2
+      - contains:
+          path: spec.template.spec.containers
+          content:
+            name: sidecar-container
+            image: busybox
+            command: ["/bin/sh"]
+            args: ["-c", "while true; do echo echo $(date -u) 'Hi I am from Sidecar container' >> /var/log/index.html; sleep 5;done"]
+            resources: {}
+            volumeMounts:
+            - name: var-logs
+              mountPath: /var/log

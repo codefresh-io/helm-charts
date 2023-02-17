@@ -1,0 +1,412 @@
+# -- Global parameters
+global:
+  # -- Global Docker image registry
+  imageRegistry: ""
+  # -- Global Docker registry secret names as array
+  imagePullSecrets: []
+  # E.g.
+  # imagePullSecrets:
+  #   - myRegistrySecret
+
+# -- Controller parameters
+controller:
+  # -- Define the controller type (`deployment`)
+  type:
+  # -- Set labels on controller
+  labels: {}
+  # -- Set annotations on controller
+  annotations: {}
+  # -- Set number of pods
+  replicas:
+  # Deployment parameters
+  deployment:
+    # -- Set deployment upgrade strategy (`RollingUpdate`/`Recreate`)
+    strategy:
+    # RollingUpdate strategy parameters
+    rollingUpdate:
+      # -- Set RollingUpdate max unavailable (absolute number or percentage)
+      maxUnavailable:
+      # -- Set RollingUpdate max surge (absolute number or percentage)
+      maxSurge:
+  # -- Set ReplicaSet revision history limit
+  revisionHistoryLimit:
+
+# -- Set image pull secrets as array
+imagePullSecrets: []
+# E.g.
+# imagePullSecrets:
+#   - myRegistrySecret
+
+# -- Set additional pod labels
+podLabels: {}
+# -- Set additional pod annotations
+podAnnotations: {}
+
+# -- Main Container parameters
+container:
+  # -- Image parameters
+  image:
+    # -- Set image registry
+    registry:
+    # -- Set image repository
+    repository:
+    # -- Set image tag
+    tag:
+    # -- Set image pull policy (`Always`, `Never`, `IfNotPresent`)
+    pullPolicy:
+
+  # -- Override commands for the container
+  command: []
+  # -- Override args for the container
+  args: []
+
+  # -- Set environments variables
+  env: {}
+  # -- Set Secrets or ConfigMaps loaded as environment variables.
+  envFrom: []
+  # E.g.
+  # envFrom:
+  #   - secretRef:
+  #       name: my-secret
+  #   - configMapRef:
+  #       name: my-config-map
+
+  # -- Set additional environment variables.
+  # Helm template supported. Passed through `tpl`, should be configured as string
+  extraEnvVars:
+  # E.g.
+  # extraEnvVars: |
+  #   - name: ALICE
+  #     valueFrom:
+  #       secretKeyRef:
+  #         name: "{{ .Release.Name }}-{{ $.Values.global.somekey }}"
+  #         key: alice
+  #   - name: FOO
+  #     value: "{{ .Values.config.foo }}"
+
+  # -- Set volume mounts for container
+  volumeMounts: {}
+
+  # Volume Mount name should match the Volume name (see `volumes` and `externalVolumes` section)
+  # E.g.
+  # volumeMounts:
+  #   config:
+  #     path:
+  #     - mountPath: /some/path/config.json
+  #       subPath: config.json
+  #   secret:
+  #     path:
+  #     - mountPath: /some/path/private.key
+  #       subPath: private.key
+  #       readOnly: true
+  #   data:
+  #     path:
+  #     - mountPath: /var/www/html
+
+  # Probes configuration
+  probes:
+    # Liveness probe configuration
+    liveness:
+      # -- Enable liveness probe
+      enabled: false
+      # -- Set liveness probe type (httpGet/exec)
+      type:
+      # httpGet probe type parameters
+      httpGet:
+        # -- Set httpGet probe path
+        path:
+        # -- Set httpGet probe port (name )
+        port:
+      # exec probe type parameters
+      exec:
+        # -- Set exec probe commands
+        command: []
+      # Liveness probe spec
+      spec:
+        # -- Set initial delay seconds for probe
+        initialDelaySeconds:
+        # -- Set period seconds for probe
+        periodSeconds:
+        # -- Set timeout seconds for probe
+        timeoutSeconds:
+        # -- Set success threshold for probe
+        successThreshold:
+        # -- Set failure threshold for probe
+        failureThreshold:
+    # Readiness probe configuration (parameters are identical to liveness)
+    readiness:
+      enabled: false
+    # Startup probe configuration (parameters are identical to liveness)
+    startup:
+      enabled: false
+
+  # -- Set the resources (requests/limits) for the container
+  resources:
+    limits: {}
+    requests: {}
+  # E.g.
+  # resources:
+  #   limits:
+  #     cpu: 100m
+  #     memory: 128Mi
+  #   requests:
+  #     cpu: 100m
+  #     memory: 128Mi
+
+  # -- Set security context for container
+  containerSecurityContext: {}
+  # Ref: https://kubernetes.io/docs/tasks/configure-pod-container/security-context/#set-the-security-context-for-a-container
+  # E.g.
+  # containerSecurityContext:
+  #   allowPrivilegeEscalation: false
+
+  # -- Set the lifecycle hooks for container
+  lifecycle: {}
+  # Ref: https://kubernetes.io/docs/concepts/containers/container-lifecycle-hooks/
+  # E.g.
+  # lifecycle:
+  #   preStop:
+  #     exec:
+  #       command:
+  #       - sh
+  #       - -c
+  #       - "sleep 5"
+
+# Create secrets with the values you provide.
+# Additional Secrets can be added by adding a dictionary key similar to the 'secret' object.
+secrets:
+  # -- Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts`
+  secret:
+    # -- Enable the secret
+    enabled: false
+    # -- Add additional labels to the secret
+    labels: {}
+    # -- Add additional annotations to the secret
+    annotation: {}
+    # -- Set secret type (`Opaque`/`kubernetes.io/tls`)
+    type: Opaque
+    # -- Secret data content. Plain text
+    stringData: {}
+      # foo: bar
+    # Helm template supported. Passed through `tpl`, should be configured as string
+    # E.g.
+    # stringData: |
+    #   FOO: "{{ .Values.global.foo }}"
+    #   BAR: "{{ .Values.global.bar }}"
+    data: {}
+    # -- Secret data content. Should be passed as base64 encoded text
+    # Helm template NOT supported.
+    # E.g.
+    # data:
+    #   tls.crt: |
+    #         MIIC2DCCAcCgAwIBAgIBATANBgkqh ...
+    #   tls.key: |
+    #         MIIEpgIBAAKCAQEA7yn3bRHQ5FHMQ ...
+
+# -- Create configMap with the values you provide.
+# Additional configMaps can be added by adding a dictionary key similar to the 'config' object.
+configMaps:
+  # -- ConfigMap name. Make sure to use the same name in `volumes` and `container.volumeMounts`
+  config:
+    # -- Enable the configMap
+    enabled: false
+    # -- Add additional labels to the configMap
+    labels: {}
+    # -- Add additional annotations to the configMap
+    annotations: {}
+    # -- ConfigMap data content.
+    data: {}
+      # foo: bar
+    # Helm template supported. Passed through `tpl`, should be configured as string
+    # E.g.
+    # data: |
+    #   ALICE: "{{ .Values.global.alice }}"
+    #   BOB: "{{ .Values.global.bob }}"
+
+# -- Configure volume for the controller.
+# Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key.
+volumes:
+  # -- Volume name. Make sure to use the same name in `configMaps`/`secrets` and `container.volumeMounts`
+  config:
+    # -- Enable the volume
+    enabled: false
+    # -- Volume type (configMap/secret)
+    type: configMap
+  secret:
+    enabled: false
+    type: secret
+  # Configure existing volumes (from other/parent chart) for the contoller.
+  # Make sure to specify `existingName` property. Helm template supported.
+  # E.g.
+  # volumes:
+  #   dind-clusters:
+  #     enabled: true
+  #     type: secret
+  #     existingName: "{{ .Values.config.dindClustersSecretName }}"
+  #     optional: true
+
+# -- Configure services fo the chart.
+# Additional services can be added by adding a dictionary key similar to the 'main' service.
+services:
+  # -- Service name
+  main:
+    # -- Enabled the service
+    enabled: false
+    # -- Make this the primary service (used in probes, notes, etc...).
+    # If there is more than 1 service, make sure that only 1 service is marked as primary.
+    primary: true
+    # -- Add additional labels for the service
+    labels: {}
+    # -- Add additional annotations for the service
+    annotations: {}
+    # -- Set the service type
+    type: ClusterIP
+    # -- Allow adding additional match labels
+    extraSelectorLabels: {}
+    # -- Configure ports for the service
+    ports:
+      # Additional ports can be added by adding a dictionary key similar to the 'http' service.
+      # -- Port name
+      http:
+        # -- Port number
+        port:
+        # -- Port protocol (`HTTP`/`HTTPS`/`TCP`/`UDP`)
+        protocol: HTTP
+        # -- Set a service targetPort if you wish to differ the service port from the application port.
+        targetPort:
+        # If `targetPort` is specified, this port number is used in the container definition instead of
+        # the `port` value. Therefore named ports are not supported for this field
+
+# -- Specifies whether a service account token should be automatically mounted.
+automountServiceAccountToken: true
+
+# -- Set security context for the pod
+podSecurityContext: {}
+# E.g.
+# podSecurityContext:
+#   runAsNonRoot: true
+#   runAsGroup: 0
+#   fsGroup: 0
+#   runAsUser: 1000
+
+# -- Set node selection constrains
+nodeSelector: {}
+
+# -- Set tolerations constrains
+tolerations: []
+
+# -- Set affinity constrains
+affinity: {}
+
+# -- Set topologySpreadConstraints rules.
+# Helm template supported. Passed through `tpl`, should be configured as string
+topologySpreadConstraints: []
+# E.g.
+# topologySpreadConstraints: |
+#   - maxSkew: 1
+#     topologyKey: topology.kubernetes.io/zone
+#     whenUnsatisfiable: ScheduleAnyway
+#     labelSelector:
+#       matchLabels:
+#         {{- include "cf-common.labels.matchLabels" . | nindent 6 }}
+
+# -- Configure autoscaling (Horizontal Pod Autoscaler)
+autoscaling:
+  # -- Enable HPA
+  enabled: false
+  # -- Set minimum autoscaling replicas
+  minReplicas:
+  # -- Set maximum autoscaling replicas
+  maxReplicas:
+  # -- Set target CPU utilization percentage
+  targetCPUUtilizationPercentage:
+  # -- Set custom metrics
+  metrics: []
+  # E.g.
+  # metrics:
+  #   - type: Object
+  #   object:
+  #     metric:
+  #       name: requests_per_pod
+  #     describedObject:
+  #       apiVersion: "v1"
+  #       kind: Service
+  #       name: production-cfapi-endpoints
+  #     target:
+  #       type: Value
+  #       value: 7
+
+# -- Configure Pod Disruption Budget
+pdb:
+  # -- Enable PDB
+  enabled: false
+  # -- Set number of pods that are available after eviction as number of percentage
+  minAvailable: ""
+  # -- Set number of pods that are unavailable after eviction as number of percentage
+  maxUnavailable: ""
+
+# -- Configure RBAC parameters
+rbac:
+  # -- Enable RBAC resources
+  enabled: false
+  # -- Configure Service Account
+  serviceAccount:
+    # -- Enable Service Account
+    enabled: false
+    # -- Override Service Account name (by default, name is generated with `fullname` template)
+    nameOverride: ""
+    # -- Set annotations for Service Account
+    annotations: {}
+  # -- Create custom rules
+  rules: []
+  # E.g.
+  # rules:
+  #   - apiGroups:
+  #       - ""
+  #     resources:
+  #       - pods
+  #     verbs:
+  #       - get
+  #       - list
+  #       - watch
+  #       - update
+
+# -- Array of extra objects to deploy with the release
+extraResources: []
+# E.g.
+# extraResources:
+# - apiVersion: v1
+#   kind: Pod
+#   metadata:
+#     name: dnsutils
+#     namespace: default
+#   spec:
+#     containers:
+#     - name: dnsutils
+#       image: registry.k8s.io/e2e-test-images/jessie-dnsutils:1.3
+#       command:
+#         - sleep
+#         - "infinity"
+#       imagePullPolicy: IfNotPresent
+#     restartPolicy: Always
+
+# -- Array of init containers to add
+initContainers: []
+# E.g.
+# initContainers:
+#   - name: init-myservice
+#     image: busybox:1.28
+#     command: ['sh', '-c', "sleep 60"]
+
+# -- Array of extra (sidecar) containers to add
+additionalContainers: []
+# E.g.
+# additionalContainers:
+#   - name: sidecar-container
+#     image: busybox
+#     command: ["/bin/sh"]
+#     args: ["-c", "while true; do echo echo $(date -u) 'Hi I am from Sidecar container' >> /var/log/index.html; sleep 5;done"]
+#     resources: {}
+#     volumeMounts:
+#     - name: var-logs
+#       mountPath: /var/log

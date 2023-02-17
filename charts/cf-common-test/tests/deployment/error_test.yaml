@@ -1,0 +1,302 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: deployment error handlers
+templates:
+  - templates/deployment.yaml
+tests:
+  - it: Test invalid controller type
+    values:
+      - values.yaml
+    set:
+      controller:
+        type: Pod
+    asserts:
+      - failedTemplate:
+          errorMessage: "Pod is invalid controller type!"
+
+  - it: Test default revisionHistoryLimit=5 if no controller.revisionHistoryLimit provided
+    values:
+      - values.yaml
+    set:
+      controller:
+        revisionHistoryLimit: null
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 5
+
+  - it: Test default replicas=1 if not controller.replicas provided (no HPA)
+    values:
+      - values.yaml
+    set:
+      controller:
+        replicas: null
+      hpa:
+        enabled: false
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 1
+
+  - it: Test invalid deployment strategy
+    values:
+      - values.yaml
+    set:
+      controller:
+        deployment:
+          strategy: RollingStones
+    asserts:
+      - failedTemplate:
+          errorMessage: "RollingStones is invalid Deployment strategy!"
+
+  - it: Test invalid imagePullSecrets
+    values:
+      - values.yaml
+    set:
+      global:
+        imagePullSecrets: pullSecret
+      imagePullSecrets:
+        name: pullSecret
+    asserts:
+      - failedTemplate:
+          errorMessage: "imagePullSecrets block must be a list!"
+
+  - it: Test invalid main container command
+    values:
+      - values.yaml
+    set:
+      container:
+        command: "/bin/bash -c"
+    asserts:
+      - failedTemplate:
+          errorMessage: "container.command block must be a list!"
+
+  - it: Test invalid main container args
+    values:
+      - values.yaml
+    set:
+      container:
+        args: "sleep 60"
+    asserts:
+      - failedTemplate:
+          errorMessage: "container.args block must be a list!"
+
+  - it: Test invalid main container securityContext
+    values:
+      - values.yaml
+    set:
+      container:
+        containerSecurityContext:
+          - allowPrivilegeEscalation: false
+    asserts:
+      - failedTemplate:
+          errorMessage: "container.containerSecurityContext block must be a map!"
+
+  - it: Test invalid main container lifecycle
+    values:
+      - values.yaml
+    set:
+      container:
+        lifecycle:
+          - preStop:
+              exec:
+                command:
+                - sh
+                - -c
+                - "sleep 5"
+    asserts:
+      - failedTemplate:
+          errorMessage: "container.lifecycle block must be a map!"
+
+  - it: Test invalid container.env variable type
+    values:
+      - values.yaml
+    set:
+      container:
+        env:
+          ALICE:
+            - name: "test"
+    asserts:
+      - failedTemplate:
+          errorMessage: "Only maps and string/int/bool are supported for environment variables!"
+
+  - it: Test invalid container.env map key (not valueFrom)
+    values:
+      - values.yaml
+    set:
+      container:
+        env:
+          ALICE:
+            something:
+              name: "test"
+    asserts:
+      - failedTemplate:
+          errorMessage: "Cannot generate environment variables only strings and valueFrom are supported!"
+
+  - it: Test invalid container.env valueFrom (not secretKeyRef/configMapKeyRef/fieldRef)
+    values:
+      - values.yaml
+    set:
+      container:
+        env:
+          ALICE:
+            valueFrom:
+              something: "test"
+    asserts:
+      - failedTemplate:
+          errorMessage: "Only secretKeyRef/configMapKeyRef/fieldRef are supported for valueFrom block for environment variables!"
+
+  - it: Test invalid container.envFrom input
+    values:
+      - values.yaml
+    set:
+      container:
+        envFrom:
+          secretRef:
+            name: my-secret
+    asserts:
+      - failedTemplate:
+          errorMessage: "container.envFrom block must be a list!"
+
+  - it: Test invalid volumeMounts.name input
+    values:
+      - values.yaml
+    set:
+      container:
+        volumeMounts:
+          config:
+            path:
+              mountPath: /some/path/config.json
+    asserts:
+      - failedTemplate:
+          errorMessage: "volumeMounts.config.path block must be a list!"
+
+  - it: Test missing volumeMounts.name.mountPath input
+    values:
+      - values.yaml
+    set:
+      container:
+        volumeMounts:
+          config:
+            path:
+            - subPath: config.json
+    asserts:
+      - failedTemplate:
+          errorMessage: "mountPath is required for volumeMount!"
+
+  - it: Test invalid probe type
+    values:
+      - values.yaml
+    set:
+      container:
+        probes:
+          shutdown:
+            enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "shutdown is invalid probe type!"
+
+  - it: Test missing httpGet probe items (no port/path)
+    values:
+      - values.yaml
+    set:
+      container:
+        probes:
+          liveness:
+            httpGet:
+              path: null
+              port: http
+    asserts:
+      - failedTemplate:
+          errorMessage: "httpGet.path is required for liveness probe!"
+
+  - it: Test invalid exec probe type
+    values:
+      - values.yaml
+    set:
+      container:
+        probes:
+          readiness:
+            exec:
+              command: /usr/local/bin/healthcheck
+    asserts:
+      - failedTemplate:
+          errorMessage: "exec.command block for readiness probe type must be a list!"
+
+  - it: Test invalid tcpSocket probe type
+    values:
+      - values.yaml
+    set:
+      container:
+        probes:
+          readiness:
+            type: tcpSocket
+            tcpSocket:
+              path: some/path
+    asserts:
+      - failedTemplate:
+          errorMessage: "tcpSocket.port is required for readiness probe!"
+
+  - it: Test missing initialDelaySeconds for probe
+    values:
+      - values.yaml
+    set:
+      container:
+        probes:
+          liveness:
+            spec:
+              initialDelaySeconds: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "spec.initialDelaySeconds is required for liveness probe!"
+
+  - it: Test invalid resources for container
+    values:
+      - values.yaml
+    set:
+      container:
+        resources:
+          - limits:
+              cpu: 100m
+              memory: 128Mi
+    asserts:
+      - failedTemplate:
+          errorMessage: "container.resources block must be a map!"
+
+  - it: Test invalid nodeSelector
+    values:
+      - values.yaml
+    set:
+      nodeSelector:
+        - node-type: app
+    asserts:
+      - failedTemplate:
+          errorMessage: "nodeSelector block must be a map!"
+
+  - it: Test invalid tolerations
+    values:
+      - values.yaml
+    set:
+      tolerations:
+        effect: NoSchedule
+        key: codefresh.io
+        value: app
+    asserts:
+      - failedTemplate:
+          errorMessage: "tolerations block must be a list!"
+
+  - it: Test invalid affinity
+    values:
+      - values.yaml
+    set:
+      affinity:
+        - nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: node-type
+                      operator: In
+                      values:
+                        - app
+    asserts:
+      - failedTemplate:
+          errorMessage: "affinity block must be a map!"

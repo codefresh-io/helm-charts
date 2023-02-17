@@ -1,0 +1,12 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: pdb error handlers
+templates:
+  - templates/pdb.yaml
+tests:
+  - it: Test PDB no minAvailable or maxUnavailable
+    set:
+      pdb:
+        enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "pdb.minAvailable or pdb.maxUnavailable is required!"

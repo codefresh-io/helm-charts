@@ -1,0 +1,39 @@
+# mock deployment for HPA
+controller:
+  enabled: true
+  type: deployment
+  replicas: 2
+  deployment:
+    strategy: Recreate
+  revisionHistoryLimit: 5
+
+container:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: master
+    pullPolicy: Always
+
+services:
+  main:
+    enabled: true
+    primary: true
+    labels: {}
+    annotations: {}
+    type: ClusterIP
+    ports:
+      http:
+        port: 80
+        protocol: HTTP
+        targetPort: 30080
+      internal-api:
+        port: 3000
+        protocol: HTTP
+        targetPort: 40000
+  # metrics:
+  #   enabled: true
+  #   type: ClusterIP
+  #   ports:
+  #     metrics:
+  #       port: 8082
+  #       protocol: HTTP
