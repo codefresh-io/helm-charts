@@ -60,8 +60,12 @@ container:
   # -- Override args for the container
   args: []
 
-  # -- Set environments variables
+  # -- Set environments variables. Helm template supported.
   env: {}
+  # E.g.
+  # env:
+  #   ALICE: BOB
+  #   FOO: "{{ .Valies.config.foo }}"
   # -- Set Secrets or ConfigMaps loaded as environment variables.
   envFrom: []
   # E.g.
@@ -70,19 +74,6 @@ container:
   #       name: my-secret
   #   - configMapRef:
   #       name: my-config-map
-
-  # -- Set additional environment variables.
-  # Helm template supported. Passed through `tpl`, should be configured as string
-  extraEnvVars:
-  # E.g.
-  # extraEnvVars: |
-  #   - name: ALICE
-  #     valueFrom:
-  #       secretKeyRef:
-  #         name: "{{ .Release.Name }}-{{ $.Values.global.somekey }}"
-  #         key: alice
-  #   - name: FOO
-  #     value: "{{ .Values.config.foo }}"
 
   # -- Set volume mounts for container
   volumeMounts: {}
@@ -185,14 +176,17 @@ secrets:
     annotation: {}
     # -- Set secret type (`Opaque`/`kubernetes.io/tls`)
     type: Opaque
-    # -- Secret data content. Plain text
+    # -- Secret data content. Plain text (not base64). Helm template supported. Passed through `tpl`, should be configured as string
     stringData: {}
-      # foo: bar
-    # Helm template supported. Passed through `tpl`, should be configured as string
+    # stringData:
+    #   FOO: BAR
     # E.g.
     # stringData: |
     #   FOO: "{{ .Values.global.foo }}"
     #   BAR: "{{ .Values.global.bar }}"
+    #   {{- if .Values.global.something }}
+    #   ALICE: value
+    #   {{- end }}
     data: {}
     # -- Secret data content. Should be passed as base64 encoded text
     # Helm template NOT supported.

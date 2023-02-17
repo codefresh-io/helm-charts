@@ -43,13 +43,12 @@ dependencies:
 | configMaps.config.data | object | `{}` | ConfigMap data content. |
 | configMaps.config.enabled | bool | `false` | Enable the configMap |
 | configMaps.config.labels | object | `{}` | Add additional labels to the configMap |
-| container | object | `{"args":[],"command":[],"containerSecurityContext":{},"env":{},"envFrom":[],"extraEnvVars":null,"image":{"pullPolicy":null,"registry":null,"repository":null,"tag":null},"lifecycle":{},"probes":{"liveness":{"enabled":false,"exec":{"command":[]},"httpGet":{"path":null,"port":null},"spec":{"failureThreshold":null,"initialDelaySeconds":null,"periodSeconds":null,"successThreshold":null,"timeoutSeconds":null},"type":null},"readiness":{"enabled":false},"startup":{"enabled":false}},"resources":{"limits":{},"requests":{}},"volumeMounts":{}}` | Main Container parameters |
+| container | object | `{"args":[],"command":[],"containerSecurityContext":{},"env":{},"envFrom":[],"image":{"pullPolicy":null,"registry":null,"repository":null,"tag":null},"lifecycle":{},"probes":{"liveness":{"enabled":false,"exec":{"command":[]},"httpGet":{"path":null,"port":null},"spec":{"failureThreshold":null,"initialDelaySeconds":null,"periodSeconds":null,"successThreshold":null,"timeoutSeconds":null},"type":null},"readiness":{"enabled":false},"startup":{"enabled":false}},"resources":{"limits":{},"requests":{}},"volumeMounts":{}}` | Main Container parameters |
 | container.args | list | `[]` | Override args for the container |
 | container.command | list | `[]` | Override commands for the container |
 | container.containerSecurityContext | object | `{}` | Set security context for container |
-| container.env | object | `{}` | Set environments variables |
+| container.env | object | `{}` | Set environments variables. Helm template supported. |
 | container.envFrom | list | `[]` | Set Secrets or ConfigMaps loaded as environment variables. |
-| container.extraEnvVars | string | `nil` | Set additional environment variables. Helm template supported. Passed through `tpl`, should be configured as string |
 | container.image | object | `{"pullPolicy":null,"registry":null,"repository":null,"tag":null}` | Image parameters |
 | container.image.pullPolicy | string | `nil` | Set image pull policy (`Always`, `Never`, `IfNotPresent`) |
 | container.image.registry | string | `nil` | Set image registry |
@@ -102,7 +101,7 @@ dependencies:
 | secrets.secret.annotation | object | `{}` | Add additional annotations to the secret |
 | secrets.secret.enabled | bool | `false` | Enable the secret |
 | secrets.secret.labels | object | `{}` | Add additional labels to the secret |
-| secrets.secret.stringData | object | `{}` | Secret data content. Plain text |
+| secrets.secret.stringData | object | `{}` | Secret data content. Plain text (not base64). Helm template supported. Passed through `tpl`, should be configured as string |
 | secrets.secret.type | string | `"Opaque"` | Set secret type (`Opaque`/`kubernetes.io/tls`) |
 | services | object | `{"main":{"annotations":{},"enabled":false,"extraSelectorLabels":{},"labels":{},"ports":{"http":{"port":null,"protocol":"HTTP","targetPort":null}},"primary":true,"type":"ClusterIP"}}` | Configure services fo the chart. Additional services can be added by adding a dictionary key similar to the 'main' service. |
 | services.main | object | `{"annotations":{},"enabled":false,"extraSelectorLabels":{},"labels":{},"ports":{"http":{"port":null,"protocol":"HTTP","targetPort":null}},"primary":true,"type":"ClusterIP"}` | Service name |
