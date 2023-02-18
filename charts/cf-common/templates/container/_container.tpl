@@ -55,16 +55,15 @@ Usage:
   {{- end }}
 
   {{- with .Values.env }}
-  env:
-  {{- include "cf-common.env-vars" (dict "Values" . "context" $) | trim | nindent 2 }}
-  {{- /* For backward compatibility */}}
+{{- /*
+For backward compatibility (.Values.env takes precedence over .Values.container.env)
+*/}}
+  {{- $mergedEnv := . }}
     {{- if $.Values.env }}
-  {{- include "cf-common.env-vars" (dict "Values" $.Values.env "context" $) | trim | nindent 2 }}
+  {{- $mergedEnv = mergeOverwrite . $.Values.env }}
     {{- end }}
-  {{- end }}
-
-  {{- with .Values.extraEnvVars }}
-  {{- include "cf-common.tplrender" (dict "Values" . "context" $) | trim | nindent 2 }}
+  env:
+  {{- include "cf-common.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}
   {{- end }}
 
   ports: {{- include "cf-common.ports" $ | trim | nindent 2 }}

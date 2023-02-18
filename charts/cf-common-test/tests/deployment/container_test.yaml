@@ -60,6 +60,23 @@ tests:
           path: spec.template.spec.containers[0].env[0].value
           value: BOB
 
+  # For backward compatibility
+  - it: Test .Values.env precedence over .Values.container.env
+    values:
+      - values.yaml
+    set:
+      container:
+        env:
+          SERVICE_ROLE: all
+      env:
+        SERVICE_ROLE: internal
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: SERVICE_ROLE
+            value: internal
+
   - it: Test main container TPL Env
     values:
       - values.yaml
