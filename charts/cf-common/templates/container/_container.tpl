@@ -66,10 +66,6 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
   {{- include "cf-common.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}
   {{- end }}
 
-  {{- with .Values.extraEnvVars }}
-  {{- include "cf-common.tplrender" (dict "Values" . "context" $) | trim | nindent 2 }}
-  {{- end }}
-
   ports: {{- include "cf-common.ports" $ | trim | nindent 2 }}
 
   {{- with .Values.volumeMounts }}
