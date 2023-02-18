@@ -18,6 +18,16 @@ Usage:
   {{- end -}}
 {{- end -}}
 
+{{- /*
+For backward compatibility (onprem with private docker registry)
+*/}}
+{{- if $.Values.global -}}
+  {{- if and $.Values.global.privateRegistry $.Values.global.dockerRegistry -}}
+    {{ $registryName = $.Values.global.dockerRegistry | trimSuffix "/" }}
+  {{- end -}}
+{{- end -}}
+
+
 {{- printf "%s/%s:%s" $registryName $repositoryName $imageTag -}}
 
 {{- end -}}
