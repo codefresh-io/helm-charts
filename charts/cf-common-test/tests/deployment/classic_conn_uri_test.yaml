@@ -1,0 +1,48 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: classic connection Uri
+templates:
+  - templates/deployment.yaml
+tests:
+  - it: Test External RabbitMQ connection Uri
+    values:
+      - values.yaml
+    set:
+      global:
+        rabbitmqUsername: username
+        rabbitmqPassword: password
+        rabbitmqProtocol: amqps
+        rabbitmqHostname: hostname.domain:5671
+      rabbitmq:
+        enabled: false
+      container:
+        env:
+          RABBIT_URL: '{{ include "cf-common.classic.calculateRabbitMqUri" . }}'
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: RABBIT_URL
+            value: "amqps://username:password@hostname.domain:5671"
+
+  - it: Test Internal RabbitMQ connection Uri
+    release:
+      name: cf
+    values:
+      - values.yaml
+    set:
+      global:
+        rabbitmqService: rabbitmq
+      rabbitmq:
+        enabled: true
+        auth:
+          username: user
+          password: pass
+      container:
+        env:
+          RABBIT_URL: '{{ include "cf-common.classic.calculateRabbitMqUri" . }}'
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: RABBIT_URL
+            value: "amqp://user:pass@cf-rabbitmq"
