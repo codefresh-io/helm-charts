@@ -27,7 +27,6 @@ For backward compatibility (onprem with private docker registry)
   {{- end -}}
 {{- end -}}
 
-
 {{- printf "%s/%s:%s" $registryName $repositoryName $imageTag -}}
 
 {{- end -}}
