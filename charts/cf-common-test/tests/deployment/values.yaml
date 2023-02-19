@@ -4,7 +4,6 @@ global:
     - global-pull-secret
   volumeName: some-existing-volume
 
-
 imagePullSecrets:
   - my-pull-secret
 

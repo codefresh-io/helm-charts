@@ -48,6 +48,22 @@ tests:
           path: spec.template.spec.imagePullSecrets
           count: 2
 
+  - it: Test deployment TPL imagePullSecrets
+    release:
+      name: cf
+    values:
+      - values.yaml
+    set:
+      global:
+        pullSecretName: ecr-codefresh
+      imagePullSecrets:
+        - "{{ .Release.Name }}-{{ .Values.global.pullSecretName }}-registry"
+    asserts:
+      - contains:
+          path: spec.template.spec.imagePullSecrets
+          content:
+            name: cf-ecr-codefresh-registry
+
   - it: Test deployment's initContainer is present and valid
     values:
       - values.yaml

@@ -27,6 +27,25 @@ For backward compatibility (onprem with private docker registry)
   {{- end -}}
 {{- end -}}
 
+{{- /*
+For backward compatibility with legacy var struct
+e.g.:
+cf-api:
+  enabled: true
+  image: codefresh/cf-api
+  dockerRegistry: gcr.io/codefresh-enterprise/
+  imageTag: latest
+*/}}
+{{- if $.Values.dockerRegistry -}}
+{{- $registryName = $.Values.dockerRegistry | trimSuffix "/" -}}
+{{- end -}}
+{{- if $.Values.image -}}
+{{- $repositoryName = $.Values.image -}}
+{{- end -}}
+{{- if $.Values.imageTag -}}
+{{- $imageTag = $.Values.imageTag | toString -}}
+{{- end -}}
+
 {{- printf "%s/%s:%s" $registryName $repositoryName $imageTag -}}
 
 {{- end -}}
@@ -46,7 +65,7 @@ Usage:
     {{- end -}}
 
     {{- range .Values.global.imagePullSecrets -}}
-      {{- $pullSecrets = append $pullSecrets . -}}
+      {{- $pullSecrets = append $pullSecrets (include "cf-common.tplrender" (dict "Values" . "context" $)) -}}
     {{- end -}}
   {{- end -}}
 
@@ -56,7 +75,7 @@ Usage:
     {{- end -}}
 
     {{- range .Values.imagePullSecrets -}}
-      {{- $pullSecrets = append $pullSecrets . -}}
+      {{- $pullSecrets = append $pullSecrets (include "cf-common.tplrender" (dict "Values" . "context" $)) -}}
     {{- end -}}
   {{- end -}}
 
