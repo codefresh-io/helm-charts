@@ -2,7 +2,11 @@
 
 Codefresh library chart
 
+<<<<<<< HEAD
 ![Version: 0.0.6](https://img.shields.io/badge/Version-0.0.6-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+=======
+![Version: 0.0.5](https://img.shields.io/badge/Version-0.0.5-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+>>>>>>> origin/master
 
 ## Installing the Chart
 
@@ -18,7 +22,11 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
+<<<<<<< HEAD
   version: 0.0.6
+=======
+  version: 0.0.5
+>>>>>>> origin/master
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 

@@ -234,6 +234,7 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: myregistry.io/codefresh/cf-api:master
+<<<<<<< HEAD
 
   # For backward compatibility (onprem with private docker registry)
   - it: Test main container with legacy var structure for image
@@ -247,3 +248,5 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: gcr.io/codefresh-enterprise/codefresh/cf-api:latest
+=======
+>>>>>>> origin/master
