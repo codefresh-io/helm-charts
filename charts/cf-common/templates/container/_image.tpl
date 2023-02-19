@@ -65,7 +65,7 @@ Usage:
     {{- end -}}
 
     {{- range .Values.global.imagePullSecrets -}}
-      {{- $pullSecrets = append $pullSecrets . -}}
+      {{- $pullSecrets = append $pullSecrets (include "cf-common.tplrender" (dict "Values" . "context" $)) -}}
     {{- end -}}
   {{- end -}}
 
@@ -75,7 +75,7 @@ Usage:
     {{- end -}}
 
     {{- range .Values.imagePullSecrets -}}
-      {{- $pullSecrets = append $pullSecrets . -}}
+      {{- $pullSecrets = append $pullSecrets (include "cf-common.tplrender" (dict "Values" . "context" $)) -}}
     {{- end -}}
   {{- end -}}
 
