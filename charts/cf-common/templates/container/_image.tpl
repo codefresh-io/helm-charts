@@ -27,7 +27,6 @@ For backward compatibility (onprem with private docker registry)
   {{- end -}}
 {{- end -}}
 
-<<<<<<< HEAD
 {{- /*
 For backward compatibility with legacy var struct
 e.g.:
@@ -47,8 +46,6 @@ cf-api:
 {{- $imageTag = $.Values.imageTag | toString -}}
 {{- end -}}
 
-=======
->>>>>>> origin/master
 {{- printf "%s/%s:%s" $registryName $repositoryName $imageTag -}}
 
 {{- end -}}
