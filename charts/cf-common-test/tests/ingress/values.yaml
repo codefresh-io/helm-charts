@@ -1,0 +1,16 @@
+# mock ingress values
+ingress:
+  main:
+    enabled: true
+    labels: {}
+    annotations: {}
+    ingressClassName: ""
+    hosts:
+      - host: host.domain.local
+        paths:
+          - path: /path
+            pathType: ImplementationSpecific
+            service:
+              name: svc-test
+              port: 8080
+    tls: []

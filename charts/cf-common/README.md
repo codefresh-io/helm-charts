@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.0.7](https://img.shields.io/badge/Version-0.0.7-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.0.8](https://img.shields.io/badge/Version-0.0.8-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.0.7
+  version: 0.0.8
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -81,6 +81,17 @@ dependencies:
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
 | global.imageRegistry | string | `""` | Global Docker image registry |
 | imagePullSecrets | list | `[]` | Set image pull secrets as array |
+| ingress | object | See below | Configure the Ingresses for the chart. Additional Ingresses can be added by adding a dictionary key similar to the 'main' ingress. |
+| ingress.main.annotations | object | `{}` | Add additional annotations for ingress. |
+| ingress.main.enabled | bool | `false` | Enables or disables the ingress |
+| ingress.main.hosts[0].host | string | `"domain.example.com"` | Host address. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].path | string | `"/"` | Path. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].pathType | string | `"Prefix"` | Path Type (`Prefix`/`ImplementationSpecific`/`Exact`) |
+| ingress.main.hosts[0].paths[0].service.name | string | `nil` | Set the service name reference for this path. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].service.port | string | `nil` | Set the service port reference for this path. Helm template can be passed. |
+| ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for the ingress. |
+| ingress.main.labels | object | `{}` | Add additional labels for ingress. |
+| ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
 | initContainers | list | `[]` | Array of init containers to add |
 | nodeSelector | object | `{}` | Set node selection constrains |
 | pdb | object | `{"enabled":false,"maxUnavailable":"","minAvailable":""}` | Configure Pod Disruption Budget |

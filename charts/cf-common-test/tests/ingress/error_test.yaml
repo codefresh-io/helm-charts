@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: ingress error handler
+templates:
+  - templates/ingress.yaml
+tests:
+  - it: Test no service name specified
+    set:
+      ingress:
+        main:
+          enabled: true
+          hosts:
+            - host: host.domain.local
+              paths:
+                - path: /path
+                  service:
+                    port: 80
+    asserts:
+      - failedTemplate:
+          errorMessage: "service.name is required for ingress main!"
+
+  - it: Test no service port specified
+    set:
+      ingress:
+        main:
+          enabled: true
+          hosts:
+            - host: host.domain.local
+              paths:
+                - path: /path
+                  service:
+                    name: svc-test
+    asserts:
+      - failedTemplate:
+          errorMessage: "service.port is required for ingress main!"
+
+  - it: Test tls as invalid type
+    values:
+      - values.yaml
+    set:
+      ingress:
+        main:
+          tls:
+            secretName: secret-example-tls
+            hosts:
+              - host.domain.local
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.main.tls must be a list!"
+
+  - it: Test hosts as invalid type
+    values:
+      - values.yaml
+    set:
+      ingress:
+        main:
+          hosts:
+            host: host.domain.local
+            paths:
+              - path: /path
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.main.hosts must be a list!"
+
+  - it: Test paths as invalid type
+    values:
+      - values.yaml
+    set:
+      ingress:
+        main:
+          enabled: true
+          hosts:
+            - host: host.domain.local
+              paths:
+                path: /path
+                pathType: ImplementationSpecific
+    asserts:
+      - failedTemplate:
+          errorMessage: "ingress.main.hosts[].paths must be a list!"
