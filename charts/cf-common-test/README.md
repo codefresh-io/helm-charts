@@ -30,6 +30,7 @@ Codefresh library chart - test chart - not for deployment!
 | extraResources | list | `[]` |  |
 | global | object | `{}` |  |
 | hpa | object | `{}` |  |
+| ingress | object | `{}` |  |
 | initContainers | list | `[]` |  |
 | nodeSelector | object | `{}` |  |
 | pdb | object | `{}` |  |
