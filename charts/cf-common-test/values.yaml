@@ -13,6 +13,8 @@ secrets: {}
 
 services: {}
 
+ingress: {}
+
 hpa: {}
 
 pdb: {}

@@ -81,6 +81,16 @@ dependencies:
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
 | global.imageRegistry | string | `""` | Global Docker image registry |
 | imagePullSecrets | list | `[]` | Set image pull secrets as array |
+| ingress | object | `{"main":{"annotations":{},"enabled":false,"hosts":[{"host":"domain.example.com","paths":[{"path":"/","pathType":"Prefix","service":{"name":null,"port":null}}]}],"ingressClassName":null,"labels":{},"tls":[]}}` | Configure the Ingresses for the chart. Additional Ingresses can be added by adding a dictionary key similar to the 'main' ingress. |
+| ingress.main.annotations | object | `{}` | add additional annotations for ingress. |
+| ingress.main.enabled | bool | `false` | Enables or disables the ingress |
+| ingress.main.hosts[0].host | string | `"domain.example.com"` | Host address. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].path | string | `"/"` | Path.  Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].service.name | string | `nil` | Set the service name reference for this path |
+| ingress.main.hosts[0].paths[0].service.port | string | `nil` | Set the service port reference for this path |
+| ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for the ingress. |
+| ingress.main.labels | object | `{}` | Add additional labels for ingress. |
+| ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
 | initContainers | list | `[]` | Array of init containers to add |
 | nodeSelector | object | `{}` | Set node selection constrains |
 | pdb | object | `{"enabled":false,"maxUnavailable":"","minAvailable":""}` | Configure Pod Disruption Budget |

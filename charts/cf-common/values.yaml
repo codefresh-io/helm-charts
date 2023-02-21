@@ -271,6 +271,46 @@ services:
         # If `targetPort` is specified, this port number is used in the container definition instead of
         # the `port` value. Therefore named ports are not supported for this field
 
+# -- Configure the Ingresses for the chart.
+# Additional Ingresses can be added by adding a dictionary key similar to the 'main' ingress.
+# @default -- See below
+ingress:
+  main:
+    # -- Enables or disables the ingress
+    enabled: false
+    # -- Add additional labels for ingress.
+    labels: {}
+    # -- Add additional annotations for ingress.
+    annotations: {}
+    # E.g.
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: "true"
+    # -- Set the ingressClass that is used for the ingress.
+    ingressClassName:  # "nginx"
+
+    ## -- Configure the hosts for the ingress
+    hosts:
+      -  # -- Host address. Helm template can be passed.
+        host: domain.example.com
+        ## - Configure the paths for the host
+        paths:
+          -  # -- Path. Helm template can be passed.
+            path: /
+            # -- Path Type (`Prefix`/`ImplementationSpecific`/`Exact`)
+            pathType: Prefix
+            service:
+              # -- Set the service name reference for this path. Helm template can be passed.
+              name:
+              # -- Set the service port reference for this path. Helm template can be passed.
+              port:
+
+    # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
+    tls: []
+    #  - secretName: domain-example-tls
+    #    hosts:
+    #      - domain.example.com
+
 # -- Specifies whether a service account token should be automatically mounted.
 automountServiceAccountToken: true
 
