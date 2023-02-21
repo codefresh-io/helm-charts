@@ -1,5 +1,5 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
-suite: ingress spec
+suite: ingress error handler
 templates:
   - templates/ingress.yaml
 tests:
