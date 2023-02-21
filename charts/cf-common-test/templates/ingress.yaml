@@ -1,1 +1,1 @@
-key: value
+{{- include "cf-common.ingress" . -}}

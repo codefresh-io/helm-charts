@@ -3,6 +3,7 @@ repos:
   rev: v4.2.0
   hooks:
     - id: check-yaml
+      exclude: "^charts*"
     - id: end-of-file-fixer
       exclude: &exclude_pattern 'README.md'
     - id: trailing-whitespace
