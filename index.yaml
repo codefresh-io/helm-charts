@@ -3,6 +3,22 @@ entries:
   cf-common:
   - apiVersion: v2
     appVersion: v0.0.0
+    created: "2023-02-21T22:04:35.818049465Z"
+    description: Codefresh library chart
+    digest: 932cc287e5b4cc48c08db0ca578529528df717d44858c8be9af69d4f2656212c
+    keywords:
+    - codefresh
+    - libs
+    maintainers:
+    - name: codefresh
+      url: https://codefresh-io.github.io/
+    name: cf-common
+    type: library
+    urls:
+    - https://github.com/codefresh-io/helm-charts/releases/download/cf-common-0.0.8/cf-common-0.0.8.tgz
+    version: 0.0.8
+  - apiVersion: v2
+    appVersion: v0.0.0
     created: "2023-02-19T12:27:05.445368974Z"
     description: Codefresh library chart
     digest: 5dc335f971b300932ecd33444a9d8a82769e7985f3dfa3eb3155e0fdaceac3ea
@@ -134,4 +150,4 @@ entries:
     urls:
     - https://github.com/codefresh-io/helm-charts/releases/download/cf-common-test-0.0.0/cf-common-test-0.0.0.tgz
     version: 0.0.0
-generated: "2023-02-19T12:27:05.578233979Z"
+generated: "2023-02-21T22:04:36.03641454Z"
