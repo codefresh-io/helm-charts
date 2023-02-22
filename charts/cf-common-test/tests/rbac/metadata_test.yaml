@@ -7,10 +7,8 @@ tests:
   - it: Test SA default metadata
     template: rbac.yaml
     set:
-      rbac:
+      serviceAccount:
         enabled: true
-        serviceAccount:
-          enabled: true
     asserts:
       - hasDocuments:
           count: 1
@@ -32,13 +30,11 @@ tests:
   - it: Test SA custom metadata
     template: rbac.yaml
     set:
-      rbac:
+      serviceAccount:
         enabled: true
-        serviceAccount:
-          enabled: true
-          nameOverride: "alice"
-          annotations:
-            foo: bar
+        nameOverride: "alice"
+        annotations:
+          foo: bar
     asserts:
       - hasDocuments:
           count: 1
@@ -59,10 +55,10 @@ tests:
   - it: Test Role default metadata
     template: rbac.yaml
     set:
+      serviceAccount:
+        enabled: true
       rbac:
         enabled: true
-        serviceAccount:
-          enabled: true
         rules:
           - apiGroups:
               - ""
@@ -98,10 +94,10 @@ tests:
   - it: Test RoleBinding default metadata
     template: rbac.yaml
     set:
+      serviceAccount:
+        enabled: true
       rbac:
         enabled: true
-        serviceAccount:
-          enabled: true
         rules:
           - apiGroups:
               - ""

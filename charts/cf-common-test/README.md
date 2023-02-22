@@ -35,9 +35,10 @@ Codefresh library chart - test chart - not for deployment!
 | nodeSelector | object | `{}` |  |
 | pdb | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| rbac.serviceAccount | object | `{}` |  |
+| rbac | object | `{}` |  |
 | secrets | object | `{}` |  |
 | service | object | `{}` |  |
+| serviceAccount | object | `{}` |  |
 | tolerations | list | `[]` |  |
 | volumes | object | `{}` |  |
 
