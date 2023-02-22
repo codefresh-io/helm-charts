@@ -51,9 +51,9 @@ spec:
       {{- if .Values.podLabels }}
       {{- include "cf-common.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}
-      {{- if .Values.podAnnotations }}
+      {{- with include "cf-common.annotations.podAnnotations" . }}
       annotations:
-      {{- include "cf-common.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
+        {{- . | nindent 8}}
       {{- end }}
     spec: {{- include "cf-common.controller.pod" . | trim | nindent 6 -}}
 {{- end -}}
