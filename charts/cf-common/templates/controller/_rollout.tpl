@@ -32,7 +32,7 @@ spec:
   selector:
     matchLabels: {{ include "cf-common.labels.matchLabels" . | nindent 6 }}
     {{- with .Values.controller.rollout }}
-  analysis: {{ include "cf-common.tplrender" (dict "Values" .analysis "context" $) | nindent 4 }}
+  analysis: {{ default $.Values.global.rollout.analysis .analysis | toYaml | nindent 4 }}
     {{- end }}
   strategy:
     {{- with .Values.controller.rollout.canary }}
@@ -40,7 +40,7 @@ spec:
     canary: 
       maxUnavailable: {{ default $.Values.global.rollout.canary.maxUnavailable .maxUnavailable }}
       maxSurge: {{ default $.Values.global.rollout.canary.maxSurge .maxSurge }}
-      steps: {{ include "cf-common.tplrender" (dict "Values" .steps "context" $) | indent 6 }}
+      steps: {{ default $.Values.global.rollout.canary.steps .steps | toYaml | nindent 6 }}
       {{- end }}
     {{- end }}
   template:
