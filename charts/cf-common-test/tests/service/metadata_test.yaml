@@ -28,7 +28,7 @@ tests:
     values:
       - values.yaml
     set:
-      services:
+      service:
         main:
           labels:
             alice: bob
@@ -56,7 +56,7 @@ tests:
     values:
       - values.yaml
     set:
-      services:
+      service:
         metrics:
           enabled: true
           type: ClusterIP

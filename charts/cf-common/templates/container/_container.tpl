@@ -54,13 +54,16 @@ Usage:
     {{- end }}
   {{- end }}
 
-  {{- with .Values.env }}
+  {{- if or (.Values.env) ($.Values.global.env) }}
+    {{- $mergedEnv := .Values.env }}
 {{- /*
 For backward compatibility (.Values.env takes precedence over .Values.container.env)
 */}}
-  {{- $mergedEnv := . }}
     {{- if $.Values.env }}
-  {{- $mergedEnv = mergeOverwrite . $.Values.env }}
+  {{- $mergedEnv = mergeOverwrite $mergedEnv $.Values.env }}
+    {{- end }}
+    {{- if $.Values.global.env }}
+  {{- $mergedEnv = merge $mergedEnv $.Values.global.env }}
     {{- end }}
   env:
   {{- include "cf-common.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}

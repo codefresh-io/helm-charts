@@ -7,20 +7,20 @@ tests:
     values:
       - values.yaml
     set:
-      services:
+      service:
         main:
           ports:
             http:
               protocol: ICMP
     asserts:
       - failedTemplate:
-          errorMessage: "services.main.ports.http.protocol is invalid!"
+          errorMessage: "service.main.ports.http.protocol is invalid!"
 
   - it: Test metrics service with no port specified
     values:
       - values.yaml
     set:
-      services:
+      service:
         metrics:
           enabled: true
           ports:
@@ -29,23 +29,23 @@ tests:
               protocol: HTTP
     asserts:
       - failedTemplate:
-          errorMessage: "services.metrics.ports.metrics.port number is required!"
+          errorMessage: "service.metrics.ports.metrics.port number is required!"
 
   - it: Test invalid service type
     values:
       - values.yaml
     set:
-      services:
+      service:
          main:
           type: Something
     asserts:
       - failedTemplate:
-          errorMessage: "services.main.type is invalid service type!"
+          errorMessage: "service.main.type is invalid service type!"
 
   - it: Test disabled service
     template: templates/service.yaml
     set:
-      services:
+      service:
          main:
           enabled: false
     asserts:
@@ -55,7 +55,7 @@ tests:
   - it: Test services items as list (not map)
     template: templates/service.yaml
     set:
-      services:
+      service:
         - main:
             primary: true
             type: ClusterIP
@@ -65,4 +65,4 @@ tests:
                 protocol: HTTP
     asserts:
       - failedTemplate:
-          errorMessage: "services block must be a map!"
+          errorMessage: "service block must be a map!"

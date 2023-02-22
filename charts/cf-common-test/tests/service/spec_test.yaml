@@ -50,7 +50,7 @@ tests:
     values:
       - values.yaml
     set:
-      services:
+      service:
         main:
           extraSelectorLabels:
             extra: label
@@ -69,7 +69,7 @@ tests:
     values:
       - values.yaml
     set:
-      services:
+      service:
         main:
           ports:
             http:
@@ -92,7 +92,7 @@ tests:
     values:
       - values.yaml
     set:
-      services:
+      service:
         metrics:
           enabled: true
           type: ClusterIP
@@ -116,7 +116,7 @@ tests:
       - values.yaml
     documentIndex: 1
     set:
-      services:
+      service:
         metrics:
           enabled: true
           ports:
@@ -133,7 +133,7 @@ tests:
     values:
       - values.yaml
     set:
-      services:
+      service:
         metrics:
           enabled: true
           type: ClusterIP

@@ -53,7 +53,7 @@ spec:
           {{- end }}
           {{- range .paths }}
           - path: {{ include "cf-common.tplrender" (dict "Values" .path "context" $) | quote }}
-            pathType: {{ default "Prefix" .pathType }}
+            pathType: {{ default "ImplementationSpecific" .pathType }}
             {{- $serviceName := required (printf "service.name is required for ingress %s!" $ingressIndex) .service.name }}
             {{- $servicePort := required (printf "service.port is required for ingress %s!" $ingressIndex) .service.port }}
             backend:

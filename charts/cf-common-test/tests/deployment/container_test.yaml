@@ -60,6 +60,65 @@ tests:
           path: spec.template.spec.containers[0].env[0].value
           value: BOB
 
+  - it: Test main container with .Values.global.env
+    values:
+      - values.yaml
+    set:
+      global:
+        env:
+          GLOBAL_VAR: somevalue
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].env
+          count: 2
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: GLOBAL_VAR
+            value: somevalue
+
+  - it: Test main container with .Values.global.env with override
+    values:
+      - values.yaml
+    set:
+      global:
+        env:
+          ALICE: globalvalue
+      container:
+        env:
+          ALICE: localvalue
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].env
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ALICE
+            value: localvalue
+
+  - it: Test main container with .Values.global.env with override and legacy .Values.env
+    values:
+      - values.yaml
+    set:
+      global:
+        env:
+          ALICE: globalvalue
+      container:
+        env:
+          ALICE: localvalue
+      env:
+        ALICE: legacyenv
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.containers[0].env
+          count: 1
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ALICE
+            value: legacyenv
+
   # For backward compatibility
   - it: Test .Values.env precedence over .Values.container.env
     values:

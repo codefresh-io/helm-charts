@@ -8,7 +8,11 @@ global:
   # imagePullSecrets:
   #   - myRegistrySecret
 
+  # -- Global Env vars. NO precedence over `.Values.container.env`
+  env: {}
+
 # -- Controller parameters
+# @default -- See below
 controller:
   # -- Define the controller type (`deployment`)
   type:
@@ -43,6 +47,7 @@ podLabels: {}
 podAnnotations: {}
 
 # -- Main Container parameters
+# @default -- See below
 container:
   # -- Image parameters
   image:
@@ -165,6 +170,7 @@ container:
 
 # Create secrets with the values you provide.
 # Additional Secrets can be added by adding a dictionary key similar to the 'secret' object.
+# @default -- See below
 secrets:
   # -- Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts`
   secret:
@@ -199,6 +205,7 @@ secrets:
 
 # -- Create configMap with the values you provide.
 # Additional configMaps can be added by adding a dictionary key similar to the 'config' object.
+# @default -- See below
 configMaps:
   # -- ConfigMap name. Make sure to use the same name in `volumes` and `container.volumeMounts`
   config:
@@ -219,6 +226,7 @@ configMaps:
 
 # -- Configure volume for the controller.
 # Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key.
+# @default -- See below
 volumes:
   # -- Volume name. Make sure to use the same name in `configMaps`/`secrets` and `container.volumeMounts`
   config:
@@ -241,7 +249,8 @@ volumes:
 
 # -- Configure services fo the chart.
 # Additional services can be added by adding a dictionary key similar to the 'main' service.
-services:
+# @default -- See below
+service:
   # -- Service name
   main:
     # -- Enabled the service
@@ -297,8 +306,8 @@ ingress:
         paths:
           -  # -- Path. Helm template can be passed.
             path: /
-            # -- Path Type (`Prefix`/`ImplementationSpecific`/`Exact`)
-            pathType: Prefix
+            # -- Path Type (`Prefix`/`ImplementationSpecific`(default)/`Exact`)
+            pathType:
             service:
               # -- Set the service name reference for this path. Helm template can be passed.
               name:
@@ -345,7 +354,8 @@ topologySpreadConstraints: []
 #         {{- include "cf-common.labels.matchLabels" . | nindent 6 }}
 
 # -- Configure autoscaling (Horizontal Pod Autoscaler)
-autoscaling:
+# @default -- See below
+hpa:
   # -- Enable HPA
   enabled: false
   # -- Set minimum autoscaling replicas
@@ -371,6 +381,7 @@ autoscaling:
   #       value: 7
 
 # -- Configure Pod Disruption Budget
+# @default -- See below
 pdb:
   # -- Enable PDB
   enabled: false
@@ -380,6 +391,7 @@ pdb:
   maxUnavailable: ""
 
 # -- Configure RBAC parameters
+# @default -- See below
 rbac:
   # -- Enable RBAC resources
   enabled: false

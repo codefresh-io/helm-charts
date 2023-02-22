@@ -11,7 +11,7 @@ configMaps: {}
 
 secrets: {}
 
-services: {}
+service: {}
 
 ingress: {}
 

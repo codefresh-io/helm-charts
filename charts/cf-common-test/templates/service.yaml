@@ -1,1 +1,1 @@
-{{- include "cf-common.services" . -}}
+{{- include "cf-common.service" . -}}
