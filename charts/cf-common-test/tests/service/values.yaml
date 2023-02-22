@@ -14,7 +14,7 @@ container:
     tag: master
     pullPolicy: Always
 
-services:
+service:
   main:
     enabled: true
     primary: true
