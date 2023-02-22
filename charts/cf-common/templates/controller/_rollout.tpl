@@ -5,7 +5,7 @@ Usage:
 */}}
 {{- define "cf-common.controller.rollout" -}}
 
-{{- $strategy := default "Canary" .Values.controller.rollout.strategy -}}
+{{- $strategy := default .Values.global.rollout.strategy .Values.controller.rollout.strategy -}}
 
 {{- if and (ne $strategy "Canary") (ne $strategy "BlueGreen") -}}
   {{- fail (printf "ERROR: %s is invalid Rollout strategy!" $strategy) -}}
@@ -31,22 +31,16 @@ spec:
   {{- end }}
   selector:
     matchLabels: {{ include "cf-common.labels.matchLabels" . | nindent 6 }}
+    {{- with .Values.controller.rollout }}
+  analysis: {{ include "cf-common.tplrender" (dict "Values" .analysis "context" $) | nindent 4 }}
+    {{- end }}
   strategy:
     {{- with .Values.controller.rollout.canary }}
       {{- if eq $strategy "Canary" }}
-    canary:
-        {{- with .maxUnavailable }}
-      maxUnavailable: {{ . }}
-        {{- end }}
-        {{- with .maxSurge }}
-      maxSurge: {{ . }}
-        {{- end }}
-      steps:
-        {{- range $k, $v := .steps }}
-        {{- range $kk, $vv := $v }}
-          - {{ $kk }}: {{ $vv }}
-        {{- end }}
-        {{- end }}
+    canary: 
+      maxUnavailable: {{ default $.Values.global.rollout.canary.maxUnavailable .maxUnavailable }}
+      maxSurge: {{ default $.Values.global.rollout.canary.maxSurge .maxSurge }}
+      steps: {{ include "cf-common.tplrender" (dict "Values" .steps "context" $) | indent 6 }}
       {{- end }}
     {{- end }}
   template:
