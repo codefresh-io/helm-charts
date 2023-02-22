@@ -9,10 +9,8 @@ tests:
     values:
       - values.yaml
     set:
-      rbac:
+      serviceAccount:
         enabled: true
-        serviceAccount:
-          enabled: true
     asserts:
       - equal:
           path: spec.template.spec.serviceAccountName
@@ -22,10 +20,8 @@ tests:
   - it: Test SA secret
     template: templates/rbac.yaml
     set:
-      rbac:
+      serviceAccount:
         enabled: true
-        serviceAccount:
-          enabled: true
     asserts:
       - contains:
           path: secrets
@@ -35,10 +31,10 @@ tests:
   - it: Test Role should contains valid rules set
     template: rbac.yaml
     set:
+      serviceAccount:
+        enabled: true
       rbac:
         enabled: true
-        serviceAccount:
-          enabled: true
         rules:
           - apiGroups:
               - ""
@@ -63,10 +59,10 @@ tests:
   - it: Test RoleBinding should reference to the correct role and SA
     template: rbac.yaml
     set:
+      serviceAccount:
+        enabled: true
       rbac:
         enabled: true
-        serviceAccount:
-          enabled: true
         rules:
           - apiGroups:
               - ""
@@ -92,11 +88,11 @@ tests:
     values:
       - values.yaml
     set:
+      serviceAccount:
+        enabled: true
+        nameOverride: alice
       rbac:
         enabled: true
-        serviceAccount:
-          enabled: true
-          nameOverride: alice
         rules:
           - apiGroups:
               - ""
@@ -123,10 +119,8 @@ tests:
     values:
       - values.yaml
     set:
-      rbac:
+      serviceAccount:
         enabled: false
-        serviceAccount:
-          enabled: false
     asserts:
       - equal:
           path: spec.template.spec.serviceAccountName

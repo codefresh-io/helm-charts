@@ -390,19 +390,21 @@ pdb:
   # -- Set number of pods that are unavailable after eviction as number of percentage
   maxUnavailable: ""
 
+# -- Configure Service Account
+# @default -- See below
+serviceAccount:
+  # -- Enable and create Service Account
+  enabled: false
+  # -- Override Service Account name (by default, name is generated with `fullname` template)
+  nameOverride: ""
+  # -- Set annotations for Service Account
+  annotations: {}
+
 # -- Configure RBAC parameters
 # @default -- See below
 rbac:
   # -- Enable RBAC resources
   enabled: false
-  # -- Configure Service Account
-  serviceAccount:
-    # -- Enable Service Account
-    enabled: false
-    # -- Override Service Account name (by default, name is generated with `fullname` template)
-    nameOverride: ""
-    # -- Set annotations for Service Account
-    annotations: {}
   # -- Create custom rules
   rules: []
   # E.g.

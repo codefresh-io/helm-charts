@@ -19,8 +19,9 @@ hpa: {}
 
 pdb: {}
 
-rbac:
-  serviceAccount: {}
+serviceAccount: {}
+
+rbac: {}
 
 podSecurityContext: {}
 

@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.0.10](https://img.shields.io/badge/Version-0.0.10-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.0.11](https://img.shields.io/badge/Version-0.0.11-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.0.10
+  version: 0.0.11
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -105,10 +105,6 @@ dependencies:
 | rbac | object | See below | Configure RBAC parameters |
 | rbac.enabled | bool | `false` | Enable RBAC resources |
 | rbac.rules | list | `[]` | Create custom rules |
-| rbac.serviceAccount | object | `{"annotations":{},"enabled":false,"nameOverride":""}` | Configure Service Account |
-| rbac.serviceAccount.annotations | object | `{}` | Set annotations for Service Account |
-| rbac.serviceAccount.enabled | bool | `false` | Enable Service Account |
-| rbac.serviceAccount.nameOverride | string | `""` | Override Service Account name (by default, name is generated with `fullname` template) |
 | secrets.secret | object | `{"annotation":{},"data":{},"enabled":false,"labels":{},"stringData":{},"type":"Opaque"}` | Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts` |
 | secrets.secret.annotation | object | `{}` | Add additional annotations to the secret |
 | secrets.secret.enabled | bool | `false` | Enable the secret |
@@ -128,6 +124,10 @@ dependencies:
 | service.main.ports.http.targetPort | string | `nil` | Set a service targetPort if you wish to differ the service port from the application port. |
 | service.main.primary | bool | `true` | Make this the primary service (used in probes, notes, etc...). If there is more than 1 service, make sure that only 1 service is marked as primary. |
 | service.main.type | string | `"ClusterIP"` | Set the service type |
+| serviceAccount | object | See below | Configure Service Account |
+| serviceAccount.annotations | object | `{}` | Set annotations for Service Account |
+| serviceAccount.enabled | bool | `false` | Enable and create Service Account |
+| serviceAccount.nameOverride | string | `""` | Override Service Account name (by default, name is generated with `fullname` template) |
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |
 | volumes | object | See below | Configure volume for the controller. Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key. |

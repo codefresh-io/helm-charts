@@ -1,4 +1,4 @@
-# mock deployment for HPA
+# mock values
 controller:
   enabled: true
   type: deployment
@@ -14,21 +14,7 @@ container:
     tag: master
     pullPolicy: Always
 
-### comment when you want to see templates with `helm template . -f tests/rbac/values.yaml --show-only templates/rbac.yaml`
+serviceAccount:
+  enabled: true
 rbac:
   enabled: true
-  serviceAccount:
-    enabled: true
-#     nameOverride: ""
-#     annotations:
-#       foo: bar
-#   rules:
-#     - apiGroups:
-#         - ""
-#       resources:
-#         - pods
-#       verbs:
-#         - get
-#         - list
-#         - watch
-#         - update

@@ -34,11 +34,9 @@ If release name contains chart name it will be used as a full name.
 ServiceAccount Name
 */}}
 {{- define "cf-common.names.serviceAccountName" -}}
-  {{- if .Values.rbac.enabled -}}
-    {{- if .Values.rbac.serviceAccount.enabled -}}
-      {{- .Values.rbac.serviceAccount.nameOverride | default (include "cf-common.names.fullname" .) -}}
-    {{- end -}}
+  {{- if .Values.serviceAccount.enabled -}}
+    {{- .Values.serviceAccount.nameOverride | default (include "cf-common.names.fullname" .)  -}}
   {{- else -}}
-    {{- .Values.rbac.serviceAccount.nameOverride | default "default" -}}
+    {{- print "default" -}}
   {{- end -}}
 {{- end -}}

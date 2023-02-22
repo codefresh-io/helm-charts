@@ -6,21 +6,22 @@ Usage:
 
 {{- define "cf-common.rbac" -}}
 
-{{- if and .Values.rbac.enabled .Values.rbac.serviceAccount.enabled }}
+{{- if .Values.serviceAccount.enabled }}
 ---
 apiVersion: v1
 kind: ServiceAccount
 metadata:
-  name: {{ default ( include "cf-common.names.fullname" $) .Values.rbac.serviceAccount.nameOverride }}
+  name: {{ default ( include "cf-common.names.fullname" $) .Values.serviceAccount.nameOverride }}
   labels: {{ include "cf-common.labels.standard" . | nindent 4 }}
-  {{- if .Values.rbac.serviceAccount.annotations }}
-  annotations: {{ include "cf-common.tplrender" (dict "Values" .Values.rbac.serviceAccount.annotations "context" $) | nindent 4 }}
+  {{- if .Values.serviceAccount.annotations }}
+  annotations: {{ include "cf-common.tplrender" (dict "Values" .Values.serviceAccount.annotations "context" $) | nindent 4 }}
   {{- end }}
 secrets:
   - name: {{ include "cf-common.names.fullname" $ }}-sa-token
 {{- end }}
 
-{{- if and .Values.rbac.enabled .Values.rbac.rules .Values.rbac.serviceAccount.enabled }}
+
+{{- if and .Values.serviceAccount.enabled .Values.rbac.enabled  }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
 kind: Role
@@ -40,7 +41,7 @@ roleRef:
   apiGroup: rbac.authorization.k8s.io
 subjects:
   - kind: ServiceAccount
-    name: {{ default ( include "cf-common.names.fullname" $) .Values.rbac.serviceAccount.nameOverride }}
+    name: {{ default ( include "cf-common.names.fullname" $) .Values.serviceAccount.nameOverride }}
     namespace: {{ .Release.Namespace }}
 {{- end }}
 
