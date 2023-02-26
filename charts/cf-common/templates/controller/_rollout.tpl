@@ -6,6 +6,7 @@ Usage:
 {{- define "cf-common.controller.rollout" -}}
 
 {{- $strategy := default .Values.global.rollout.strategy .Values.controller.rollout.strategy -}}
+{{- $fullName:= include "cf-common.names.fullname" . }}
 
 {{- if and (ne $strategy "Canary") (ne $strategy "BlueGreen") -}}
   {{- fail (printf "ERROR: %s is invalid Rollout strategy!" $strategy) -}}
@@ -35,13 +36,17 @@ spec:
   analysis: {{ default $.Values.global.rollout.analysis .analysis | toYaml | nindent 4 }}
     {{- end }}
   strategy:
-    {{- with .Values.controller.rollout.canary }}
-      {{- if eq $strategy "Canary" }}
+    {{- if eq $strategy "Canary" }}
+      {{- with .Values.controller.rollout.canary }}
     canary: 
       maxUnavailable: {{ default $.Values.global.rollout.canary.maxUnavailable .maxUnavailable }}
       maxSurge: {{ default $.Values.global.rollout.canary.maxSurge .maxSurge }}
+      stableMetadata: {{ default $.Values.global.rollout.canary.stableMetadata .stableMetadata| toYaml | nindent 8 }}
+      canaryMetadata: {{ default $.Values.global.rollout.canary.canaryMetadata .canaryMetadata| toYaml | nindent 8 }}
+      stableService: {{ .stableService | default (printf "%s-stable" ( $fullName )) }}
+      canaryService: {{ .canaryService | default (printf "%s-canary" ( $fullName )) }}
       steps: {{ default $.Values.global.rollout.canary.steps .steps | toYaml | nindent 6 }}
-      {{- end }}
+      {{- end}}
     {{- end }}
   template:
     metadata:
