@@ -34,7 +34,11 @@ global:
         - pause:
             duration: {}
 
+  # -- Global Env vars. NO precedence over `.Values.container.env`
+  env: {}
+
 # -- Controller parameters
+# @default -- See below
 controller:
   # -- Define the controller type (`deployment`)
   type:
@@ -95,6 +99,7 @@ podLabels: {}
 podAnnotations: {}
 
 # -- Main Container parameters
+# @default -- See below
 container:
   # -- Image parameters
   image:
@@ -217,6 +222,7 @@ container:
 
 # Create secrets with the values you provide.
 # Additional Secrets can be added by adding a dictionary key similar to the 'secret' object.
+# @default -- See below
 secrets:
   # -- Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts`
   secret:
@@ -251,6 +257,7 @@ secrets:
 
 # -- Create configMap with the values you provide.
 # Additional configMaps can be added by adding a dictionary key similar to the 'config' object.
+# @default -- See below
 configMaps:
   # -- ConfigMap name. Make sure to use the same name in `volumes` and `container.volumeMounts`
   config:
@@ -271,6 +278,7 @@ configMaps:
 
 # -- Configure volume for the controller.
 # Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key.
+# @default -- See below
 volumes:
   # -- Volume name. Make sure to use the same name in `configMaps`/`secrets` and `container.volumeMounts`
   config:
@@ -293,7 +301,8 @@ volumes:
 
 # -- Configure services fo the chart.
 # Additional services can be added by adding a dictionary key similar to the 'main' service.
-services:
+# @default -- See below
+service:
   # -- Service name
   main:
     # -- Enabled the service
@@ -322,6 +331,46 @@ services:
         targetPort:
         # If `targetPort` is specified, this port number is used in the container definition instead of
         # the `port` value. Therefore named ports are not supported for this field
+
+# -- Configure the Ingresses for the chart.
+# Additional Ingresses can be added by adding a dictionary key similar to the 'main' ingress.
+# @default -- See below
+ingress:
+  main:
+    # -- Enables or disables the ingress
+    enabled: false
+    # -- Add additional labels for ingress.
+    labels: {}
+    # -- Add additional annotations for ingress.
+    annotations: {}
+    # E.g.
+    # annotations:
+    #   kubernetes.io/ingress.class: nginx
+    #   kubernetes.io/tls-acme: "true"
+    # -- Set the ingressClass that is used for the ingress.
+    ingressClassName:  # "nginx"
+
+    ## -- Configure the hosts for the ingress
+    hosts:
+      -  # -- Host address. Helm template can be passed.
+        host: domain.example.com
+        ## - Configure the paths for the host
+        paths:
+          -  # -- Path. Helm template can be passed.
+            path: /
+            # -- Path Type (`Prefix`/`ImplementationSpecific`(default)/`Exact`)
+            pathType:
+            service:
+              # -- Set the service name reference for this path. Helm template can be passed.
+              name:
+              # -- Set the service port reference for this path. Helm template can be passed.
+              port:
+
+    # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
+    tls: []
+    #  - secretName: domain-example-tls
+    #    hosts:
+    #      - domain.example.com
 
 # -- Specifies whether a service account token should be automatically mounted.
 automountServiceAccountToken: true
@@ -357,7 +406,8 @@ topologySpreadConstraints: []
 #         {{- include "cf-common.labels.matchLabels" . | nindent 6 }}
 
 # -- Configure autoscaling (Horizontal Pod Autoscaler)
-autoscaling:
+# @default -- See below
+hpa:
   # -- Enable HPA
   enabled: false
   # -- Set minimum autoscaling replicas
@@ -383,6 +433,7 @@ autoscaling:
   #       value: 7
 
 # -- Configure Pod Disruption Budget
+# @default -- See below
 pdb:
   # -- Enable PDB
   enabled: false
@@ -391,18 +442,21 @@ pdb:
   # -- Set number of pods that are unavailable after eviction as number of percentage
   maxUnavailable: ""
 
+# -- Configure Service Account
+# @default -- See below
+serviceAccount:
+  # -- Enable and create Service Account
+  enabled: false
+  # -- Override Service Account name (by default, name is generated with `fullname` template)
+  nameOverride: ""
+  # -- Set annotations for Service Account
+  annotations: {}
+
 # -- Configure RBAC parameters
+# @default -- See below
 rbac:
   # -- Enable RBAC resources
   enabled: false
-  # -- Configure Service Account
-  serviceAccount:
-    # -- Enable Service Account
-    enabled: false
-    # -- Override Service Account name (by default, name is generated with `fullname` template)
-    nameOverride: ""
-    # -- Set annotations for Service Account
-    annotations: {}
   # -- Create custom rules
   rules: []
   # E.g.

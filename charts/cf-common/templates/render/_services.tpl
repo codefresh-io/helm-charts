@@ -1,22 +1,22 @@
 {{/*
 Renders Services templates
 Usage:
-{{- include "cf-common.services" . -}}
+{{- include "cf-common.service" . -}}
 */}}
 
-{{- define "cf-common.services" }}
+{{- define "cf-common.service" }}
 
-{{- if not (kindIs "map" .Values.services) }}
-  {{- fail "ERROR: services block must be a map!" }}
+{{- if not (kindIs "map" .Values.service) }}
+  {{- fail "ERROR: service block must be a map!" }}
 {{- end }}
 
-{{- range $serviceIndex, $serviceItem := .Values.services }}
+{{- range $serviceIndex, $serviceItem := .Values.service }}
 
 {{- $serviceName := "" -}}
 {{- $serviceType := $serviceItem.type | default "ClusterIP" -}}
 
 {{- if not (or (eq "ClusterIP" $serviceType) (eq "NodePort" $serviceType) (eq "LoadBalancer" $serviceType)) -}}
-  {{ fail ( printf "ERROR: services.%s.type is invalid service type!" $serviceIndex ) }}
+  {{ fail ( printf "ERROR: service.%s.type is invalid service type!" $serviceIndex ) }}
 {{- end -}}
 
 {{- if and (hasKey $serviceItem "primary") $serviceItem.primary }}
@@ -66,7 +66,7 @@ spec:
   {{- end }}
   ports:
     {{- range $portName, $portItem := $serviceItem.ports }}
-    - port: {{ required (printf "services.%s.ports.%s.port number is required!" $serviceIndex $portName) $portItem.port }}
+    - port: {{ required (printf "service.%s.ports.%s.port number is required!" $serviceIndex $portName) $portItem.port }}
       targetPort: {{ $portItem.targetPort | default $portName }}
       name: {{ $portName }}
       {{- if $portItem.protocol }}
@@ -75,7 +75,7 @@ spec:
         {{- else if or ( eq $portItem.protocol "UDP" ) ( eq $portItem.protocol "SCTP" ) }}
       protocol: {{ $portItem.protocol }}
         {{- else }}
-          {{ fail (printf "ERROR: services.%s.ports.%s.protocol is invalid!" $serviceIndex $portName) }}
+          {{ fail (printf "ERROR: service.%s.ports.%s.protocol is invalid!" $serviceIndex $portName) }}
         {{- end }}
       {{- else }}
       protocol: TCP

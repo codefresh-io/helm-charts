@@ -1,16 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
-suite: service metadata
+suite: ingress metadata
 templates:
-  - templates/service.yaml
+  - templates/ingress.yaml
 tests:
-  - it: Test service default metadata
+  - it: Test Ingress default metadata
     values:
       - values.yaml
     asserts:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Service
+          of: Ingress
       - isNull:
           path: metadata.annotations
       - equal:
@@ -22,13 +22,13 @@ tests:
             helm.sh/chart: cf-common-test-0.0.0
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-cf-common-test
+          value: RELEASE-NAME-cf-common-test-main
 
-  - it: Test service custom metadata
+  - it: Test Ingress custom metadata
     values:
       - values.yaml
     set:
-      service:
+      ingress:
         main:
           labels:
             alice: bob
@@ -38,7 +38,7 @@ tests:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Service
+          of: Ingress
       - equal:
           path: metadata.annotations
           value:
@@ -51,23 +51,3 @@ tests:
             app.kubernetes.io/name: cf-common-test
             helm.sh/chart: cf-common-test-0.0.0
             alice: bob
-
-  - it: Test metrics service metadata
-    values:
-      - values.yaml
-    set:
-      service:
-        metrics:
-          enabled: true
-          type: ClusterIP
-          ports:
-            metrics:
-              port: 8082
-              protocol: HTTP
-    documentIndex: 1
-    asserts:
-      - isKind:
-          of: Service
-      - equal:
-          path: metadata.name
-          value: RELEASE-NAME-cf-common-test-metrics

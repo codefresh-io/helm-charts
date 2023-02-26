@@ -30,13 +30,15 @@ Codefresh library chart - test chart - not for deployment!
 | extraResources | list | `[]` |  |
 | global | object | `{}` |  |
 | hpa | object | `{}` |  |
+| ingress | object | `{}` |  |
 | initContainers | list | `[]` |  |
 | nodeSelector | object | `{}` |  |
 | pdb | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
-| rbac.serviceAccount | object | `{}` |  |
+| rbac | object | `{}` |  |
 | secrets | object | `{}` |  |
-| services | object | `{}` |  |
+| service | object | `{}` |  |
+| serviceAccount | object | `{}` |  |
 | tolerations | list | `[]` |  |
 | volumes | object | `{}` |  |
 

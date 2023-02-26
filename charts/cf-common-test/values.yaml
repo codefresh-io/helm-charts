@@ -11,14 +11,17 @@ configMaps: {}
 
 secrets: {}
 
-services: {}
+service: {}
+
+ingress: {}
 
 hpa: {}
 
 pdb: {}
 
-rbac:
-  serviceAccount: {}
+serviceAccount: {}
+
+rbac: {}
 
 podSecurityContext: {}
 
