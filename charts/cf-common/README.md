@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.0.11](https://img.shields.io/badge/Version-0.0.11-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.0.12](https://img.shields.io/badge/Version-0.0.12-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.0.11
+  version: 0.0.12
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -71,7 +71,7 @@ dependencies:
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
 | controller.type | string | `nil` | Define the controller type (`deployment`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
-| global | object | `{"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
+| global | object | `{"env":{},"imagePullSecrets":[],"imageRegistry":"","rollout":{"analysis":{"successfulRunHistoryLimit":4,"unsuccessfulRunHistoryLimit":2},"canary":{"maxSurge":"25%","maxUnavailable":1,"steps":[{"setWeight":10},{"pause":{"duration":"1h"}},{"setWeight":20},{"pause":{"duration":{}}}]},"strategy":"Canary"}}` | Global parameters |
 | global.env | object | `{}` | Global Env vars. NO precedence over `.Values.container.env` |
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
 | global.imageRegistry | string | `""` | Global Docker image registry |
