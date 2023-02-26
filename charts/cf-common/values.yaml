@@ -7,7 +7,6 @@ global:
   # E.g.
   # imagePullSecrets:
   #   - myRegistrySecret
-
   # Global Rollout parameters
   rollout:
     analysis:
@@ -33,7 +32,6 @@ global:
         - setWeight: 20
         - pause:
             duration: {}
-
   # -- Global Env vars. NO precedence over `.Values.container.env`
   env: {}
 
