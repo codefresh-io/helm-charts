@@ -43,8 +43,6 @@ spec:
       maxSurge: {{ default $.Values.global.rollout.canary.maxSurge .maxSurge }}
       stableMetadata: {{ default $.Values.global.rollout.canary.stableMetadata .stableMetadata| toYaml | nindent 8 }}
       canaryMetadata: {{ default $.Values.global.rollout.canary.canaryMetadata .canaryMetadata| toYaml | nindent 8 }}
-      stableService: {{ .stableService | default (printf "%s-stable" ( $fullName )) }}
-      canaryService: {{ .canaryService | default (printf "%s-canary" ( $fullName )) }}
       steps: {{ default $.Values.global.rollout.canary.steps .steps | toYaml | nindent 6 }}
       {{- end}}
     {{- end }}

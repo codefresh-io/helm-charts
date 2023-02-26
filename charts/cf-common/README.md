@@ -71,7 +71,7 @@ dependencies:
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
 | controller.type | string | `nil` | Define the controller type (`deployment`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
-| global | object | `{"env":{},"imagePullSecrets":[],"imageRegistry":"","rollout":{"analysis":{"successfulRunHistoryLimit":4,"unsuccessfulRunHistoryLimit":2},"canary":{"maxSurge":"25%","maxUnavailable":1,"steps":[{"setWeight":10},{"pause":{"duration":"1h"}},{"setWeight":20},{"pause":{"duration":{}}}]},"strategy":"Canary"}}` | Global parameters |
+| global | object | `{"env":{},"imagePullSecrets":[],"imageRegistry":"","rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null}}` | Global parameters |
 | global.env | object | `{}` | Global Env vars. NO precedence over `.Values.container.env` |
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
 | global.imageRegistry | string | `""` | Global Docker image registry |
