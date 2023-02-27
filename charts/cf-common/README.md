@@ -69,7 +69,7 @@ dependencies:
 | controller.labels | object | `{}` | Set labels on controller |
 | controller.replicas | string | `nil` | Set number of pods |
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
-| controller.type | string | `""` | Define the controller type (`deployment` \ `rollout`) |
+| controller.type | string | `"deployment"` | Define the controller type (`deployment` \ `rollout`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | global | object | `{"controller":{"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":""},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
 | global.controller.type | string | `""` | Define the controller type (`deployment` \ `rollout`) |
