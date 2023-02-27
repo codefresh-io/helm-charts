@@ -3,6 +3,8 @@ global:
   imagePullSecrets:
     - global-pull-secret
   volumeName: some-existing-volume
+  controller:
+    type: deployment
 imagePullSecrets:
   - my-pull-secret
 
