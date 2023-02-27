@@ -43,7 +43,7 @@ global:
 # @default -- See below
 controller:
   # -- Define the controller type (`deployment` \ `rollout`)
-  type: deployment
+  type: ""
   # -- Set labels on controller
   labels: {}
   # -- Set annotations on controller
