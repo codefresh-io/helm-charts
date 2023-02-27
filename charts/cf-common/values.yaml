@@ -10,7 +10,7 @@ global:
   # Global controller parameters
   controller:
     # -- Define the controller type (`deployment` \ `rollout`)
-    type: 
+    type: ""
     # Global Rollout parameters
     rollout:
       analysis:

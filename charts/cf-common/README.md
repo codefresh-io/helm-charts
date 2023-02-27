@@ -71,8 +71,8 @@ dependencies:
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
 | controller.type | string | `nil` | Define the controller type (`deployment` \ `rollout`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
-| global | object | `{"controller":{"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":null},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
-| global.controller.type | string | `nil` | Define the controller type (`deployment` \ `rollout`) |
+| global | object | `{"controller":{"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":""},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
+| global.controller.type | string | `""` | Define the controller type (`deployment` \ `rollout`) |
 | global.env | object | `{}` | Global Env vars. NO precedence over `.Values.container.env` |
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
 | global.imageRegistry | string | `""` | Global Docker image registry |
