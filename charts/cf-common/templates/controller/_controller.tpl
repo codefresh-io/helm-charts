@@ -7,11 +7,13 @@ Usage:
 
 {{- define "cf-common.controller" -}}
 
-{{- if .Values.controller.enabled -}}
-  {{- if eq .Values.controller.type "deployment" }}
-    {{ include "cf-common.controller.deployment" . | nindent 0 }}
+{{- if or .Values.controller.enabled -}}
+  {{- if eq .Values.global.controller.type "rollout" }}
+    {{ include "cf-common.controller.rollout" . | nindent 0 }}
   {{- else if eq .Values.controller.type "rollout" }}
     {{ include "cf-common.controller.rollout" . | nindent 0 }}
+  {{- else if eq .Values.controller.type "deployment" }}
+    {{ include "cf-common.controller.deployment" . | nindent 0 }}
   {{- else }}
     {{ fail (printf "ERROR: %s is invalid controller type!" .Values.controller.type) }}
   {{- end }}

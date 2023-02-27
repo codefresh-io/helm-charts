@@ -5,7 +5,7 @@ Usage:
 */}}
 {{- define "cf-common.controller.rollout" -}}
 
-{{- $strategy := default .Values.global.rollout.strategy .Values.controller.rollout.strategy -}}
+{{- $strategy := default .Values.global.controller.rollout.strategy .Values.controller.rollout.strategy -}}
 {{- $fullName:= include "cf-common.names.fullname" . }}
 
 {{- if and (ne $strategy "Canary") (ne $strategy "BlueGreen") -}}
@@ -33,17 +33,17 @@ spec:
   selector:
     matchLabels: {{ include "cf-common.labels.matchLabels" . | nindent 6 }}
     {{- with .Values.controller.rollout }}
-  analysis: {{ default $.Values.global.rollout.analysis .analysis | toYaml | nindent 4 }}
+  analysis: {{ default $.Values.global.controller.rollout.analysis .analysis | toYaml | nindent 4 }}
     {{- end }}
   strategy:
     {{- if eq $strategy "Canary" }}
       {{- with .Values.controller.rollout.canary }}
     canary: 
-      maxUnavailable: {{ default $.Values.global.rollout.canary.maxUnavailable .maxUnavailable }}
-      maxSurge: {{ default $.Values.global.rollout.canary.maxSurge .maxSurge }}
-      stableMetadata: {{ default $.Values.global.rollout.canary.stableMetadata .stableMetadata| toYaml | nindent 8 }}
-      canaryMetadata: {{ default $.Values.global.rollout.canary.canaryMetadata .canaryMetadata| toYaml | nindent 8 }}
-      steps: {{ default $.Values.global.rollout.canary.steps .steps | toYaml | nindent 6 }}
+      maxUnavailable: {{ default $.Values.global.controller.rollout.canary.maxUnavailable .maxUnavailable }}
+      maxSurge: {{ default $.Values.global.controller.rollout.canary.maxSurge .maxSurge }}
+      stableMetadata: {{ default $.Values.global.controller.rollout.canary.stableMetadata .stableMetadata| toYaml | nindent 8 }}
+      canaryMetadata: {{ default $.Values.global.controller.rollout.canary.canaryMetadata .canaryMetadata| toYaml | nindent 8 }}
+      steps: {{ default $.Values.global.controller.rollout.canary.steps .steps | toYaml | nindent 6 }}
       {{- end}}
     {{- end }}
   template:
