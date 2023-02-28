@@ -7,39 +7,53 @@ global:
   # E.g.
   # imagePullSecrets:
   #   - myRegistrySecret
-  # Global Rollout parameters
-  rollout:
-    analysis:
-      # Limits the number of successful analysis runs and experiments to be stored in a history
-      successfulRunHistoryLimit:
-      # Limits the number of unsuccessful analysis runs and experiments to be stored in a history. ( Stages for unsuccessful: "Error", "Failed", "Inconclusive" )
-      unsuccessfulRunHistoryLimit:
-    # Rollout update strategy - can be Canary or BlueGreen.
-    strategy:
-    # Canary update strategy parameters
-    canary:
-      # The maximum number of pods that can be unavailable during the update. Value can be an absolute number / percentage
-      maxUnavailable:
-      # The maximum number of pods that can be scheduled above the original number of pods. Value can be an absolute number / percentage
-      maxSurge:
-      # Steps define sequence of steps to take during an update of the canary.
-      steps:
-        # Sets the ratio of canary ReplicaSet in percentage.
-        - setWeight:
-        # Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed
-        - pause:
-            duration:
-        - setWeight:
-        - pause:
-            duration:
+  # Global controller parameters
+  controller:
+    # -- Define the controller type (`deployment` \ `rollout`)
+    type: ""
+    # Deployment parameters (overrides for global.deployment values)
+    deployment:
+      # -- Set deployment upgrade strategy (`RollingUpdate`/`Recreate`)
+      strategy:
+      # RollingUpdate strategy parameters
+      rollingUpdate:
+        # -- Set RollingUpdate max unavailable (absolute number or percentage)
+        maxUnavailable:
+        # -- Set RollingUpdate max surge (absolute number or percentage)
+        maxSurge:
+    # Global Rollout parameters
+    rollout:
+      analysis:
+        # Limits the number of successful analysis runs and experiments to be stored in a history
+        successfulRunHistoryLimit:
+        # Limits the number of unsuccessful analysis runs and experiments to be stored in a history. ( Stages for unsuccessful: "Error", "Failed", "Inconclusive" )
+        unsuccessfulRunHistoryLimit:
+      # Rollout update strategy - can be Canary or BlueGreen.
+      strategy:
+      # Canary update strategy parameters
+      canary:
+        # The maximum number of pods that can be unavailable during the update. Value can be an absolute number / percentage
+        maxUnavailable:
+        # The maximum number of pods that can be scheduled above the original number of pods. Value can be an absolute number / percentage
+        maxSurge:
+        # Steps define sequence of steps to take during an update of the canary.
+        steps:
+          # Sets the ratio of canary ReplicaSet in percentage.
+          - setWeight:
+          # Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed
+          - pause:
+              duration:
+          - setWeight:
+          - pause:
+              duration:
   # -- Global Env vars. NO precedence over `.Values.container.env`
   env: {}
 
 # -- Controller parameters
 # @default -- See below
 controller:
-  # -- Define the controller type (`deployment`)
-  type:
+  # -- Define the controller type (`deployment` \ `rollout`)
+  type: ""
   # -- Set labels on controller
   labels: {}
   # -- Set annotations on controller
@@ -48,7 +62,7 @@ controller:
   replicas:
   # -- Set ReplicaSet revision history limit
   revisionHistoryLimit:
-  # Deployment parameters
+  # Deployment parameters (overrides for global.deployment values)
   deployment:
     # -- Set deployment upgrade strategy (`RollingUpdate`/`Recreate`)
     strategy:

@@ -5,7 +5,7 @@ Usage:
 */}}
 {{- define "cf-common.controller.rollout" -}}
 
-{{- $strategy := default .Values.global.rollout.strategy .Values.controller.rollout.strategy -}}
+{{- $strategy := .Values.controller.rollout.strategy -}}
 {{- $fullName:= include "cf-common.names.fullname" . }}
 
 {{- if and (ne $strategy "Canary") (ne $strategy "BlueGreen") -}}
@@ -33,17 +33,17 @@ spec:
   selector:
     matchLabels: {{ include "cf-common.labels.matchLabels" . | nindent 6 }}
     {{- with .Values.controller.rollout }}
-  analysis: {{ default $.Values.global.rollout.analysis .analysis | toYaml | nindent 4 }}
+  analysis: {{ .analysis | toYaml | nindent 4 }}
     {{- end }}
   strategy:
     {{- if eq $strategy "Canary" }}
       {{- with .Values.controller.rollout.canary }}
     canary: 
-      maxUnavailable: {{ default $.Values.global.rollout.canary.maxUnavailable .maxUnavailable }}
-      maxSurge: {{ default $.Values.global.rollout.canary.maxSurge .maxSurge }}
-      stableMetadata: {{ default $.Values.global.rollout.canary.stableMetadata .stableMetadata| toYaml | nindent 8 }}
-      canaryMetadata: {{ default $.Values.global.rollout.canary.canaryMetadata .canaryMetadata| toYaml | nindent 8 }}
-      steps: {{ default $.Values.global.rollout.canary.steps .steps | toYaml | nindent 6 }}
+      maxUnavailable: {{ .maxUnavailable }}
+      maxSurge: {{ .maxSurge }}
+      stableMetadata: {{ .stableMetadata| toYaml | nindent 8 }}
+      canaryMetadata: {{ .canaryMetadata| toYaml | nindent 8 }}
+      steps: {{ .steps | toYaml | nindent 6 }}
       {{- end}}
     {{- end }}
   template:
@@ -52,9 +52,9 @@ spec:
       {{- if .Values.podLabels }}
       {{- include "cf-common.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}
-      {{- if .Values.podAnnotations }}
+      {{- with include "cf-common.annotations.podAnnotations" . }}
       annotations:
-      {{- include "cf-common.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
+        {{- . | nindent 8}}
       {{- end }}
     spec: {{- include "cf-common.controller.pod" . | trim | nindent 6 -}}
 {{- end -}}
