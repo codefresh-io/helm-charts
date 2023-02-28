@@ -11,6 +11,16 @@ global:
   controller:
     # -- Define the controller type (`deployment` \ `rollout`)
     type: ""
+    # Deployment parameters (overrides for global.deployment values)
+    deployment:
+      # -- Set deployment upgrade strategy (`RollingUpdate`/`Recreate`)
+      strategy:
+      # RollingUpdate strategy parameters
+      rollingUpdate:
+        # -- Set RollingUpdate max unavailable (absolute number or percentage)
+        maxUnavailable:
+        # -- Set RollingUpdate max surge (absolute number or percentage)
+        maxSurge:
     # Global Rollout parameters
     rollout:
       analysis:
@@ -52,7 +62,7 @@ controller:
   replicas:
   # -- Set ReplicaSet revision history limit
   revisionHistoryLimit:
-  # Deployment parameters
+  # Deployment parameters (overrides for global.deployment values)
   deployment:
     # -- Set deployment upgrade strategy (`RollingUpdate`/`Recreate`)
     strategy:
