@@ -1,6 +1,5 @@
 ###
-global:
-  controller: {}
+global: {}
 
 controller: {}
 
