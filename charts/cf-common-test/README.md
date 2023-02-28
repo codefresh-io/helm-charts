@@ -28,7 +28,7 @@ Codefresh library chart - test chart - not for deployment!
 | container | object | `{}` |  |
 | controller | object | `{}` |  |
 | extraResources | list | `[]` |  |
-| global.controller | object | `{}` |  |
+| global | object | `{}` |  |
 | hpa | object | `{}` |  |
 | ingress | object | `{}` |  |
 | initContainers | list | `[]` |  |
