@@ -2,7 +2,7 @@
 suite: rbac spec
 templates:
   - templates/rbac.yaml
-  - templates/deployment.yaml
+  - templates/controller.yaml
 tests:
   - it: Test SA name in deployment
     template: templates/rbac.yaml
@@ -15,7 +15,7 @@ tests:
       - equal:
           path: spec.template.spec.serviceAccountName
           value: RELEASE-NAME-cf-common-test
-        template: templates/deployment.yaml
+        template: templates/controller.yaml
 
   - it: Test SA secret
     template: templates/rbac.yaml
@@ -112,7 +112,7 @@ tests:
       - equal:
           path: spec.template.spec.serviceAccountName
           value: alice
-        template: templates/deployment.yaml
+        template: templates/controller.yaml
 
   - it: Test Deployment should use a default SA if rbac is disabled
     template: templates/rbac.yaml
@@ -125,4 +125,4 @@ tests:
       - equal:
           path: spec.template.spec.serviceAccountName
           value: default
-        template: templates/deployment.yaml
+        template: templates/controller.yaml

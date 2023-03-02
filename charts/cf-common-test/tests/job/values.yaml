@@ -1,0 +1,34 @@
+# mock values for tests
+controller:
+  enabled: true
+  type: job
+  labels: {}
+  annotations: {}
+  job:
+    activeDeadlineSeconds: 100
+    backoffLimit: 5
+    completions: 12
+    parallelism: 3
+    ttlSecondsAfterFinished: 300
+  restartPolicy: OnFailure
+
+container:
+  image:
+    registry: docker.io
+    repository: bitnami/kubectl
+    tag: latest
+    pullPolicy: Always
+
+  command:
+    - "/bin/sh"
+  args:
+    - "-c"
+    - "sleep 10"
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi

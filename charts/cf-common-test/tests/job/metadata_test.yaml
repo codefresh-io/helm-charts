@@ -1,16 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
-suite: deployment metadata
+suite: job metadata
 templates:
   - templates/controller.yaml
 tests:
-  - it: Test deployment default metadata
+  - it: Test job default metadata
     values:
       - values.yaml
     asserts:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Deployment
+          of: Job
       - isNull:
           path: metadata.annotations
       - equal:
@@ -37,7 +37,7 @@ tests:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Deployment
+          of: Job
       - equal:
           path: metadata.annotations
           value:
@@ -66,39 +66,3 @@ tests:
       - equal:
           path: spec.template.metadata.annotations.foo
           value: bar
-
-  - it: Test checksum/config annotation
-    values:
-      - values.yaml
-    set:
-      podAnnotations:
-        foo: bar
-      configMaps:
-        config:
-          enabled: true
-          data:
-            alice: bob
-    asserts:
-      - equal:
-          path: spec.template.metadata.annotations
-          value:
-            foo: bar
-            checksum/config: 6d1644995a0e1ef705e43f2f737e6adea7036bfceb82cc3bf468cc411a0ff77b
-
-  - it: Test checksum/secret annotation
-    values:
-      - values.yaml
-    set:
-      podAnnotations:
-        foo: bar
-      secrets:
-        secret:
-          enabled: true
-          stringData:
-            alice: bob
-    asserts:
-      - equal:
-          path: spec.template.metadata.annotations
-          value:
-            foo: bar
-            checksum/secret: 8de97c7e45c17e43f84a9bda5428fe0bdf0be8fe12b99cb928c95a01cacfb85f

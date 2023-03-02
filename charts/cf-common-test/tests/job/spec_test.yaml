@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: job spec
+templates:
+  - templates/controller.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test job activeDeadlineSeconds
+    asserts:
+      - equal:
+          path: spec.activeDeadlineSeconds
+          value: 100
+
+  - it: Test job backoffLimit
+    asserts:
+      - equal:
+          path: spec.backoffLimit
+          value: 5
+
+  - it: Test job ttlSecondsAfterFinished
+    asserts:
+      - equal:
+          path: spec.ttlSecondsAfterFinished
+          value: 300
+
+  - it: Test job pod restartPolicy
+    asserts:
+      - equal:
+          path: spec.template.spec.restartPolicy
+          value: OnFailure
+
+  - it: Test job parallelism
+    asserts:
+      - equal:
+          path: spec.parallelism
+          value: 3
+
+  - it: Test job completions
+    asserts:
+      - equal:
+          path: spec.completions
+          value: 12
+
+  - it: Test job suspend
+    set:
+      controller:
+        job:
+          suspend: true
+    asserts:
+      - equal:
+          path: spec.suspend
+          value: true
+
+  - it: Test job with manual selector
+    set:
+      controller:
+        job:
+          manualSelector: true
+          selector:
+            controller-uid: a8f3d00d-c6d2-11e5-9f87-42010af00002
+    asserts:
+      - equal:
+          path: spec.manualSelector
+          value: true
+      - equal:
+          path: spec.selector
+          value:
+            matchLabels:
+              controller-uid: a8f3d00d-c6d2-11e5-9f87-42010af00002

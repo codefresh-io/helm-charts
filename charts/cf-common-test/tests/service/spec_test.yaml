@@ -2,7 +2,7 @@
 suite: service metadata
 templates:
   - templates/service.yaml
-  - templates/deployment.yaml
+  - templates/controller.yaml
 values:
   - values.yaml
 tests:
@@ -129,7 +129,7 @@ tests:
           value: ClusterIP
 
   - it: Test ports list in deployment
-    template: templates/deployment.yaml
+    template: templates/controller.yaml
     values:
       - values.yaml
     set:
