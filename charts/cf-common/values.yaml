@@ -52,7 +52,7 @@ global:
 # -- Controller parameters
 # @default -- See below
 controller:
-  # -- Define the controller type (`deployment` \ `rollout`)
+  # -- Define the controller type (`deployment`/`rollout`/`job`)
   type: ""
   # -- Set labels on controller
   labels: {}
@@ -75,28 +75,48 @@ controller:
   # Rollout parameters (overrides for global.rollout values)
   rollout:
     analysis:
-      # Limits the number of successful analysis runs and experiments to be stored in a history
+      # -- Limits the number of successful analysis runs and experiments to be stored in a history
       successfulRunHistoryLimit:
-      # Limits the number of unsuccessful analysis runs and experiments to be stored in a history. ( Stages for unsuccessful: "Error", "Failed", "Inconclusive" )
+      # -- Limits the number of unsuccessful analysis runs and experiments to be stored in a history. ( Stages for unsuccessful: "Error", "Failed", "Inconclusive" )
       unsuccessfulRunHistoryLimit:
-    # Rollout update strategy - can be Canary or BlueGreen.
+    # -- Rollout update strategy - can be Canary or BlueGreen.
     strategy:
-    # Canary update strategy parameters
+    # -- Canary update strategy parameters
     canary:
-      # The maximum number of pods that can be unavailable during the update. Value can be an absolute number / percentage
+      # -- The maximum number of pods that can be unavailable during the update. Value can be an absolute number / percentage
       maxUnavailable:
-      # The maximum number of pods that can be scheduled above the original number of pods. Value can be an absolute number / percentage
+      # -- The maximum number of pods that can be scheduled above the original number of pods. Value can be an absolute number / percentage
       maxSurge:
-      # Steps define sequence of steps to take during an update of the canary.
+      # -- Steps define sequence of steps to take during an update of the canary.
       steps:
-        # Sets the ratio of canary ReplicaSet in percentage.
+        # -- Sets the ratio of canary ReplicaSet in percentage.
         - setWeight:
-        # Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed
+        # -- Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed
         - pause:
             duration:
         - setWeight:
         - pause:
             duration:
+  # Job parameters
+  job:
+    # -- Set the duration in seconds relative to the startTime that the job may be continuously active before the system tries to terminate it; value must be positive integer. (int)
+    activeDeadlineSeconds:
+    # -- Set the number of retries before marking this job failed. Defaults to 6. (int)
+    backoffLimit:
+    # -- Set the desired number of successfully finished pods the job should be run with. (int)
+    completions:
+    # -- Controls generation of pod labels and pod selectors. Leave manualSelector unset unless you are certain what you are doing. (boolean)
+    # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/job/#specifying-your-own-pod-selector
+    manualSelector:
+    # -- A label query over pods that should match the pod count. Normally, the system sets this field for you.
+    # Ref: https://kubernetes.io/docs/concepts/workloads/controllers/job/#specifying-your-own-pod-selector
+    selector:
+    # -- Set the maximum desired number of pods the job should run at any given time. (int)
+    parallelism:
+    # -- Suspend specifies whether the Job controller should create Pods or not. (boolean)
+    suspend:
+    # -- Set the limit on the lifetime of a Job that has finished execution (either Complete or Failed). (int)
+    ttlSecondsAfterFinished:
 
 # -- Set image pull secrets as array
 imagePullSecrets: []

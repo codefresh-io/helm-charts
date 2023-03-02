@@ -2,7 +2,7 @@
 suite: rbac metadata
 templates:
   - templates/rbac.yaml
-  - templates/deployment.yaml
+  - templates/controller.yaml
 tests:
   - it: Test SA default metadata
     template: rbac.yaml

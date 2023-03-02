@@ -16,7 +16,7 @@ Usage:
     {{- if not (kindIs "slice" .) }}
       {{- fail "ERROR: container.command block must be a list!" }}
     {{- end }}
-  command: {{ toYaml . | nindent 2 }}
+  command: {{- include "cf-common.tplrender" (dict "Values" . "context" $) | nindent 2 }}
   {{- end }}
 
   {{- with .Values.args }}

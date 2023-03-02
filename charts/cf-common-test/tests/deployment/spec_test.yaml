@@ -1,7 +1,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
 suite: deployment spec
 templates:
-  - templates/deployment.yaml
+  - templates/controller.yaml
 values:
   - values.yaml
 tests:
