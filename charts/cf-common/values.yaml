@@ -129,6 +129,9 @@ podLabels: {}
 # -- Set additional pod annotations
 podAnnotations: {}
 
+# -- Duration in seconds the pod needs to terminate gracefully
+terminationGracePeriodSeconds:
+
 # -- Main Container parameters
 # @default -- See below
 container:
