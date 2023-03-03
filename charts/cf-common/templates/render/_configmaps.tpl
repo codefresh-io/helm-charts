@@ -24,7 +24,7 @@ metadata:
   {{- if not ( or (kindIs "map" $configMapItem.data) (kindIs "string" $configMapItem.data)) }}
     {{- fail (printf "ERROR: configMaps.%s.data must be a map or multiline string!" $configMapIndex) }}
   {{- end }}
-data: {{ include "cf-common.tplrender" (dict "Values" $configMapItem.data "context" $) | nindent 2 }}
+data: {{ toYaml $configMapItem.data | nindent 2 }}
 {{- end }}
 
 {{- end }}

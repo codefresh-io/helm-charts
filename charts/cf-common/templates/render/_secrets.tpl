@@ -27,7 +27,7 @@ type: {{ . }}
   {{- if not ( or (kindIs "map" $secretItem.stringData) (kindIs "string" $secretItem.stringData) ) }}
     {{- fail (printf "ERROR: secrets.%s.stringData must be a map or multiline string!" $secretIndex) }}
   {{- end }}
-stringData: {{ include "cf-common.tplrender" (dict "Values" $secretItem.stringData "context" $) | nindent 2 }}
+stringData: {{ toYaml $secretItem.data | nindent 2 }}
 {{- else if $secretItem.data }}
   {{- if not (kindIs "map" $secretItem.data ) }}
     {{- fail (printf "ERROR: secrets.%s.data must be a map" $secretIndex) }}
