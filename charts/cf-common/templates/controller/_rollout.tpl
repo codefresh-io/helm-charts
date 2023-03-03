@@ -38,7 +38,7 @@ spec:
   strategy:
     {{- if eq $strategy "Canary" }}
       {{- with .Values.controller.rollout.canary }}
-    canary: 
+    canary:
       maxUnavailable: {{ .maxUnavailable }}
       maxSurge: {{ .maxSurge }}
       stableMetadata: {{ .stableMetadata| toYaml | nindent 8 }}
@@ -52,9 +52,9 @@ spec:
       {{- if .Values.podLabels }}
       {{- include "cf-common.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}
-      {{- with include "cf-common.annotations.podAnnotations" . }}
+      {{- if .Values.podAnnotations }}
       annotations:
-        {{- . | nindent 8}}
+      {{- include "cf-common.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
     spec: {{- include "cf-common.controller.pod" . | trim | nindent 6 -}}
 {{- end -}}
