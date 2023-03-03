@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v0.0.0
 description: Codefresh library chart
 name: cf-common
-version: 0.0.17
+version: 0.0.18
 type: library
 keywords:
   - codefresh
