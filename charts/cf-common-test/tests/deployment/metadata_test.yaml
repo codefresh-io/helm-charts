@@ -2,8 +2,11 @@
 suite: deployment metadata
 templates:
   - templates/controller.yaml
+  - templates/secret.yaml
+  - templates/configmap.yaml
 tests:
   - it: Test deployment default metadata
+    template: templates/controller.yaml
     values:
       - values.yaml
     asserts:
@@ -25,6 +28,7 @@ tests:
           value: RELEASE-NAME-cf-common-test
 
   - it: Test deployment custom metadata
+    template: templates/controller.yaml
     values:
       - values.yaml
     set:
@@ -52,6 +56,7 @@ tests:
             alice: bob
 
   - it: Test pod labels and annotations
+    template: templates/controller.yaml
     values:
       - values.yaml
     set:
@@ -72,7 +77,7 @@ tests:
       - values.yaml
     set:
       podAnnotations:
-        foo: bar
+        checksum/config: '{{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}'
       configMaps:
         config:
           enabled: true
@@ -82,15 +87,15 @@ tests:
       - equal:
           path: spec.template.metadata.annotations
           value:
-            foo: bar
-            checksum/config: 6d1644995a0e1ef705e43f2f737e6adea7036bfceb82cc3bf468cc411a0ff77b
+            checksum/config: de9d09f672fb2a4162f23792f202d4b078206a32d322d2b999fd822939397cb6
+        template: templates/controller.yaml
 
   - it: Test checksum/secret annotation
     values:
       - values.yaml
     set:
       podAnnotations:
-        foo: bar
+        checksum/secret: '{{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}'
       secrets:
         secret:
           enabled: true
@@ -100,5 +105,5 @@ tests:
       - equal:
           path: spec.template.metadata.annotations
           value:
-            foo: bar
-            checksum/secret: 8de97c7e45c17e43f84a9bda5428fe0bdf0be8fe12b99cb928c95a01cacfb85f
+            checksum/secret: 22b7034621e9d062b0ca2a2d181ccaa21b537b480769384488b2e2b8d71e1cad
+        template: templates/controller.yaml
