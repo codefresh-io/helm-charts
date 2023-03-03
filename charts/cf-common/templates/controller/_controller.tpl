@@ -33,9 +33,9 @@ Usage:
 {{- define "cf-common.controller.type" }}
 
   {{- $controllerDict := .Values.controller -}}
-  {{- if .Values.global -}}
-    {{- if .Values.global.controller -}}
-      {{- $controllerDict = merge $controllerDict .Values.global.controller -}}
+  {{- if $.Values.global -}}
+    {{- if $.Values.global.controller -}}
+      {{- $controllerDict = merge $controllerDict $.Values.global.controller -}}
     {{- end -}}
   {{- end -}}
   {{- $_ := set .Values "controller" $controllerDict -}}
