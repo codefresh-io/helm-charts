@@ -12,6 +12,9 @@ Usage:
 
   {{- if eq .Values.controller.type "rollout" }}
     {{ include "cf-common.controller.rollout" . | nindent 0 }}
+    {{- if .Values.controller.rollout.analysisTemplate.enabled }}
+    {{ include "cf-common.controller.analysis-template" . | nindent 0 }}
+    {{- end }}
   {{- else if eq .Values.controller.type "deployment" }}
     {{ include "cf-common.controller.deployment" . | nindent 0 }}
   {{- else if eq .Values.controller.type "job" }}

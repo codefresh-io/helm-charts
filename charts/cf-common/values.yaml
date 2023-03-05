@@ -23,6 +23,31 @@ global:
         maxSurge:
     # Global Rollout parameters
     rollout:
+      # Analysis template parameters to run in the background during a rollout update.
+      analysisTemplate:
+        # Enable analysis template
+        enabled:
+        # Array of arguments to pass
+        args:
+        # The metrics which the analysis should perform
+        metrics:
+            # The name of the metric
+          - name:
+            # The maximum number of failed run an analysis is allowed.
+            failureLimit:
+            # Determines if a measurement is considered failed
+            failureCondition:
+            # Determines if a measurement is considered successful
+            successCondition:
+            # The external metrics system to use to verify the analysis
+            provider:
+              # Defines NewRelic as the external metrics system
+              newRelic:
+                # The name of the secret holding NewRelic account configuration
+                profile:
+                # A raw NewRelic NRQL query to perform
+                query:
+      # Analysis history configuration
       analysis:
         # Limits the number of successful analysis runs and experiments to be stored in a history
         successfulRunHistoryLimit:
@@ -74,6 +99,31 @@ controller:
       maxSurge:
   # Rollout parameters (overrides for global.rollout values)
   rollout:
+    # Analysis template parameters to run in the background during a rollout update.
+    analysisTemplate:
+      # Enable analysis template
+      enabled:
+      # Array of arguments to pass
+      args:
+      # The metrics which the analysis should perform
+      metrics:
+          # The name of the metric
+        - name:
+          # The maximum number of failed run an analysis is allowed.
+          failureLimit:
+          # Determines if a measurement is considered failed
+          failureCondition:
+          # Determines if a measurement is considered successful
+          successCondition:
+          # The external metrics system to use to verify the analysis
+          provider:
+            # Defines NewRelic as the external metrics system
+            newRelic:
+              # The name of the secret holding NewRelic account configuration
+              profile:
+              # A raw NewRelic NRQL query to perform
+              query:
+    # Analysis history configuration
     analysis:
       # -- Limits the number of successful analysis runs and experiments to be stored in a history
       successfulRunHistoryLimit:
