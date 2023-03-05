@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.0.14](https://img.shields.io/badge/Version-0.0.14-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.0.20](https://img.shields.io/badge/Version-0.0.20-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.0.14
+  version: 0.0.20
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -71,7 +71,7 @@ dependencies:
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
 | controller.type | string | `""` | Define the controller type (`deployment` \ `rollout`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
-| global | object | `{"controller":{"deployment":{"rollingUpdate":{"maxSurge":null,"maxUnavailable":null},"strategy":null},"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":""},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
+| global | object | `{"controller":{"deployment":{"rollingUpdate":{"maxSurge":null,"maxUnavailable":null},"strategy":null},"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"analysisTemplate":{"enabled":null,"metrics":[{"failureCondition":null,"failureLimit":null,"name":null,"provider":{"newRelic":{"profile":null,"query":null}},"successCondition":null}]},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":""},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
 | global.controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
 | global.controller.deployment.rollingUpdate.maxUnavailable | string | `nil` | Set RollingUpdate max unavailable (absolute number or percentage) |
 | global.controller.deployment.strategy | string | `nil` | Set deployment upgrade strategy (`RollingUpdate`/`Recreate`) |

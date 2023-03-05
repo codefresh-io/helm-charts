@@ -37,14 +37,19 @@ spec:
     {{- end }}
   strategy:
     {{- if eq $strategy "Canary" }}
-      {{- with .Values.controller.rollout.canary }}
+      {{- with .Values.controller.rollout }}
     canary: 
-      maxUnavailable: {{ .maxUnavailable }}
-      maxSurge: {{ .maxSurge }}
-      stableMetadata: {{ .stableMetadata| toYaml | nindent 8 }}
-      canaryMetadata: {{ .canaryMetadata| toYaml | nindent 8 }}
-      steps: {{ .steps | toYaml | nindent 6 }}
-      {{- end}}
+      maxUnavailable: {{ .canary.maxUnavailable }}
+      maxSurge: {{ .canary.maxSurge }}
+      stableMetadata: {{ .canary.stableMetadata| toYaml | nindent 8 }}
+      canaryMetadata: {{ .canary.canaryMetadata| toYaml | nindent 8 }}
+      steps: {{ .canary.steps | toYaml | nindent 6 }}
+      {{- if .analysisTemplate.enabled }}
+      - analysis:
+          templates:
+            - templateName: error-rate-{{ $fullName }}
+      {{- end }}
+      {{- end }}
     {{- end }}
   template:
     metadata:

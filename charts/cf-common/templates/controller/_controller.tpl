@@ -19,6 +19,9 @@ Usage:
 
   {{- if eq $controllerDict.type "rollout" }}
     {{ include "cf-common.controller.rollout" . | nindent 0 }}
+    {{- if $controllerDict.rollout.analysisTemplate.enabled }}
+    {{ include "cf-common.controller.analysis-template" . | nindent 0 }}
+    {{- end }}
   {{- else if eq $controllerDict.type "deployment" }}
     {{ include "cf-common.controller.deployment" . | nindent 0 }}
   {{- else }}
