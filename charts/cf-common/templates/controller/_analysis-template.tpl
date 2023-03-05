@@ -8,10 +8,8 @@ kind: AnalysisTemplate
 metadata:
   name: error-rate-{{ $fullName }}
 spec:
-  args: 
-    - name: application-name
-      value: {{ $fullName }}
-  {{- with .Values.global.controller.rollout.analysisTemplate }}
+  {{- with .Values.controller.rollout.analysisTemplate }}
+  args: {{- include "cf-common.tplrender" (dict "Values" .args "context" $) | nindent 4 }}
   metrics: {{- .metrics | toYaml | nindent 4 }}
   {{- end }}
 

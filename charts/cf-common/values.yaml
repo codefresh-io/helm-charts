@@ -27,6 +27,8 @@ global:
       analysisTemplate:
         # Enable analysis template
         enabled:
+        # Array of arguments to pass
+        args:
         # The metrics which the analysis should perform
         metrics:
             # The name of the metric
@@ -101,6 +103,8 @@ controller:
     analysisTemplate:
       # Enable analysis template
       enabled:
+      # Array of arguments to pass
+      args:
       # The metrics which the analysis should perform
       metrics:
           # The name of the metric
