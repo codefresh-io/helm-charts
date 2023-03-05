@@ -45,7 +45,7 @@ global:
                 profile:
                 # A raw NewRelic NRQL query to perform
                 query:
-      # Analysis history configuration 
+      # Analysis history configuration
       analysis:
         # Limits the number of successful analysis runs and experiments to be stored in a history
         successfulRunHistoryLimit:
@@ -119,7 +119,7 @@ controller:
               profile:
               # A raw NewRelic NRQL query to perform
               query:
-    # Analysis history configuration 
+    # Analysis history configuration
     analysis:
       # -- Limits the number of successful analysis runs and experiments to be stored in a history
       successfulRunHistoryLimit:
