@@ -8,6 +8,8 @@ Usage:
 
 {{- if .Values.hpa.enabled -}}
 
+{{ include "cf-common.controller.type" . }}
+
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:

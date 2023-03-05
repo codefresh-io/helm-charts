@@ -1,19 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
-suite: deployment metadata
+suite: job metadata
 templates:
   - templates/controller.yaml
-  - templates/secret.yaml
-  - templates/configmap.yaml
 tests:
-  - it: Test deployment default metadata
-    template: templates/controller.yaml
+  - it: Test job default metadata
     values:
       - values.yaml
     asserts:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Deployment
+          of: Job
       - isNull:
           path: metadata.annotations
       - equal:
@@ -28,7 +25,6 @@ tests:
           value: RELEASE-NAME-cf-common-test
 
   - it: Test deployment custom metadata
-    template: templates/controller.yaml
     values:
       - values.yaml
     set:
@@ -41,7 +37,7 @@ tests:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Deployment
+          of: Job
       - equal:
           path: metadata.annotations
           value:
@@ -56,7 +52,6 @@ tests:
             alice: bob
 
   - it: Test pod labels and annotations
-    template: templates/controller.yaml
     values:
       - values.yaml
     set:
@@ -71,39 +66,3 @@ tests:
       - equal:
           path: spec.template.metadata.annotations.foo
           value: bar
-
-  - it: Test checksum/config annotation
-    values:
-      - values.yaml
-    set:
-      podAnnotations:
-        checksum/config: '{{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}'
-      configMaps:
-        config:
-          enabled: true
-          data:
-            alice: bob
-    asserts:
-      - equal:
-          path: spec.template.metadata.annotations
-          value:
-            checksum/config: de9d09f672fb2a4162f23792f202d4b078206a32d322d2b999fd822939397cb6
-        template: templates/controller.yaml
-
-  - it: Test checksum/secret annotation
-    values:
-      - values.yaml
-    set:
-      podAnnotations:
-        checksum/secret: '{{ include (print $.Template.BasePath "/secret.yaml") . | sha256sum }}'
-      secrets:
-        secret:
-          enabled: true
-          stringData:
-            alice: bob
-    asserts:
-      - equal:
-          path: spec.template.metadata.annotations
-          value:
-            checksum/secret: 22b7034621e9d062b0ca2a2d181ccaa21b537b480769384488b2e2b8d71e1cad
-        template: templates/controller.yaml

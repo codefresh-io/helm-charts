@@ -34,8 +34,12 @@ If release name contains chart name it will be used as a full name.
 ServiceAccount Name
 */}}
 {{- define "cf-common.names.serviceAccountName" -}}
-  {{- if .Values.serviceAccount.enabled -}}
-    {{- .Values.serviceAccount.nameOverride | default (include "cf-common.names.fullname" .)  -}}
+  {{- if .Values.serviceAccount -}}
+    {{- if .Values.serviceAccount.enabled -}}
+      {{- .Values.serviceAccount.nameOverride | default (include "cf-common.names.fullname" .)  -}}
+    {{- else -}}
+      {{- print "default" -}}
+    {{- end -}}
   {{- else -}}
     {{- print "default" -}}
   {{- end -}}

@@ -7,7 +7,7 @@ Renders PodDisruptionBudget template
 
 {{- if .Values.pdb.enabled -}}
 
-apiVersion: policy/v1beta1
+apiVersion: policy/v1
 kind: PodDisruptionBudget
 metadata:
   name: {{ include "cf-common.names.fullname" . }}

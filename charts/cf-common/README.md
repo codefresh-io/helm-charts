@@ -66,10 +66,27 @@ dependencies:
 | controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
 | controller.deployment.rollingUpdate.maxUnavailable | string | `nil` | Set RollingUpdate max unavailable (absolute number or percentage) |
 | controller.deployment.strategy | string | `nil` | Set deployment upgrade strategy (`RollingUpdate`/`Recreate`) |
+| controller.job.activeDeadlineSeconds | string | `nil` | Set the duration in seconds relative to the startTime that the job may be continuously active before the system tries to terminate it; value must be positive integer. (int) |
+| controller.job.backoffLimit | string | `nil` | Set the number of retries before marking this job failed. Defaults to 6. (int) |
+| controller.job.completions | string | `nil` | Set the desired number of successfully finished pods the job should be run with. (int) |
+| controller.job.manualSelector | string | `nil` | Controls generation of pod labels and pod selectors. Leave manualSelector unset unless you are certain what you are doing. (boolean) Ref: https://kubernetes.io/docs/concepts/workloads/controllers/job/#specifying-your-own-pod-selector |
+| controller.job.parallelism | string | `nil` | Set the maximum desired number of pods the job should run at any given time. (int) |
+| controller.job.selector | string | `nil` | A label query over pods that should match the pod count. Normally, the system sets this field for you. Ref: https://kubernetes.io/docs/concepts/workloads/controllers/job/#specifying-your-own-pod-selector |
+| controller.job.suspend | string | `nil` | Suspend specifies whether the Job controller should create Pods or not. (boolean) |
+| controller.job.ttlSecondsAfterFinished | string | `nil` | Set the limit on the lifetime of a Job that has finished execution (either Complete or Failed). (int) |
 | controller.labels | object | `{}` | Set labels on controller |
 | controller.replicas | string | `nil` | Set number of pods |
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
-| controller.type | string | `""` | Define the controller type (`deployment` \ `rollout`) |
+| controller.rollout.analysis.successfulRunHistoryLimit | string | `nil` | Limits the number of successful analysis runs and experiments to be stored in a history |
+| controller.rollout.analysis.unsuccessfulRunHistoryLimit | string | `nil` | Limits the number of unsuccessful analysis runs and experiments to be stored in a history. ( Stages for unsuccessful: "Error", "Failed", "Inconclusive" ) |
+| controller.rollout.canary | object | `{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]}` | Canary update strategy parameters |
+| controller.rollout.canary.maxSurge | string | `nil` | The maximum number of pods that can be scheduled above the original number of pods. Value can be an absolute number / percentage |
+| controller.rollout.canary.maxUnavailable | string | `nil` | The maximum number of pods that can be unavailable during the update. Value can be an absolute number / percentage |
+| controller.rollout.canary.steps | list | `[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]` | Steps define sequence of steps to take during an update of the canary. |
+| controller.rollout.canary.steps[0] | object | `{"setWeight":null}` | Sets the ratio of canary ReplicaSet in percentage. |
+| controller.rollout.canary.steps[1] | object | `{"pause":{"duration":null}}` | Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed |
+| controller.rollout.strategy | string | `nil` | Rollout update strategy - can be Canary or BlueGreen. |
+| controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | global | object | `{"controller":{"deployment":{"rollingUpdate":{"maxSurge":null,"maxUnavailable":null},"strategy":null},"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"analysisTemplate":{"enabled":null,"metrics":[{"failureCondition":null,"failureLimit":null,"name":null,"provider":{"newRelic":{"profile":null,"query":null}},"successCondition":null}]},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":""},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
 | global.controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
@@ -132,6 +149,7 @@ dependencies:
 | serviceAccount.annotations | object | `{}` | Set annotations for Service Account |
 | serviceAccount.enabled | bool | `false` | Enable and create Service Account |
 | serviceAccount.nameOverride | string | `""` | Override Service Account name (by default, name is generated with `fullname` template) |
+| terminationGracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully |
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |
 | volumes | object | See below | Configure volume for the controller. Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key. |
