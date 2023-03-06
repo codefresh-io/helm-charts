@@ -12,11 +12,16 @@ Usage:
   {{- fail (printf "ERROR: %s is invalid Rollout strategy!" $strategy) -}}
 {{- end -}}
 
+{{- $rolloutName := include "cf-common.names.fullname" . -}}
+{{- if and (hasKey .Values.controller "nameOverride") .Values.controller.nameOverride -}}
+  {{- $rolloutName = printf "%v-%v" $rolloutName .Values.controller.nameOverride -}}
+{{- end -}}
+
 ---
 apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
-  name: {{ include "cf-common.names.fullname" . }}
+  name: {{ $rolloutName }}
   labels: {{ include "cf-common.labels.standard" . | nindent 4 }}
   {{- if .Values.controller.labels }}
   {{- include "cf-common.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
@@ -38,7 +43,7 @@ spec:
   strategy:
     {{- if eq $strategy "Canary" }}
       {{- with .Values.controller.rollout }}
-    canary: 
+    canary:
       maxUnavailable: {{ .canary.maxUnavailable }}
       maxSurge: {{ .canary.maxSurge }}
       stableMetadata: {{ .canary.stableMetadata| toYaml | nindent 8 }}

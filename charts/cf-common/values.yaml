@@ -83,6 +83,8 @@ controller:
   labels: {}
   # -- Set annotations on controller
   annotations: {}
+  # -- Override the name suffix that is used for this controller
+  nameOverride: ""
   # -- Set number of pods
   replicas:
   # -- Set ReplicaSet revision history limit

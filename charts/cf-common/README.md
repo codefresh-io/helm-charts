@@ -75,6 +75,7 @@ dependencies:
 | controller.job.suspend | string | `nil` | Suspend specifies whether the Job controller should create Pods or not. (boolean) |
 | controller.job.ttlSecondsAfterFinished | string | `nil` | Set the limit on the lifetime of a Job that has finished execution (either Complete or Failed). (int) |
 | controller.labels | object | `{}` | Set labels on controller |
+| controller.nameOverride | string | `""` | Override the name suffix that is used for this controller |
 | controller.replicas | string | `nil` | Set number of pods |
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
 | controller.rollout.analysis.successfulRunHistoryLimit | string | `nil` | Limits the number of successful analysis runs and experiments to be stored in a history |
