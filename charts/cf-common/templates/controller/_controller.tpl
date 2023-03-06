@@ -10,6 +10,8 @@ Usage:
 
   {{ include "cf-common.controller.type" . }}
 
+  {{ .Values.controller | mustToPrettyJson | fail }}
+
   {{- if eq .Values.controller.type "rollout" }}
     {{ include "cf-common.controller.rollout" . | nindent 0 }}
     {{- if .Values.controller.rollout.analysisTemplate.enabled }}
