@@ -8,9 +8,15 @@ Usage:
 
 {{- if .Values.controller.enabled -}}
 
-  {{ include "cf-common.controller.type" . }}
-
-  {{ .Values.controller | mustToPrettyJson | fail }}
+  {{- $defaultControllerValues := deepCopy .Values.controller -}}
+  {{- $globalControllerValues := dict -}}
+  {{- if .Values.global -}}
+    {{- if .Values.global.controller -}}
+      {{- $globalControllerValues = deepCopy .Values.global.controller -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $mergedControllerValues := mergeOverwrite $globalControllerValues $defaultControllerValues -}}
+  {{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
 
   {{- if eq .Values.controller.type "rollout" }}
     {{ include "cf-common.controller.rollout" . | nindent 0 }}
