@@ -54,3 +54,38 @@ volumes:
 {{- end }}
 
 {{- end }}
+
+
+
+{{/*
+Merges two lists: `.Values.extraVolumes[]` with `.Values.global.extraVolumes[]`
+Sets resulting list to `.Values.extraVolumes`
+Usage in templates:
+volumes:
+{{- if .Values.extraVolumes }}
+  {{- include "appendExtraVolumes" . }}
+  {{- include "cf-common.tplrender" ( dict "Values" .Values.extraVolumes "context" $) | nindent 8 }}
+{{- end }}
+*/}}
+
+{{- define "cf-common.appendExtraVolumes" -}}
+
+{{- $mergedExtraVolumes := list -}}
+
+{{- if .Values.extraVolumes -}}
+  {{- range .Values.extraVolumes -}}
+    {{- $mergedExtraVolumes = append $mergedExtraVolumes . | uniq -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if .Values.global.extraVolumes -}}
+  {{- range .Values.global.extraVolumes -}}
+    {{- $mergedExtraVolumes = append $mergedExtraVolumes . | uniq -}}
+  {{- end -}}
+{{- end -}}
+
+{{- if (not (empty $mergedExtraVolumes)) -}}
+  {{- $_ := set .Values "extraVolumes" $mergedExtraVolumes -}}
+{{- end -}}
+
+{{- end -}}
