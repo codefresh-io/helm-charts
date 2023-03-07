@@ -8,7 +8,15 @@ Usage:
 
 {{- if .Values.hpa.enabled -}}
 
-{{ include "cf-common.controller.type" . }}
+{{- $defaultControllerValues := deepCopy .Values.controller -}}
+{{- $globalControllerValues := dict -}}
+{{- if .Values.global -}}
+  {{- if .Values.global.controller -}}
+    {{- $globalControllerValues = deepCopy .Values.global.controller -}}
+  {{- end -}}
+{{- end -}}
+{{- $mergedControllerValues := mergeOverwrite $globalControllerValues $defaultControllerValues -}}
+{{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
 
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler

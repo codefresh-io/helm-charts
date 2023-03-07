@@ -12,11 +12,16 @@ Usage:
   {{- fail (printf "ERROR: %s is invalid Deployment strategy!" $strategy) -}}
 {{- end -}}
 
+{{- $deploymentName := include "cf-common.names.fullname" . -}}
+{{- if and (hasKey .Values.controller "nameOverride") .Values.controller.nameOverride -}}
+  {{- $deploymentName = printf "%v-%v" $deploymentName .Values.controller.nameOverride -}}
+{{- end -}}
+
 ---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: {{ include "cf-common.names.fullname" . }}
+  name: {{ $deploymentName }}
   labels: {{ include "cf-common.labels.standard" . | nindent 4 }}
   {{- if .Values.controller.labels }}
   {{- include "cf-common.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}

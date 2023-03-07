@@ -8,7 +8,15 @@ Usage:
 
 {{- if .Values.controller.enabled -}}
 
-  {{ include "cf-common.controller.type" . }}
+  {{- $defaultControllerValues := deepCopy .Values.controller -}}
+  {{- $globalControllerValues := dict -}}
+  {{- if .Values.global -}}
+    {{- if .Values.global.controller -}}
+      {{- $globalControllerValues = deepCopy .Values.global.controller -}}
+    {{- end -}}
+  {{- end -}}
+  {{- $mergedControllerValues := mergeOverwrite $globalControllerValues $defaultControllerValues -}}
+  {{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
 
   {{- if eq .Values.controller.type "rollout" }}
     {{ include "cf-common.controller.rollout" . | nindent 0 }}
@@ -25,22 +33,3 @@ Usage:
 {{- end -}}
 
 {{- end -}}
-
-
-{{- /*
-Define controller type. Merges .Values.controller (takes precedence) with .Values.global.controller
-Usage:
-{{ include "cf-common.controller.type" . }}
-*/}}
-
-{{- define "cf-common.controller.type" }}
-
-  {{- $controllerDict := .Values.controller -}}
-  {{- if $.Values.global -}}
-    {{- if $.Values.global.controller -}}
-      {{- $controllerDict = merge $controllerDict $.Values.global.controller -}}
-    {{- end -}}
-  {{- end -}}
-  {{- $_ := set .Values "controller" $controllerDict -}}
-
-{{- end }}
