@@ -3,13 +3,30 @@ Renders volumeMounts list in container
 Usage:
   {{- with .Values.volumeMounts }}
   volumeMounts:
-  {{- include "cf-common.volumeMounts" . | trim | nindent 2 }}
+  {{- include "cf-common.volumeMounts" (dict "Values" . "context" $) | trim | nindent 2 }}
   {{- end }}
 */}}
 
 {{- define "cf-common.volumeMounts" -}}
+{{/* Restoring root $ context */}}
+{{- $ := .context -}}
 
-{{- range $mountIndex, $mountItem := . }}
+{{- $defaultVolumeMounts := dict -}}
+{{- $globalVolumeMounts := dict -}}
+
+{{- if .Values -}}
+  {{- $defaultVolumeMounts = deepCopy .Values -}}
+{{- end -}}
+{{- if $.Values.global -}}
+  {{- if $.Values.global.container -}}
+    {{- if $.Values.global.container.volumeMounts -}}
+      {{- $globalVolumeMounts = deepCopy $.Values.global.container.volumeMounts -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $mergedVolumeMounts := mergeOverwrite $globalVolumeMounts $defaultVolumeMounts -}}
+
+{{- range $mountIndex, $mountItem := $mergedVolumeMounts }}
 
 {{- if not (kindIs "slice" $mountItem.path) }}
   {{ fail (printf "ERROR: volumeMounts.%s.path block must be a list!" $mountIndex ) }}
@@ -28,38 +45,5 @@ Usage:
 {{- end }}
 
 {{- end }}
-
-{{- end -}}
-
-{{/*
-Merges two lists: `.Values.extraVolumeMounts[]` with `.Values.global.extraVolumeMounts[]`
-Sets resulting list to `.Values.extraVolumeMounts`
-Usage in templates:
-volumeMounts:
-{{- if .Values.extraVolumeMounts }}
-  {{- include "appendextraVolumeMounts" . }}
-  {{- include "cf-common.tplrender" ( dict "Values" .Values.extraVolumeMounts "context" $) | nindent 8 }}
-{{- end }}
-*/}}
-
-{{- define "cf-common.appendExtraVolumeMounts" -}}
-
-{{- $mergedExtraVolumeMounts := list -}}
-
-{{- if .Values.extraVolumeMounts -}}
-  {{- range .Values.extraVolumeMounts -}}
-    {{- $mergedExtraVolumeMounts = append $mergedExtraVolumeMounts . | uniq -}}
-  {{- end -}}
-{{- end -}}
-
-{{- if .Values.global.extraVolumeMounts -}}
-  {{- range .Values.global.extraVolumeMounts -}}
-    {{- $mergedExtraVolumeMounts = append $mergedExtraVolumeMounts . | uniq -}}
-  {{- end -}}
-{{- end -}}
-
-{{- if (not (empty $mergedExtraVolumeMounts)) -}}
-  {{- $_ := set .Values "extraVolumeMounts" $mergedExtraVolumeMounts -}}
-{{- end -}}
 
 {{- end -}}

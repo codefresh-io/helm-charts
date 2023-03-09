@@ -73,7 +73,7 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
 
   {{- with .Values.volumeMounts }}
   volumeMounts:
-  {{- include "cf-common.volumeMounts" . | trim | nindent 2 }}
+  {{- include "cf-common.volumeMounts" (dict "Values" . "context" $) | trim | nindent 2 }}
   {{- end }}
 
   {{- with .Values.probes }}
