@@ -1,18 +1,30 @@
 {{/*
 Renders volumes in controller template
-
 Usage:
-volumes:
-{{ include "cf-common.volumes" (dict "Values" .Values.volumes "context" $) }}
-{{ include "cf-common.volumes" (dict "Values" .Values.existingVolumes "context" $) }}
+  {{- with .Values.volumes }}
+  volumes:
+  {{ include "cf-common.volumes" (dict "Values" . "context" $) | trim }}
+  {{- end }}
 */}}
 
-{{- define "cf-common.volumes" }}
-
+{{- define "cf-common.volumes" -}}
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
-{{- range $volumeIndex, $volumeItem := .Values }}
+{{- $defaultVolumes := dict -}}
+{{- $globalVolumes := dict -}}
+
+{{- if .Values -}}
+  {{- $defaultVolumes = deepCopy .Values -}}
+{{- end -}}
+{{- if $.Values.global -}}
+  {{- if $.Values.global.volumes -}}
+    {{- $globalVolumes = deepCopy $.Values.global.volumes -}}
+  {{- end -}}
+{{- end -}}
+{{- $mergedVolumes := mergeOverwrite $globalVolumes $defaultVolumes -}}
+
+{{- range $volumeIndex, $volumeItem := $mergedVolumes }}
 
 {{- if $volumeItem.enabled }}
 - name: {{ $volumeIndex }}
@@ -53,4 +65,4 @@ volumes:
 
 {{- end }}
 
-{{- end }}
+{{- end -}}

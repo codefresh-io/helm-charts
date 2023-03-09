@@ -3,13 +3,30 @@ Renders volumeMounts list in container
 Usage:
   {{- with .Values.volumeMounts }}
   volumeMounts:
-  {{- include "cf-common.volumeMounts" . | trim | nindent 2 }}
+  {{- include "cf-common.volumeMounts" (dict "Values" . "context" $) | trim | nindent 2 }}
   {{- end }}
 */}}
 
 {{- define "cf-common.volumeMounts" -}}
+{{/* Restoring root $ context */}}
+{{- $ := .context -}}
 
-{{- range $mountIndex, $mountItem := . }}
+{{- $defaultVolumeMounts := dict -}}
+{{- $globalVolumeMounts := dict -}}
+
+{{- if .Values -}}
+  {{- $defaultVolumeMounts = deepCopy .Values -}}
+{{- end -}}
+{{- if $.Values.global -}}
+  {{- if $.Values.global.container -}}
+    {{- if $.Values.global.container.volumeMounts -}}
+      {{- $globalVolumeMounts = deepCopy $.Values.global.container.volumeMounts -}}
+    {{- end -}}
+  {{- end -}}
+{{- end -}}
+{{- $mergedVolumeMounts := mergeOverwrite $globalVolumeMounts $defaultVolumeMounts -}}
+
+{{- range $mountIndex, $mountItem := $mergedVolumeMounts }}
 
 {{- if not (kindIs "slice" $mountItem.path) }}
   {{ fail (printf "ERROR: volumeMounts.%s.path block must be a list!" $mountIndex ) }}

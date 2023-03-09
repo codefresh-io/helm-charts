@@ -41,3 +41,84 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "something is invalid volume type for volume my-volume!"
+
+  - it: Test volumes and volumeMounts from global
+    values:
+      - values.yaml
+    set:
+      global:
+        volumes:
+          global-ca-cert:
+            enabled: true
+            type: secret
+            existingName: my-global-ca-cert-secret
+            optional: true
+        container:
+          volumeMounts:
+            global-ca-cert:
+              path:
+              - mountPath: /etc/ssl/ca.pem
+                subPath: ca.pem
+                readOnly: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: global-ca-cert
+            secret:
+              secretName: my-global-ca-cert-secret
+              optional: true
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: global-ca-cert
+            mountPath: /etc/ssl/ca.pem
+            subPath: ca.pem
+            readOnly: true
+
+  - it: Test merge volumes and volumeMounts with global
+    values:
+      - values.yaml
+    set:
+      global:
+        volumes:
+          ca-cert:
+            enabled: true
+            type: secret
+            existingName: GLOBAL-ca-cert-secret
+            optional: true
+        container:
+          volumeMounts:
+            ca-cert:
+              path:
+              - mountPath: /etc/ssl/global/ca.pem
+                subPath: ca.pem
+                readOnly: true
+      volumes:
+        ca-cert:
+          enabled: true
+          type: secret
+          existingName: DEFAULT-ca-cert-secret
+          optional: true
+      container:
+        volumeMounts:
+          ca-cert:
+            path:
+            - mountPath: /etc/ssl/default/ca.pem
+              subPath: ca.pem
+              readOnly: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: ca-cert
+            secret:
+              secretName: DEFAULT-ca-cert-secret
+              optional: true
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: ca-cert
+            mountPath: /etc/ssl/default/ca.pem
+            subPath: ca.pem
+            readOnly: true
