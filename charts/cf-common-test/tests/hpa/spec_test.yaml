@@ -74,6 +74,7 @@ tests:
         enabled: true
         minReplicas: 2
         maxReplicas: 10
+        targetCPUUtilizationPercentage: 50
         metrics:
         - type: Object
           object:
@@ -89,4 +90,4 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.metrics
-          count: 1
+          count: 2

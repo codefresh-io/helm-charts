@@ -38,7 +38,8 @@ spec:
   metrics:
 {{- if .Values.hpa.metrics }}
 {{ toYaml .Values.hpa.metrics | indent 4 }}
-{{- else if (or .Values.hpa.targetMemoryUtilizationPercentage .Values.hpa.targetCPUUtilizationPercentage) }}
+{{- end }}
+{{- if (or .Values.hpa.targetMemoryUtilizationPercentage .Values.hpa.targetCPUUtilizationPercentage) }}
 {{- with .Values.hpa.targetMemoryUtilizationPercentage }}
     - type: Resource
       resource:
