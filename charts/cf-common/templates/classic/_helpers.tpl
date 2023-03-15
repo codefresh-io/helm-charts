@@ -15,15 +15,15 @@ If built-in bitnami/rabbitmq chart enabled get username/password there
 */}}
 {{- if $.Values.rabbitmq }}
   {{- if $.Values.rabbitmq.enabled }}
-    {{- $rabbitmqUsername = .Values.rabbitmq.auth.username -}}
-    {{- $rabbitmqPassword = .Values.rabbitmq.auth.password -}}
+    {{- $rabbitmqUsername = $.Values.rabbitmq.auth.username -}}
+    {{- $rabbitmqPassword = $.Values.rabbitmq.auth.password -}}
   {{- end }}
 {{- end }}
 
 {{- /*
 coalesce here for backward compatibility
 */}}
-{{- $rabbitmqHostname := .Values.global.rabbitmqHostname | default (printf "%s-%s" .Release.Name (coalesce .Values.global.rabbitService .Values.global.rabbitmqService ) ) -}}
+{{- $rabbitmqHostname := $.Values.global.rabbitmqHostname | default (printf "%s-%s" .Release.Name (coalesce $.Values.global.rabbitService $.Values.global.rabbitmqService ) ) -}}
 
 {{- printf "%s://%s:%s@%s" $rabbitmqProtocol $rabbitmqUsername $rabbitmqPassword $rabbitmqHostname -}}
 
@@ -32,7 +32,7 @@ coalesce here for backward compatibility
 {{/*
 Calculate Mongo Uri
 Usage:
-{{ include "cf.common.classic.calculateMongoUri" (dict "dbName" .Values.global.pipelineManagerService "mongoURI" .Values.global.mongoURI) }}
+{{ include "cf.common.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
 */}}
 {{- define "cf-common.classic.calculateMongoUri" -}}
   {{- if contains "?" .mongoURI -}}
