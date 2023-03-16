@@ -131,3 +131,35 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-cf-common-test
         documentIndex: 2
+
+  - it: Test cluster role and binding are created when rbac.namespaced=false
+    template: templates/rbac.yaml
+    values:
+      - values.yaml
+    set:
+      rbac:
+        namespaced: false
+    asserts:
+      - hasDocuments:
+          count: 3
+      - isKind:
+          of: ServiceAccount
+        documentIndex: 0
+      - isKind:
+          of: ClusterRole
+        documentIndex: 1
+      - isKind:
+          of: ClusterRoleBinding
+        documentIndex: 2
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+        documentIndex: 1
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+        documentIndex: 1
