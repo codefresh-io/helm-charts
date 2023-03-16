@@ -18,3 +18,4 @@ serviceAccount:
   enabled: true
 rbac:
   enabled: true
+  namespaced: true
