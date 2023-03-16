@@ -24,19 +24,19 @@ secrets:
 {{- if and .Values.serviceAccount.enabled .Values.rbac.enabled  }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: {{ (.Values.rbac.namespaced | default true) | ternary "Role" "ClusterRole" }}
+kind: {{ ( .Values.rbac.namespaced ) | ternary "Role" "ClusterRole" }}
 metadata:
   name: {{ include "cf-common.names.fullname" $ }}
   labels: {{ include "cf-common.labels.standard" . | nindent 4 }}
 rules: {{ include "cf-common.tplrender" (dict "Values" .Values.rbac.rules "context" $) | nindent 2 }}
 ---
 apiVersion: rbac.authorization.k8s.io/v1
-kind: {{ (.Values.rbac.namespaced | default true) | ternary "RoleBinding" "ClusterRoleBinding" }}
+kind: {{ ( .Values.rbac.namespaced ) | ternary "RoleBinding" "ClusterRoleBinding" }}
 metadata:
   name: {{ include "cf-common.names.fullname" $ }}
   labels: {{ include "cf-common.labels.standard" . | nindent 4 }}
 roleRef:
-  kind: {{ (.Values.rbac.namespaced | default true) | ternary "Role" "ClusterRole" }}
+  kind: {{ (.Values.rbac.namespaced ) | ternary "Role" "ClusterRole" }}
   name: {{ include "cf-common.names.fullname" $ }}
   apiGroup: rbac.authorization.k8s.io
 subjects:
