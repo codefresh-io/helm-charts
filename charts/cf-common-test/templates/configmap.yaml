@@ -1,1 +1,1 @@
-{{- include "cf-common.v0.0.25.configmaps" . -}}
+{{- include "cf-common.v0.1.0.configmaps" . -}}

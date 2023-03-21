@@ -16,7 +16,7 @@ tests:
         enabled: false
       container:
         env:
-          RABBIT_URL: '{{ include "cf-common.v0.0.25.classic.calculateRabbitMqUri" . }}'
+          RABBIT_URL: '{{ include "cf-common.v0.1.0.classic.calculateRabbitMqUri" . }}'
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
@@ -39,7 +39,7 @@ tests:
           password: pass
       container:
         env:
-          RABBIT_URL: '{{ include "cf-common.v0.0.25.classic.calculateRabbitMqUri" . }}'
+          RABBIT_URL: '{{ include "cf-common.v0.1.0.classic.calculateRabbitMqUri" . }}'
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env

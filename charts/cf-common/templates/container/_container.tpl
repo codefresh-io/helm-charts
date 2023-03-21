@@ -1,22 +1,22 @@
 {{/*
 Renders main container in pod template
 Usage:
-{{ include "cf-common.v0.0.25.container" (dict "Values" .Values.container "context" $) }}
+{{ include "cf-common.v0.1.0.container" (dict "Values" .Values.container "context" $) }}
 */}}
-{{-  define "cf-common.v0.0.25.container" -}}
+{{-  define "cf-common.v0.1.0.container" -}}
 
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
-- name: {{ include "cf-common.v0.0.25.names.fullname" $ }}
-  image: {{ include "cf-common.v0.0.25.image.name" (dict "image" .Values.image "context" $) }}
+- name: {{ include "cf-common.v0.1.0.names.fullname" $ }}
+  image: {{ include "cf-common.v0.1.0.image.name" (dict "image" .Values.image "context" $) }}
   imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
 
   {{- with .Values.command }}
     {{- if not (kindIs "slice" .) }}
       {{- fail "ERROR: container.command block must be a list!" }}
     {{- end }}
-  command: {{- include "cf-common.v0.0.25.tplrender" (dict "Values" . "context" $) | nindent 2 }}
+  command: {{- include "cf-common.v0.1.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
   {{- end }}
 
   {{- with .Values.args }}
@@ -46,11 +46,11 @@ Usage:
       {{- if not (kindIs "slice" .) }}
         {{ fail "ERROR: container.envFrom block must be a list!"}}
       {{- end }}
-      {{- include "cf-common.v0.0.25.tplrender" (dict "Values" . "context" $) | trim | nindent 4 }}
+      {{- include "cf-common.v0.1.0.tplrender" (dict "Values" . "context" $) | trim | nindent 4 }}
     {{- end }}
     {{- range $secretName, $_ := $.Values.secrets }}
     - secretRef:
-        name: {{ printf "%s-%s" (include "cf-common.v0.0.25.names.fullname" $) $secretName }}
+        name: {{ printf "%s-%s" (include "cf-common.v0.1.0.names.fullname" $) $secretName }}
     {{- end }}
   {{- end }}
 
@@ -66,18 +66,18 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
   {{- $mergedEnv = merge $mergedEnv $.Values.global.env }}
     {{- end }}
   env:
-  {{- include "cf-common.v0.0.25.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}
+  {{- include "cf-common.v0.1.0.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}
   {{- end }}
 
-  ports: {{- include "cf-common.v0.0.25.ports" $ | trim | nindent 2 }}
+  ports: {{- include "cf-common.v0.1.0.ports" $ | trim | nindent 2 }}
 
   {{- with .Values.volumeMounts }}
   volumeMounts:
-  {{- include "cf-common.v0.0.25.volumeMounts" (dict "Values" . "context" $) | trim | nindent 2 }}
+  {{- include "cf-common.v0.1.0.volumeMounts" (dict "Values" . "context" $) | trim | nindent 2 }}
   {{- end }}
 
   {{- with .Values.probes }}
-  {{- include "cf-common.v0.0.25.probes" . | trim | nindent 2 }}
+  {{- include "cf-common.v0.1.0.probes" . | trim | nindent 2 }}
   {{- end }}
 
   {{- with .Values.resources }}

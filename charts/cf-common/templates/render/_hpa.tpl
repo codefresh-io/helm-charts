@@ -1,10 +1,10 @@
 {{/*
 Renders HorizontalPodAutoscaler template
 Usage:
-{{- include "cf-common.v0.0.25.hpa" . -}}
+{{- include "cf-common.v0.1.0.hpa" . -}}
 */}}
 
-{{- define "cf-common.v0.0.25.hpa" -}}
+{{- define "cf-common.v0.1.0.hpa" -}}
 
 {{- if .Values.hpa.enabled -}}
 
@@ -21,8 +21,8 @@ Usage:
 apiVersion: autoscaling/v2beta2
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "cf-common.v0.0.25.names.fullname" . }}
-  labels: {{ include "cf-common.v0.0.25.labels.standard" . | nindent 4 }}
+  name: {{ include "cf-common.v0.1.0.names.fullname" . }}
+  labels: {{ include "cf-common.v0.1.0.labels.standard" . | nindent 4 }}
 spec:
   scaleTargetRef:
     {{- if eq .Values.controller.type "deployment" }}
@@ -32,7 +32,7 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
     {{- end }}
-    name: {{ include "cf-common.v0.0.25.names.fullname" . }}
+    name: {{ include "cf-common.v0.1.0.names.fullname" . }}
   minReplicas: {{ required "hpa.minReplicas is required!" .Values.hpa.minReplicas | int }}
   maxReplicas: {{ required "hpa.maxReplicas is required!" .Values.hpa.maxReplicas | int }}
   metrics:
