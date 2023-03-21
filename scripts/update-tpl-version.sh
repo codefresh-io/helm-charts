@@ -2,11 +2,16 @@
 
 # Script iterates over cf-common lib chart ".tpl" files and updates named templates versions to match version in `Chart.yaml`
 
-set -eou pipefail
+set -eoux pipefail
 
 SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
-CHART_PATH="./charts/cf-common/templates"
-CHART_VERSION="v$(yq eval '.version' ./charts/cf-common/Chart.yaml)"
+LIB_CHART_PATH="./charts/cf-common/templates"
+CHART_VERSION="$(yq eval '.version' ./charts/cf-common/Chart.yaml)"
+SEMVER_REGEXP="[0-9]\+\.[0-9]\+\.[0-9]\+"
 
-find $CHART_PATH -type f -name '*.tpl' -exec sed -i "s/\(v[0-9]\+\.[0-9]\+\.[0-9]\+\)/$CHART_VERSION/g" {} +
+find $LIB_CHART_PATH -type f -name '*.tpl' -exec sed -i "s/\(v$SEMVER_REGEXP\)/v$CHART_VERSION/g" {} +
+
+# Need to update unit test templates too to invoke a valid versions with `include`
+LIB_TEST_CHART_PATH="./charts/cf-common-test"
+find $LIB_TEST_CHART_PATH -type f -name '*.yaml' -exec sed -i "s/\(v$SEMVER_REGEXP\)/v$CHART_VERSION/g" {} +
