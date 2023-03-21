@@ -1,10 +1,10 @@
 {{/*
 Renders Services templates
 Usage:
-{{- include "cf-common.service" . -}}
+{{- include "cf-common.v0.0.24.service" . -}}
 */}}
 
-{{- define "cf-common.service" }}
+{{- define "cf-common.v0.0.24.service" }}
 
 {{- if not (kindIs "map" .Values.service) }}
   {{- fail "ERROR: service block must be a map!" }}
@@ -20,9 +20,9 @@ Usage:
 {{- end -}}
 
 {{- if and (hasKey $serviceItem "primary") $serviceItem.primary }}
-  {{- $serviceName = include "cf-common.names.fullname" $ -}}
+  {{- $serviceName = include "cf-common.v0.0.24.names.fullname" $ -}}
 {{- else }}
-  {{- $serviceName = printf "%s-%s" (include "cf-common.names.fullname" $) $serviceIndex -}}
+  {{- $serviceName = printf "%s-%s" (include "cf-common.v0.0.24.names.fullname" $) $serviceIndex -}}
 {{- end }}
 
   {{- if $serviceItem.enabled }}
@@ -31,12 +31,12 @@ apiVersion: v1
 kind: Service
 metadata:
   name: {{ $serviceName }}
-  labels: {{ include "cf-common.labels.standard" $ | nindent 4 }}
+  labels: {{ include "cf-common.v0.0.24.labels.standard" $ | nindent 4 }}
   {{- if $serviceItem.labels }}
-  {{- include "cf-common.tplrender" (dict "Values" $serviceItem.labels "context" $) | nindent 4 }}
+  {{- include "cf-common.v0.0.24.tplrender" (dict "Values" $serviceItem.labels "context" $) | nindent 4 }}
   {{- end }}
   {{- if $serviceItem.annotations }}
-  annotations: {{- include "cf-common.tplrender" (dict "Values" $serviceItem.annotations "context" $) | nindent 4 }}
+  annotations: {{- include "cf-common.v0.0.24.tplrender" (dict "Values" $serviceItem.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   type: {{ $serviceType }}
@@ -84,9 +84,9 @@ spec:
       nodePort: {{ $portItem.nodePort }}
       {{- end }}
     {{- end }}
-  selector: {{ include "cf-common.labels.matchLabels" $ | nindent 4 }}
+  selector: {{ include "cf-common.v0.0.24.labels.matchLabels" $ | nindent 4 }}
     {{- if $serviceItem.extraSelectorLabels }}
-  {{- include "cf-common.tplrender" (dict "Values" $serviceItem.extraSelectorLabels "context" $) | nindent 4 }}
+  {{- include "cf-common.v0.0.24.tplrender" (dict "Values" $serviceItem.extraSelectorLabels "context" $) | nindent 4 }}
     {{- end }}
   {{- end }}
 {{- end }}

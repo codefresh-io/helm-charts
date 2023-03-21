@@ -1,10 +1,10 @@
 {{/*
 Calculate RabbitMQ URI
 Usage
-{{ include "cf-common.classic.calculateRabbitMqUri" . }}
+{{ include "cf-common.v0.0.24.classic.calculateRabbitMqUri" . }}
 */}}
 
-{{- define "cf-common.classic.calculateRabbitMqUri" }}
+{{- define "cf-common.v0.0.24.classic.calculateRabbitMqUri" }}
 
 {{- $rabbitmqProtocol := $.Values.global.rabbitmqProtocol | default "amqp" -}}
 {{- $rabbitmqUsername := .Values.global.rabbitmqUsername -}}

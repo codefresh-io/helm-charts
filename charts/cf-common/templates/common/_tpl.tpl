@@ -1,9 +1,9 @@
 {{/*
 Renders a value that contains template.
 Usage:
-{{ include "cf-common.tplrender" ( dict "Values" .Values.path.to.the.Value "context" $) }}
+{{ include "cf-common.v0.0.24.tplrender" ( dict "Values" .Values.path.to.the.Value "context" $) }}
 */}}
-{{- define "cf-common.tplrender" -}}
+{{- define "cf-common.v0.0.24.tplrender" -}}
   {{- $tpl := .Values -}}
   {{- if not (typeIs "string" $tpl) -}}
     {{- $tpl = toYaml $tpl -}}
@@ -14,4 +14,3 @@ Usage:
     {{- $tpl -}}
   {{- end -}}
 {{- end -}}
-

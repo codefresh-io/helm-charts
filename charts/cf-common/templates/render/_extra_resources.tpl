@@ -1,16 +1,16 @@
 {{/*
 Renders Extra objects defined at .Values.extraResources
 Usage:
-{{- include "cf-common.extraResources" . -}}
+{{- include "cf-common.v0.0.24.extraResources" . -}}
 */}}
 
-{{- define "cf-common.extraResources" -}}
+{{- define "cf-common.v0.0.24.extraResources" -}}
 
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
 {{- range .Values.extraResources }}
-{{ include "cf-common.tplrender" (dict "Values" . "context" $) }}
+{{ include "cf-common.v0.0.24.tplrender" (dict "Values" . "context" $) }}
 {{- end }}
 
 {{- end -}}

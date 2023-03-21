@@ -3,11 +3,11 @@ Renders volumes in controller template
 Usage:
   {{- with .Values.volumes }}
   volumes:
-  {{ include "cf-common.volumes" (dict "Values" . "context" $) | trim }}
+  {{ include "cf-common.v0.0.24.volumes" (dict "Values" . "context" $) | trim }}
   {{- end }}
 */}}
 
-{{- define "cf-common.volumes" -}}
+{{- define "cf-common.v0.0.24.volumes" -}}
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
@@ -30,10 +30,10 @@ Usage:
 - name: {{ $volumeIndex }}
   {{- if or (eq $volumeItem.type "configMap") (eq $volumeItem.type "secret") }}
 
-  {{- $volumeName := printf "%s-%s" (include "cf-common.names.fullname" $) $volumeIndex -}}
+  {{- $volumeName := printf "%s-%s" (include "cf-common.v0.0.24.names.fullname" $) $volumeIndex -}}
 
   {{- if and (hasKey $volumeItem "existingName") $volumeItem.existingName  }}
-  {{- $volumeName = include "cf-common.tplrender" (dict "Values" $volumeItem.existingName "context" $) -}}
+  {{- $volumeName = include "cf-common.v0.0.24.tplrender" (dict "Values" $volumeItem.existingName "context" $) -}}
   {{- end }}
 
   {{- if eq $volumeItem.type "configMap" }}

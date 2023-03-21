@@ -1,23 +1,23 @@
 {{/*
 Renders job template
 Usage:
-{{ include "cf-common.controller.job" . | nindent 0 }}
+{{ include "cf-common.v0.0.24.controller.job" . | nindent 0 }}
 */}}
 
-{{- define "cf-common.controller.job" -}}
+{{- define "cf-common.v0.0.24.controller.job" -}}
 
 ---
 apiVersion: batch/v1
 kind: Job
 metadata:
-  name: {{ include "cf-common.names.fullname" . }}
-  labels: {{ include "cf-common.labels.standard" . | nindent 4 }}
+  name: {{ include "cf-common.v0.0.24.names.fullname" . }}
+  labels: {{ include "cf-common.v0.0.24.labels.standard" . | nindent 4 }}
   {{- if .Values.controller.labels }}
-  {{- include "cf-common.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
+  {{- include "cf-common.v0.0.24.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
   {{- end }}
   {{- if .Values.controller.annotations }}
   annotations:
-  {{- include "cf-common.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
+  {{- include "cf-common.v0.0.24.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   {{- if .Values.controller.job.suspend }}
@@ -39,22 +39,22 @@ spec:
   manualSelector: {{ .Values.controller.job.manualSelector }}
     {{- if .Values.controller.job.selector }}
   selector:
-    matchLabels: {{- include "cf-common.tplrender" (dict "Values" .Values.controller.job.selector "context" $) | nindent 6 }}
+    matchLabels: {{- include "cf-common.v0.0.24.tplrender" (dict "Values" .Values.controller.job.selector "context" $) | nindent 6 }}
     {{- else }}
     {{ fail (printf "ERROR: manualSelector is enabled! Specify `.job.selector` labels!") }}
     {{- end }}
   {{- end }}
   template:
     metadata:
-      labels: {{ include "cf-common.labels.matchLabels" . | nindent 8 }}
+      labels: {{ include "cf-common.v0.0.24.labels.matchLabels" . | nindent 8 }}
       {{- if .Values.podLabels }}
-      {{- include "cf-common.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
+      {{- include "cf-common.v0.0.24.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}
-      {{- with include "cf-common.annotations.podAnnotations" . }}
+      {{- with include "cf-common.v0.0.24.annotations.podAnnotations" . }}
       annotations:
         {{- . | nindent 8}}
       {{- end }}
-    spec: {{- include "cf-common.controller.pod" . | trim | nindent 6 -}}
+    spec: {{- include "cf-common.v0.0.24.controller.pod" . | trim | nindent 6 -}}
   {{- with .Values.controller.job.ttlSecondsAfterFinished }}
   ttlSecondsAfterFinished: {{ . }}
   {{- end }}
