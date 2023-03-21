@@ -80,6 +80,18 @@ jobs:
             echo -e '\033[0;32mDocumentation up to date\033[0m ✔'
           fi
 
+      - name: Run templates version check
+        id: tpl-versions
+        run: |
+          ./scripts/update-tpl-version.sh
+          if [[ $(git diff --stat) != '' ]]; then
+            echo -e '\033[0;31mNamed templates versions outdated!\033[0m ❌ Run ./scripts/update-tpl-version.sh before commit!'
+            git diff --color
+            exit 1
+          else
+            echo -e '\033[0;32mNamed templates versions up to date\033[0m ✔'
+          fi
+
       - name: Create kind cluster
         uses: helm/kind-action@v1.5.0
 
