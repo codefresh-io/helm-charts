@@ -1,10 +1,10 @@
 {{/*
 Renders ports map in container. Ports are obtained from .Values.service so root $ context should be passed.
 Usage:
-  ports: {{- include "cf-common.v0.0.24.ports" $ | trim | nindent 2 }}
+  ports: {{- include "cf-common.v0.0.25.ports" $ | trim | nindent 2 }}
 */}}
 
-{{- define "cf-common.v0.0.24.ports" -}}
+{{- define "cf-common.v0.0.25.ports" -}}
 
 {{- $ports := list -}}
 {{- range $serviceName, $serviceItem := .Values.service }}

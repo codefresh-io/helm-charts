@@ -1,24 +1,24 @@
 {{/*
 Renders Secrets templates
-{{- include "cf-common.v0.0.24.secrets" . -}}
+{{- include "cf-common.v0.0.25.secrets" . -}}
 */}}
-{{- define "cf-common.v0.0.24.secrets" -}}
+{{- define "cf-common.v0.0.25.secrets" -}}
 
 {{- range $secretIndex, $secretItem := .Values.secrets }}
 
 {{- if $secretItem.enabled }}
-{{- $secretName := printf "%s-%s" (include "cf-common.v0.0.24.names.fullname" $) $secretIndex }}
+{{- $secretName := printf "%s-%s" (include "cf-common.v0.0.25.names.fullname" $) $secretIndex }}
 ---
 apiVersion: v1
 kind: Secret
 metadata:
   name: {{ $secretName }}
-  labels: {{ include "cf-common.v0.0.24.labels.standard" $ | nindent 4 }}
+  labels: {{ include "cf-common.v0.0.25.labels.standard" $ | nindent 4 }}
   {{- if $secretItem.labels }}
-  {{- include "cf-common.v0.0.24.tplrender" (dict "Values" $secretItem.labels "context" $) | nindent 4 }}
+  {{- include "cf-common.v0.0.25.tplrender" (dict "Values" $secretItem.labels "context" $) | nindent 4 }}
   {{- end }}
   {{- if $secretItem.annotations }}
-  annotations: {{- include "cf-common.v0.0.24.tplrender" (dict "Values" $secretItem.annotations "context" $) | nindent 4 }}
+  annotations: {{- include "cf-common.v0.0.25.tplrender" (dict "Values" $secretItem.annotations "context" $) | nindent 4 }}
   {{- end }}
 {{- with $secretItem.type }}
 type: {{ . }}
@@ -27,7 +27,7 @@ type: {{ . }}
   {{- if not ( or (kindIs "map" $secretItem.stringData) (kindIs "string" $secretItem.stringData) ) }}
     {{- fail (printf "ERROR: secrets.%s.stringData must be a map or multiline string!" $secretIndex) }}
   {{- end }}
-stringData: {{ include "cf-common.v0.0.24.tplrender" (dict "Values" $secretItem.stringData "context" $) | nindent 2 }}
+stringData: {{ include "cf-common.v0.0.25.tplrender" (dict "Values" $secretItem.stringData "context" $) | nindent 2 }}
 {{- else if $secretItem.data }}
   {{- if not (kindIs "map" $secretItem.data ) }}
     {{- fail (printf "ERROR: secrets.%s.data must be a map" $secretIndex) }}

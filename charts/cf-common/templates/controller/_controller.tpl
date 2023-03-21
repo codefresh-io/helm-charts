@@ -1,10 +1,10 @@
 {{/*
 Renders contoller object
 Usage:
-{{- include "cf-common.v0.0.24.controller" . -}}
+{{- include "cf-common.v0.0.25.controller" . -}}
 */}}
 
-{{- define "cf-common.v0.0.24.controller" -}}
+{{- define "cf-common.v0.0.25.controller" -}}
 
 {{- if .Values.controller.enabled -}}
 
@@ -19,14 +19,14 @@ Usage:
   {{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
 
   {{- if eq .Values.controller.type "rollout" }}
-    {{ include "cf-common.v0.0.24.controller.rollout" . | nindent 0 }}
+    {{ include "cf-common.v0.0.25.controller.rollout" . | nindent 0 }}
     {{- if .Values.controller.rollout.analysisTemplate.enabled }}
-    {{ include "cf-common.v0.0.24.controller.analysis-template" . | nindent 0 }}
+    {{ include "cf-common.v0.0.25.controller.analysis-template" . | nindent 0 }}
     {{- end }}
   {{- else if eq .Values.controller.type "deployment" }}
-    {{ include "cf-common.v0.0.24.controller.deployment" . | nindent 0 }}
+    {{ include "cf-common.v0.0.25.controller.deployment" . | nindent 0 }}
   {{- else if eq .Values.controller.type "job" }}
-    {{ include "cf-common.v0.0.24.controller.job" . | nindent 0 }}
+    {{ include "cf-common.v0.0.25.controller.job" . | nindent 0 }}
   {{- else }}
     {{ fail (printf "ERROR: %s is invalid controller type!" .Values.controller.type) }}
   {{- end }}
