@@ -1,2 +1,2 @@
-{{ $templateName := printf "cf-common.v%s.ingress" (index .Subcharts "cf-common").Chart.Version }}
+{{ $templateName := printf "cf-common-%s.ingress" (index .Subcharts "cf-common").Chart.Version }}
 {{- include $templateName . -}}

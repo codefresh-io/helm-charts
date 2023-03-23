@@ -10,4 +10,4 @@ LIB_CHART_PATH="./charts/cf-common/templates"
 CHART_VERSION="$(yq eval '.version' ./charts/cf-common/Chart.yaml)"
 SEMVER_REGEXP="[0-9]\+\.[0-9]\+\.[0-9]\+"
 
-find $LIB_CHART_PATH -type f -name '*.tpl' -exec sed -i "s/\(v$SEMVER_REGEXP\)/v$CHART_VERSION/g" {} +
+find $LIB_CHART_PATH -type f -name '*.tpl' -exec sed -i "s/\(-$SEMVER_REGEXP\)/-$CHART_VERSION/g" {} +

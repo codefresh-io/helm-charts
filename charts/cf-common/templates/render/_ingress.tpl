@@ -1,12 +1,12 @@
 {{/*
 Renders Ingress templates
-{{- include "cf-common.v0.1.0.ingress" . -}}
+{{- include "cf-common-0.1.0.ingress" . -}}
 */}}
-{{- define "cf-common.v0.1.0.ingress" -}}
+{{- define "cf-common-0.1.0.ingress" -}}
 
 {{- range $ingressIndex, $ingressItem := .Values.ingress }}
 
-{{- $ingressName := printf "%s-%s" (include "cf-common.v0.1.0.names.fullname" $) $ingressIndex  -}}
+{{- $ingressName := printf "%s-%s" (include "cf-common-0.1.0.names.fullname" $) $ingressIndex  -}}
 
 {{- if $ingressItem.enabled }}
 ---
@@ -14,12 +14,12 @@ apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
   name: {{ $ingressName }}
-  labels: {{ include "cf-common.v0.1.0.labels.standard" $ | nindent 4 }}
+  labels: {{ include "cf-common-0.1.0.labels.standard" $ | nindent 4 }}
   {{- if $ingressItem.labels }}
-  {{- include "cf-common.v0.1.0.tplrender" (dict "Values" $ingressItem.labels "context" $) | nindent 4 }}
+  {{- include "cf-common-0.1.0.tplrender" (dict "Values" $ingressItem.labels "context" $) | nindent 4 }}
   {{- end }}
   {{- if $ingressItem.annotations }}
-  annotations: {{- include "cf-common.v0.1.0.tplrender" (dict "Values" $ingressItem.annotations "context" $) | nindent 4 }}
+  annotations: {{- include "cf-common-0.1.0.tplrender" (dict "Values" $ingressItem.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   {{- if $ingressItem.ingressClassName }}
@@ -33,10 +33,10 @@ spec:
     {{- range $ingressItem.tls }}
     - hosts:
         {{- range .hosts }}
-        - {{ include "cf-common.v0.1.0.tplrender" (dict "Values" . "context" $) | quote }}
+        - {{ include "cf-common-0.1.0.tplrender" (dict "Values" . "context" $) | quote }}
         {{- end }}
       {{- if .secretName }}
-      secretName: {{ include "cf-common.v0.1.0.tplrender" (dict "Values" .secretName "context" $) | quote}}
+      secretName: {{ include "cf-common-0.1.0.tplrender" (dict "Values" .secretName "context" $) | quote}}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -45,22 +45,22 @@ spec:
       {{- fail (printf "ERROR: ingress.%s.hosts must be a list!" $ingressIndex) }}
     {{- end }}
   {{- range $ingressItem.hosts }}
-    - host: {{ include "cf-common.v0.1.0.tplrender" (dict "Values" .host "context" $) | quote }}
+    - host: {{ include "cf-common-0.1.0.tplrender" (dict "Values" .host "context" $) | quote }}
       http:
         paths:
           {{- if not (kindIs "slice" .paths) }}
             {{- fail (printf "ERROR: ingress.%s.hosts[].paths must be a list!" $ingressIndex ) }}
           {{- end }}
           {{- range .paths }}
-          - path: {{ include "cf-common.v0.1.0.tplrender" (dict "Values" .path "context" $) | quote }}
+          - path: {{ include "cf-common-0.1.0.tplrender" (dict "Values" .path "context" $) | quote }}
             pathType: {{ default "ImplementationSpecific" .pathType }}
             {{- $serviceName := required (printf "service.name is required for ingress %s!" $ingressIndex) .service.name }}
             {{- $servicePort := required (printf "service.port is required for ingress %s!" $ingressIndex) .service.port }}
             backend:
               service:
-                name: {{ include "cf-common.v0.1.0.tplrender" (dict "Values" $serviceName "context" $) }}
+                name: {{ include "cf-common-0.1.0.tplrender" (dict "Values" $serviceName "context" $) }}
                 port:
-                  number: {{ include "cf-common.v0.1.0.tplrender" (dict "Values" $servicePort "context" $) }}
+                  number: {{ include "cf-common-0.1.0.tplrender" (dict "Values" $servicePort "context" $) }}
           {{- end }}
   {{- end }}
 

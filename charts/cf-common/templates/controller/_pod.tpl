@@ -1,13 +1,13 @@
 {{/*
 Renders pod in controller template
 Usage:
-{{ include "cf-common.v0.1.0.controller.pod" . }}
+{{ include "cf-common-0.1.0.controller.pod" . }}
 */}}
-{{- define "cf-common.v0.1.0.controller.pod" -}}
+{{- define "cf-common-0.1.0.controller.pod" -}}
 
-{{- include "cf-common.v0.1.0.image.pullSecrets" . }}
+{{- include "cf-common-0.1.0.image.pullSecrets" . }}
 
-serviceAccountName: {{ include "cf-common.v0.1.0.names.serviceAccountName" . }}
+serviceAccountName: {{ include "cf-common-0.1.0.names.serviceAccountName" . }}
 
 automountServiceAccountToken: {{ .Values.automountServiceAccountToken | default true }}
 
@@ -51,11 +51,11 @@ terminationGracePeriodSeconds: {{ . }}
 {{- end }}
 
 {{- with .Values.initContainers }}
-initContainers: {{- include "cf-common.v0.1.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
+initContainers: {{- include "cf-common-0.1.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
 {{- end }}
 
 {{- with .Values.container }}
-containers: {{ include "cf-common.v0.1.0.container" (dict "Values" . "context" $) | trim | nindent 0 }}
+containers: {{ include "cf-common-0.1.0.container" (dict "Values" . "context" $) | trim | nindent 0 }}
 {{- end }}
 {{- with .Values.additionalContainers }}
 {{ toYaml . | nindent 0 }}
@@ -63,11 +63,11 @@ containers: {{ include "cf-common.v0.1.0.container" (dict "Values" . "context" $
 
 {{- with .Values.volumes }}
 volumes:
-{{ include "cf-common.v0.1.0.volumes" (dict "Values" . "context" $) | trim }}
+{{ include "cf-common-0.1.0.volumes" (dict "Values" . "context" $) | trim }}
 {{- end }}
 
 {{- with .Values.extraVolumes }}
-{{ include "cf-common.v0.1.0.volumes" (dict "Values" . "context" $) | trim }}
+{{ include "cf-common-0.1.0.volumes" (dict "Values" . "context" $) | trim }}
 {{- end }}
 
 {{- with .Values.hostAliases }}
@@ -96,7 +96,7 @@ affinity: {{ toYaml . | nindent 2 }}
 {{- end }}
 
 {{- with .Values.topologySpreadConstraints }}
-topologySpreadConstraints: {{- include "cf-common.v0.1.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
+topologySpreadConstraints: {{- include "cf-common-0.1.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
 {{- end }}
 
 {{- with .Values.controller.restartPolicy }}

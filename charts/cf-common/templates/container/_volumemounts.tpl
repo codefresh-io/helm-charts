@@ -3,11 +3,11 @@ Renders volumeMounts list in container
 Usage:
   {{- with .Values.volumeMounts }}
   volumeMounts:
-  {{- include "cf-common.v0.1.0.volumeMounts" (dict "Values" . "context" $) | trim | nindent 2 }}
+  {{- include "cf-common-0.1.0.volumeMounts" (dict "Values" . "context" $) | trim | nindent 2 }}
   {{- end }}
 */}}
 
-{{- define "cf-common.v0.1.0.volumeMounts" -}}
+{{- define "cf-common-0.1.0.volumeMounts" -}}
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
