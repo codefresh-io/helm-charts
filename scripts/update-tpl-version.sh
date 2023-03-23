@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-
-# Script iterates over cf-common lib chart ".tpl" files and updates named templates versions to match version in `Chart.yaml`
+# This script iterates over cf-common lib chart ".tpl" files and updates named templates versions to match version in `Chart.yaml`
 
 set -eoux pipefail
+
+yq() {
+  docker run --rm -i -v "${PWD}":/workdir mikefarah/yq "$@"
+}
 
 SRCROOT="$(cd "$(dirname "$0")/.." && pwd)"
 
