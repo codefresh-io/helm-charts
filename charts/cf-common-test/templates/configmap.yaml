@@ -1,1 +1,2 @@
-{{- include "cf-common.v0.1.0.configmaps" . -}}
+{{ $templateName := printf "cf-common.v%s.configmaps" (index .Subcharts "cf-common").Chart.Version }}
+{{- include $templateName . -}}
