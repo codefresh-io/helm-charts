@@ -6,8 +6,6 @@ codefresh:
   url: "g.codefresh.io"
   cfApiEndpointsSvc: cfapi-endpoints
   cfApiEndpointsPort: 80
-  argoPlatformApiPath: "/2.0/api"
-  argoPlatformUiPath: "/2.0"
   apiGraphqlSvc: argo-platform-api-graphql
   apiGraphqlPort: 80
   apiEventsSvc: argo-platform-api-events
@@ -32,11 +30,6 @@ ingress:
       - host: "{{ .Values.codefresh.url }}"
         paths:
           - path: "{{ .Values.codefresh.argoPlatformApiPath }}"
-            pathType: ImplementationSpecific
-            service:
-              name: '{{ include "internal-gateway.fullname" . }}'
-              port: "{{ .Values.service.main.ports.http.port }}"
-          - path: "{{ .Values.codefresh.argoPlatformUiPath }}"
             pathType: ImplementationSpecific
             service:
               name: '{{ include "internal-gateway.fullname" . }}'
