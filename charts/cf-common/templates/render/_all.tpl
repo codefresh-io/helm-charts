@@ -2,13 +2,13 @@
 Render all underlying templates
 */}}
 
-{{- define "cf-common.all" -}}
+{{- define "cf-common-0.1.0.all" -}}
 
-{{- include "cf-common.controller" . -}}
-{{- include "cf-common.service" . -}}
-{{- include "cf-common.configmaps" . -}}
-{{- include "cf-common.secrets" . -}}
-{{- include "cf-common.serviceaccount" . -}}
-{{- include "cf-common.rbac" . -}}
+{{- include "cf-common-0.1.0.controller" . -}}
+{{- include "cf-common-0.1.0.service" . -}}
+{{- include "cf-common-0.1.0.configmaps" . -}}
+{{- include "cf-common-0.1.0.secrets" . -}}
+{{- include "cf-common-0.1.0.serviceaccount" . -}}
+{{- include "cf-common-0.1.0.rbac" . -}}
 
 {{- end -}}
