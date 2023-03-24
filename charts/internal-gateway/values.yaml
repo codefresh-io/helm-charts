@@ -2,7 +2,7 @@
 # Added to support usage in Codefresh On-Premise Helm chart
 libraryMode: false
 
-# -- Codefresh services parameters
+# -- Codefresh platform settings
 # @default -- See below
 codefresh:
   url: "g.codefresh.io"
@@ -17,6 +17,7 @@ codefresh:
 
 ## See full values structure at https://github.com/codefresh-io/helm-charts/blob/master/charts/cf-common/values.yaml
 # -- Global parameters
+# @default -- See below
 global:
   # -- configures cluster domain ("cluster.local" by default)
   clusterDomain: "cluster.local"
@@ -25,6 +26,8 @@ global:
   # -- configures DNS service namespace
   dnsNamespace: "kube-system"
 
+# -- Ingress parameters
+# @default -- See below
 ingress:
   main:
     enabled: false
@@ -67,6 +70,7 @@ nginx:
       client_body_buffer_size: "16k"
 
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating.
+    # @default -- See below
     file: |
       worker_processes 5;  ## Default: 1
       error_log  /dev/stderr {{ .Values.nginx.config.errorLogLevel }};
@@ -205,6 +209,8 @@ nginx:
         }
       }
 
+# -- Controller parameters
+# @default -- See below
 controller:
   enabled: true
   type: deployment
@@ -215,16 +221,21 @@ controller:
       maxUnavailable: 0
       maxSurge: "50%"
 
-podLabels: {}
+# -- Pod annotations
+# @default -- See below
 podAnnotations:
   checksum/config: '{{ include (printf "cf-common-%s.tplrender" (index .Subcharts "cf-common").Chart.Version) (dict "Values" .Values.nginx.config.file "context" $) | sha256sum }}'
 
+# -- Pod Security Context parameters
+# @default -- See below
 podSecurityContext:
   fsGroup: 101
   runAsGroup: 101
   runAsNonRoot: true
   runAsUser: 101
 
+# -- Main container parameters
+# @default -- See below
 container:
   image:
     registry: docker.io
@@ -273,6 +284,8 @@ container:
         failureThreshold: 3
         successThreshold: 1
 
+# -- Container security context parameters
+# @default -- See below
 containerSecurityContext:
   readOnlyRootFilesystem: true
   capabilities:
@@ -280,6 +293,8 @@ containerSecurityContext:
       - ALL
   allowPrivilegeEscalation: false
 
+# -- Service parameters
+# @default -- See below
 service:
   main:
     enabled: true
@@ -291,11 +306,15 @@ service:
         protocol: HTTP
         targetPort: 8080
 
+# -- Volumes parameters
+# @default -- See below
 volumes:
   config:
     enabled: true
     type: configMap
 
+# -- HPA parameters
+# @default -- See below
 hpa:
   enabled: false
   minReplicas: 2
@@ -303,10 +322,14 @@ hpa:
   targetMemoryUtilizationPercentage: 70
   targetCPUUtilizationPercentage: 70
 
+# -- PDB parameters
+# @default -- See below
 pdb:
   enabled: false
   minAvailable: "50%"
 
+# -- Topologe Spread Constraints parameters
+# @default -- See below
 topologySpreadConstraints: |
   - maxSkew: 1
     topologyKey: kubernetes.io/hostname
@@ -321,12 +344,18 @@ topologySpreadConstraints: |
       matchLabels:
         {{- include "internal-gateway.selectorLabels" . | nindent 6 }}
 
+# -- Service Account parameters
+# @default -- See below
 serviceAccount:
   enabled: false
 
+# -- RBAC parameters
+# @default -- See below
 rbac:
   enabled: false
 
+# -- Configmap parameters
+# @default -- See below
 configMaps:
   config:
     enabled: true
