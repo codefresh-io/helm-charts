@@ -1,0 +1,306 @@
+# Defines if library mode is used for tunnel client. No templates are generated when using this mode.
+# Added to support usage in Codefresh On-Premise Helm chart
+libraryMode: false
+
+codefresh:
+  url: "g.codefresh.io"
+  cfApiEndpointsSvc: cfapi-endpoints
+  cfApiEndpointsPort: 80
+  argoPlatformApiPath: "/2.0/api"
+  argoPlatformUiPath: "/2.0"
+  apiGraphqlSvc: argo-platform-api-graphql
+  apiGraphqlPort: 80
+  apiEventsSvc: argo-platform-api-events
+  apiEventsPort: 80
+  argoPlatformUiSvc: argo-platform-ui
+  argoPlatformUiPort: 4200
+
+## See full values structure at https://github.com/codefresh-io/helm-charts/blob/master/charts/cf-common/values.yaml
+global:
+  # -- configures cluster domain ("cluster.local" by default)
+  clusterDomain: "cluster.local"
+  # -- configures DNS service name
+  dnsService: "kube-dns"
+  # -- configures DNS service namespace
+  dnsNamespace: "kube-system"
+
+ingress:
+  argo-platform:
+    enabled: false
+    ingressClassName: ""
+    hosts:
+      - host: "{{ .Values.codefresh.url }}"
+        paths:
+          - path: "{{ .Values.codefresh.argoPlatformApiPath }}"
+            pathType: ImplementationSpecific
+            service:
+              name: '{{ include "internal-gateway.fullname" . }}'
+              port: "{{ .Values.service.main.ports.http.port }}"
+          - path: "{{ .Values.codefresh.argoPlatformUiPath }}"
+            pathType: ImplementationSpecific
+            service:
+              name: '{{ include "internal-gateway.fullname" . }}'
+              port: "{{ .Values.service.main.ports.http.port }}"
+
+nginx:
+  config:
+    # -- Enable logging of 2xx and 3xx HTTP requests
+    verboseLogging: true
+    # -- NGINX log format
+    logFormat: |-
+      main '$remote_addr - $remote_user [$time_local]  $status '
+              '"$request" $body_bytes_sent "$http_referer" '
+              '"$http_user_agent" "$http_x_forwarded_for"';
+    # -- Sets the log level of the NGINX error log. One of `debug`, `info`, `notice`, `warn`, `error`, `crit`, `alert`, or `emerg`
+    errorLogLevel: error
+    # -- Enables NGINX access logs
+    accessLogEnabled: true
+    # -- Allows appending custom configuration to the server block
+    serverSnippet: ""
+    # -- Allows appending custom configuration to the http block
+    httpSnippet: ""
+    # -- Allows to set a custom resolver
+    resolver: null
+
+    # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating.
+    file: |
+      worker_processes 5;  ## Default: 1
+      error_log  /dev/stderr {{ .Values.nginx.config.errorLogLevel }};
+      pid        /tmp/nginx.pid;
+      worker_rlimit_nofile 8192;
+
+      events {
+        worker_connections  4096;  ## Default: 1024
+      }
+
+      http {
+        client_body_temp_path /tmp/client_temp;
+        proxy_temp_path       /tmp/proxy_temp_path;
+        fastcgi_temp_path     /tmp/fastcgi_temp;
+        uwsgi_temp_path       /tmp/uwsgi_temp;
+        scgi_temp_path        /tmp/scgi_temp;
+
+        default_type application/octet-stream;
+        log_format   {{ .Values.nginx.config.logFormat }}
+
+        {{- if .Values.nginx.verboseLogging }}
+        access_log   /dev/stderr  main;
+        {{- else }}
+
+        map $status $loggable {
+          ~^[23]  0;
+          default 1;
+        }
+        access_log   {{ .Values.nginx.config.accessLogEnabled | ternary "/dev/stderr  main  if=$loggable;" "off;" }}
+        {{- end }}
+        sendfile     on;
+        tcp_nopush   on;
+
+        {{- if .Values.nginx.config.resolver }}
+        resolver {{ .Values.nginx.config.resolver }};
+        {{- else }}
+        resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+        {{- end }}
+
+        {{- with .Values.nginx.config.httpSnippet }}
+        {{ . | nindent 2 }}
+        {{- end }}
+
+        server {
+          listen 8080;
+
+          location = / {
+            return 200 'OK';
+            auth_basic off;
+          }
+
+          location = /ready {
+            return 200 'OK';
+            auth_basic off;
+          }
+
+          location /api/auth/authenticate {
+            # Authenticate through Classic CF platform
+            set $cfapi_svc {{ .Values.codefresh.cfApiEndpointsSvc }};
+            set $cfapi_port {{ .Values.codefresh.cfApiEndpointsPort }};
+            proxy_pass http://$cfapi_svc:$cfapi_port;
+            proxy_pass_request_body off; # no need to send the POST body
+            proxy_set_header Content-Length "";
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Original-URI $request_uri;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+          }
+
+          location /2.0/api/events {
+            # Any request to this server will first be sent to this URL
+            auth_request /api/auth/authenticate;
+            # Sets the HTTP header 'x-cf-auth-entity' that old platform sends, into $auth_entity variable
+            auth_request_set $auth_entity $upstream_http_x_cf_auth_entity;
+            set $argo_platform_api_events_svc {{ .Values.codefresh.apiEventsSvc }};
+            set $argo_platform_api_events_port {{ .Values.codefresh.apiEventsSvc }};
+            proxy_pass  http://$argo_platform_api_events_svc:$argo_platform_api_events_port;
+
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
+          }
+
+          location /2.0/api/graphql {
+            # Any request to this server will first be sent to this URL
+            auth_request /api/auth/authenticate;
+            # Sets the HTTP header 'x-cf-auth-entity' that old platform sends, into $auth_entity variable
+            auth_request_set $auth_entity $upstream_http_x_cf_auth_entity;
+            set $argo_platform_api_graphql_svc {{ .Values.codefresh.apiGraphqlSvc }};
+            set $argo_platform_api_graphql_port {{ .Values.codefresh.apiGraphqlPort }};
+            proxy_pass  http://$argo_platform_api_graphql_svc:$argo_platform_api_graphql_port;
+
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
+          }
+
+          location /2.0 {
+            set $argo_platform_ui_svc {{ .Values.codefresh.argoPlatformUiSvc }};
+            set $argo_platform_ui_port {{ .Values.codefresh.argoPlatformUiPort }};
+            proxy_pass  http://$argo_platform_ui_svc:$argo_platform_ui_port;
+
+            proxy_set_header Upgrade $http_upgrade;
+            proxy_set_header Connection "upgrade";
+            proxy_http_version 1.1;
+          }
+
+          {{- with .Values.nginx.config.serverSnippet }}
+          {{ . | nindent 4 }}
+          {{- end }}
+        }
+      }
+
+controller:
+  enabled: true
+  type: deployment
+  replicas: 2
+  deployment:
+    strategy: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: "50%"
+
+podLabels: {}
+podAnnotations:
+  checksum/config: '{{ include (printf "cf-common-%s.tplrender" (index .Subcharts "cf-common").Chart.Version) (dict "Values" .Values.nginx.config.file "context" $) | sha256sum }}'
+
+podSecurityContext:
+  fsGroup: 101
+  runAsGroup: 101
+  runAsNonRoot: true
+  runAsUser: 101
+
+container:
+  image:
+    registry: docker.io
+    repository: nginxinc/nginx-unprivileged
+    tag: 1.23-alpine
+
+  env: {}
+  envFrom: []
+
+  volumeMounts:
+    config:
+      path:
+        - mountPath: /etc/nginx
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 1000m
+      memory: 2Gi
+
+  probes:
+    readiness:
+      enabled: true
+      type: httpGet
+      httpGet:
+        path: /ready
+        port: http
+      spec:
+        initialDelaySeconds: 15
+        timeoutSeconds: 3
+        periodSeconds: 5
+        failureThreshold: 3
+        successThreshold: 1
+    liveness:
+      enabled: true
+      type: httpGet
+      httpGet:
+        path: /
+        port: http
+      spec:
+        initialDelaySeconds: 30
+        timeoutSeconds: 3
+        periodSeconds: 5
+        failureThreshold: 3
+        successThreshold: 1
+
+containerSecurityContext:
+  readOnlyRootFilesystem: true
+  capabilities:
+    drop:
+      - ALL
+  allowPrivilegeEscalation: false
+
+service:
+  main:
+    enabled: true
+    primary: true
+    type: ClusterIP
+    ports:
+      http:
+        port: 80
+        protocol: HTTP
+        targetPort: 8080
+
+volumes:
+  config:
+    enabled: true
+    type: configMap
+
+hpa:
+  enabled: false
+  minReplicas: 2
+  maxReplicas: 10
+  targetMemoryUtilizationPercentage: 70
+  targetCPUUtilizationPercentage: 70
+
+pdb:
+  enabled: false
+  minAvailable: "50%"
+
+topologySpreadConstraints: |
+  - maxSkew: 1
+    topologyKey: kubernetes.io/hostname
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        {{- include "internal-gateway.selectorLabels" . | nindent 6 }}
+  - maxSkew: 1
+    topologyKey: topology.kubernetes.io/zone
+    whenUnsatisfiable: ScheduleAnyway
+    labelSelector:
+      matchLabels:
+        {{- include "internal-gateway.selectorLabels" . | nindent 6 }}
+
+serviceAccount:
+  enabled: false
+
+rbac:
+  enabled: false
+
+configMaps:
+  config:
+    enabled: true
+    data:
+      nginx.conf: |
+        {{ include (printf "cf-common-%s.tplrender" (index .Subcharts "cf-common").Chart.Version) (dict "Values" .Values.nginx.config.file "context" $) | nindent 4 }}
