@@ -55,6 +55,10 @@ nginx:
     # -- Allows to set a custom resolver
     resolver: null
 
+    # proxy.conf:
+    #   proxy-buffer-size: "64k"
+    #   proxy-buffers:
+
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating.
     file: |
       worker_processes 5;  ## Default: 1
@@ -134,9 +138,12 @@ nginx:
             set $argo_platform_api_events_port {{ .Values.codefresh.apiEventsPort }};
             proxy_pass  http://$argo_platform_api_events_svc:$argo_platform_api_events_port;
 
+            proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
-            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-CF-Auth-Entity $auth_entity;
+            proxy_cache_bypass $http_upgrade;
           }
 
           location /2.0/api/graphql {
@@ -148,9 +155,12 @@ nginx:
             set $argo_platform_api_graphql_port {{ .Values.codefresh.apiGraphqlPort }};
             proxy_pass  http://$argo_platform_api_graphql_svc:$argo_platform_api_graphql_port;
 
+            proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
-            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-CF-Auth-Entity $auth_entity;
+            proxy_cache_bypass $http_upgrade;
           }
 
           location /2.0 {
@@ -158,9 +168,12 @@ nginx:
             set $argo_platform_ui_port {{ .Values.codefresh.argoPlatformUiPort }};
             proxy_pass  http://$argo_platform_ui_svc:$argo_platform_ui_port;
 
+            proxy_http_version 1.1;
             proxy_set_header Upgrade $http_upgrade;
             proxy_set_header Connection "upgrade";
-            proxy_http_version 1.1;
+            proxy_set_header Host $host;
+            proxy_set_header X-CF-Auth-Entity $auth_entity;
+            proxy_cache_bypass $http_upgrade;
           }
 
           {{- with .Values.nginx.config.serverSnippet }}
