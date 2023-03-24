@@ -55,9 +55,10 @@ nginx:
     # -- Allows to set a custom resolver
     resolver: null
 
-    # proxy.conf:
-    #   proxy-buffer-size: "64k"
-    #   proxy-buffers:
+    proxyConf: {}
+      # proxy_buffer_size: "64k"
+      # proxy_buffers: "4 64k"
+
 
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating.
     file: |
@@ -127,6 +128,10 @@ nginx:
             proxy_set_header X-Original-URI $request_uri;
             proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
             proxy_set_header X-Forwarded-Proto $scheme;
+
+            {{- range $key, $val := .Values.nginx.config.proxyConf }}
+            {{ printf "%s %s;" $key $val }}
+            {{- end }}
           }
 
           location /2.0/api/events {
@@ -144,6 +149,10 @@ nginx:
             proxy_set_header Host $host;
             proxy_set_header X-CF-Auth-Entity $auth_entity;
             proxy_cache_bypass $http_upgrade;
+
+            {{- range $key, $val := .Values.nginx.config.proxyConf }}
+            {{ printf "%s %s;" $key $val }}
+            {{- end }}
           }
 
           location /2.0/api/graphql {
@@ -161,6 +170,10 @@ nginx:
             proxy_set_header Host $host;
             proxy_set_header X-CF-Auth-Entity $auth_entity;
             proxy_cache_bypass $http_upgrade;
+
+            {{- range $key, $val := .Values.nginx.config.proxyConf }}
+            {{ printf "%s %s;" $key $val }}
+            {{- end }}
           }
 
           location /2.0 {
@@ -174,6 +187,10 @@ nginx:
             proxy_set_header Host $host;
             proxy_set_header X-CF-Auth-Entity $auth_entity;
             proxy_cache_bypass $http_upgrade;
+
+            {{- range $key, $val := .Values.nginx.config.proxyConf }}
+            {{ printf "%s %s;" $key $val }}
+            {{- end }}
           }
 
           {{- with .Values.nginx.config.serverSnippet }}
