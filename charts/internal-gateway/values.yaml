@@ -2,6 +2,8 @@
 # Added to support usage in Codefresh On-Premise Helm chart
 libraryMode: false
 
+# -- Codefresh services parameters
+# @default -- See below
 codefresh:
   url: "g.codefresh.io"
   cfApiEndpointsSvc: cfapi-endpoints
@@ -14,6 +16,7 @@ codefresh:
   argoPlatformUiPort: 4200
 
 ## See full values structure at https://github.com/codefresh-io/helm-charts/blob/master/charts/cf-common/values.yaml
+# -- Global parameters
 global:
   # -- configures cluster domain ("cluster.local" by default)
   clusterDomain: "cluster.local"
@@ -55,10 +58,13 @@ nginx:
     # -- Allows to set a custom resolver
     resolver: null
 
-    proxyConf: {}
-      # proxy_buffer_size: "64k"
-      # proxy_buffers: "4 64k"
-
+    # -- Set proxy parameters
+    # Ref: https://nginx.org/en/docs/http/ngx_http_proxy_module.html
+    proxyConf:
+      proxy_buffer_size: "64k"
+      proxy_buffers: "4 64k"
+      client_max_body_size: "5M"
+      client_body_buffer_size: "16k"
 
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating.
     file: |
