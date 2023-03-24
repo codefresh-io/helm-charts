@@ -138,7 +138,7 @@ nginx:
             # Sets the HTTP header 'x-cf-auth-entity' that old platform sends, into $auth_entity variable
             auth_request_set $auth_entity $upstream_http_x_cf_auth_entity;
             set $argo_platform_api_events_svc {{ .Values.codefresh.apiEventsSvc }};
-            set $argo_platform_api_events_port {{ .Values.codefresh.apiEventsSvc }};
+            set $argo_platform_api_events_port {{ .Values.codefresh.apiEventsPort }};
             proxy_pass  http://$argo_platform_api_events_svc:$argo_platform_api_events_port;
 
             proxy_set_header Upgrade $http_upgrade;
