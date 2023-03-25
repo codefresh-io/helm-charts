@@ -179,7 +179,7 @@ jobs:
       run: |
         set -o xtrace
         CHART_NAME=$(yq read ${{ matrix.chart }}/Chart.yaml name)
-        CHART_VERSION=$(yq read ${{ matrix.chart }}/Chart.yaml version)-${{ steps.git-branch-name.outputs.name }}"
+        CHART_VERSION=$(yq read ${{ matrix.chart }}/Chart.yaml version)-${{ steps.git-branch-name.outputs.name }}
 
         helm plugin install https://github.com/chartmuseum/helm-push.git
         helm repo add chartmuseum ${{ secrets.CHARTMUSEUM_DEV_URL }}/$CHART_NAME --username ${{ secrets.CHARTMUSEUM_DEV_USERNAME }} --password ${{ secrets.CHARTMUSEUM_DEV_PASSWORD }}
