@@ -4,9 +4,6 @@ tests:
 library:
 - charts/cf-common/**/*
 
-internal-gateway:
-- charts/internal-gateway/**/*
-
 docs:
 - README.md
 - CHANGELOG.md
