@@ -92,7 +92,7 @@ nginx:
         default_type application/octet-stream;
         log_format   {{ .Values.nginx.config.logFormat }}
 
-        {{- if .Values.nginx.verboseLogging }}
+        {{- if .Values.nginx.config.verboseLogging }}
         access_log   /dev/stderr  main;
         {{- else }}
 
