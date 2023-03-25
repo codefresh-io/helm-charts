@@ -34,7 +34,7 @@ ingress:
     enabled: false
     ingressClassName: "nginx"
     hosts:
-      - host: "{{ .Values.codefresh.url }}"
+      - host: '{{ regexReplaceAll "^https?://" .Values.codefresh.url "" }}'
         paths:
           - path: "/2.0"
             pathType: ImplementationSpecific
