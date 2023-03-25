@@ -8,11 +8,12 @@ codefresh:
   url: "g.codefresh.io"
   cfApiEndpointsSvc: cfapi-endpoints
   cfApiEndpointsPort: 80
-  apiGraphqlSvc: argo-platform-api-graphql.codefresh-v2.svc.cluster.local
+  argoPlatformNamespace: codefresh-v2
+  apiGraphqlSvc: argo-platform-api-graphql
   apiGraphqlPort: 80
-  apiEventsSvc: argo-platform-api-events.codefresh-v2.svc.cluster.local
+  apiEventsSvc: argo-platform-api-events
   apiEventsPort: 80
-  argoPlatformUiSvc: argo-platform-ui.codefresh-v2.svc.cluster.local
+  argoPlatformUiSvc: argo-platform-ui
   argoPlatformUiPort: 4200
 
 ## See full values structure at https://github.com/codefresh-io/helm-charts/blob/master/charts/cf-common/values.yaml
