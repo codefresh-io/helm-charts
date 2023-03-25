@@ -161,11 +161,25 @@ jobs:
     - name: Set short SHA
       run: echo "GITHUB_SHORT_SHA=`echo ${GITHUB_SHA} | cut -c1-8`" >> $GITHUB_ENV
 
+    - name: Normalize git branch name
+      id: git-branch-name
+      uses: ohueter/normalize-git-branch-name@v1
+      with:
+        ref: ${{ github.ref }}
+        head-ref: ${{ github.head_ref }}
+
+    - name: Print normalized branch name and checksum
+      run: |
+        echo "Original branch name: ${{ steps.git-branch-name.outputs.original_name }}"
+        echo "Normalized branch name: ${{ steps.git-branch-name.outputs.name }}"
+        echo "SHA1 checksum of branch name: ${{ steps.git-branch-name.outputs.hash }}"
+        echo "Short SHA1 checksum of branch name: ${{ steps.git-branch-name.outputs.short_hash }}"
+
     - name: Push Helm Chart to Dev ChartMuseum
       run: |
         set -o xtrace
         CHART_NAME=$(yq read ${{ matrix.chart }}/Chart.yaml name)
-        CHART_VERSION=$(yq read ${{ matrix.chart }}/Chart.yaml version)-${{ github.ref | basename }}
+        CHART_VERSION=$(yq read ${{ matrix.chart }}/Chart.yaml version)-${{ steps.git-branch-name.outputs.name }}"
 
         helm plugin install https://github.com/chartmuseum/helm-push.git
         helm repo add chartmuseum ${{ secrets.CHARTMUSEUM_DEV_URL }}/$CHART_NAME --username ${{ secrets.CHARTMUSEUM_DEV_USERNAME }} --password ${{ secrets.CHARTMUSEUM_DEV_PASSWORD }}
