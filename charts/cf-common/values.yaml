@@ -489,7 +489,7 @@ topologySpreadConstraints: []
 #     whenUnsatisfiable: ScheduleAnyway
 #     labelSelector:
 #       matchLabels:
-#         {{- include "cf-common.labels.matchLabels" . | nindent 6 }}
+#         {{- include (printf "cf-common-%s.labels.matchLabels" (index .Subcharts "cf-common").Chart.Version) . | nindent 6 }}
 
 # -- Configure autoscaling (Horizontal Pod Autoscaler)
 # @default -- See below
@@ -543,6 +543,8 @@ serviceAccount:
 rbac:
   # -- Enable RBAC resources
   enabled: false
+  # -- Restrict RBAC in a single namespace instead of cluster-wide scope
+  namespaced: true
   # -- Create custom rules
   rules: []
   # E.g.

@@ -16,7 +16,7 @@ tests:
         enabled: false
       container:
         env:
-          RABBIT_URL: '{{ include "cf-common.classic.calculateRabbitMqUri" . }}'
+          RABBIT_URL: '{{ include (printf "cf-common-%s.classic.calculateRabbitMqUri" (index .Subcharts "cf-common").Chart.Version) . }}'
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
@@ -39,7 +39,7 @@ tests:
           password: pass
       container:
         env:
-          RABBIT_URL: '{{ include "cf-common.classic.calculateRabbitMqUri" . }}'
+          RABBIT_URL: '{{ include (printf "cf-common-%s.classic.calculateRabbitMqUri" (index .Subcharts "cf-common").Chart.Version) . }}'
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env

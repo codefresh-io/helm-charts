@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.0.24](https://img.shields.io/badge/Version-0.0.24-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.0.24
+  version: 0.1.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -126,6 +126,7 @@ dependencies:
 | podSecurityContext | object | `{}` | Set security context for the pod |
 | rbac | object | See below | Configure RBAC parameters |
 | rbac.enabled | bool | `false` | Enable RBAC resources |
+| rbac.namespaced | bool | `true` | Restrict RBAC in a single namespace instead of cluster-wide scope |
 | rbac.rules | list | `[]` | Create custom rules |
 | secrets.secret | object | `{"annotation":{},"data":{},"enabled":false,"labels":{},"stringData":{},"type":"Opaque"}` | Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts` |
 | secrets.secret.annotation | object | `{}` | Add additional annotations to the secret |

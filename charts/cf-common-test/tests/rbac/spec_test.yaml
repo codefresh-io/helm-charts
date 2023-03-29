@@ -35,6 +35,7 @@ tests:
         enabled: true
       rbac:
         enabled: true
+        namespaced: true
         rules:
           - apiGroups:
               - ""
@@ -63,6 +64,7 @@ tests:
         enabled: true
       rbac:
         enabled: true
+        namespaced: true
         rules:
           - apiGroups:
               - ""

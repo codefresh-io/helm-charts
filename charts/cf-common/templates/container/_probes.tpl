@@ -2,10 +2,10 @@
 Renders probes map in container
 Usage:
   {{- with .Values.probes }}
-  {{- include "cf-common.probes" . | trim | nindent 2 }}
+  {{- include "cf-common-0.1.0.probes" . | trim | nindent 2 }}
   {{- end }}
 */}}
-{{- define "cf-common.probes" -}}
+{{- define "cf-common-0.1.0.probes" -}}
 
 {{- range $probeName, $probeItem := . }}
 
