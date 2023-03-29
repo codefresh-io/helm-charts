@@ -1,40 +1,40 @@
 {{/*
-Calculate RabbitMQ URI
+Calculate RabbitMQ URI (for On-Prem)
 Usage
 {{ include "cf-common-0.1.0.classic.calculateRabbitMqUri" . }}
 */}}
 
 {{- define "cf-common-0.1.0.classic.calculateRabbitMqUri" }}
 
-{{- $rabbitmqProtocol := $.Values.global.rabbitmqProtocol | default "amqp" -}}
-{{- $rabbitmqUsername := $.Values.global.rabbitmqUsername -}}
-{{- $rabbitmqPassword := $.Values.global.rabbitmqPassword -}}
+{{- $rabbitmqProtocol := .Values.global.rabbitmqProtocol | default "amqp" -}}
+{{- $rabbitmqUsername := .Values.global.rabbitmqUsername -}}
+{{- $rabbitmqPassword := .Values.global.rabbitmqPassword -}}
 
 {{- /*
 If built-in bitnami/rabbitmq chart enabled get username/password there
 */}}
-{{- if $.Values.rabbitmq }}
-  {{- if $.Values.rabbitmq.enabled }}
-    {{- $rabbitmqUsername = $.Values.rabbitmq.auth.username -}}
-    {{- $rabbitmqPassword = $.Values.rabbitmq.auth.password -}}
+{{- if .Values.rabbitmq }}
+  {{- if .Values.rabbitmq.enabled }}
+    {{- $rabbitmqUsername = .Values.rabbitmq.auth.username -}}
+    {{- $rabbitmqPassword = .Values.rabbitmq.auth.password -}}
   {{- end }}
 {{- end }}
 
 {{- /*
 coalesce here for backward compatibility
 */}}
-{{- $rabbitmqHostname := $.Values.global.rabbitmqHostname | default (printf "%s-%s" .Release.Name (coalesce $.Values.global.rabbitService $.Values.global.rabbitmqService ) ) -}}
+{{- $rabbitmqHostname := .Values.global.rabbitmqHostname | default (printf "%s-%s" .Release.Name (coalesce .Values.global.rabbitService .Values.global.rabbitmqService ) ) -}}
 
 {{- printf "%s://%s:%s@%s" $rabbitmqProtocol $rabbitmqUsername $rabbitmqPassword $rabbitmqHostname -}}
 
 {{- end }}
 
 {{/*
-Calculate Mongo Uri
+Calculate Mongo Uri (for On-Prem)
 Usage:
-{{ include "cf.common.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
+{{ include "cf.common-0.1.0.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
 */}}
-{{- define "cf-common.classic.calculateMongoUri" -}}
+{{- define "cf-common-0.1.0.classic.calculateMongoUri" -}}
   {{- if contains "?" .mongoURI -}}
     {{- $mongoURI :=  (splitList "?" .mongoURI) -}}
     {{- printf "%s%s?%s" (first $mongoURI) .dbName (last $mongoURI) }}
