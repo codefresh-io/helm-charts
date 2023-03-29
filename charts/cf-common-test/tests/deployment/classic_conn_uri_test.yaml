@@ -56,7 +56,7 @@ tests:
         pipelineManagerService: pipeline-manager
       container:
         env:
-          MONGO_URI: '{{ include "cf-common.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}'
+          MONGO_URI: '{{ include (printf "cf-common-%s.classic.calculateMongoUri" (index .Subcharts "cf-common").Chart.Version) (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}'
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
