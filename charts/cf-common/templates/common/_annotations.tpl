@@ -2,17 +2,17 @@
 Render checksum annotation
 Usage:
 */}}
-{{- define "cf-common-0.1.1.annotations.podAnnotations" -}}
+{{- define "cf-common-0.1.2.annotations.podAnnotations" -}}
 
 {{- if .Values.podAnnotations -}}
-  {{- include "cf-common-0.1.1.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 0 }}
+  {{- include "cf-common-0.1.2.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 0 }}
 {{- end -}}
 
 {{- $configMapFound := dict -}}
 {{- range $configMapIndex, $configMapItem := .Values.configMaps -}}
 
   {{- if $configMapItem.enabled -}}
-    {{- $_ := set $configMapFound $configMapIndex ( include "cf-common-0.1.1.tplrender" (dict "Values" $configMapItem.data "context" $) | sha256sum) -}}
+    {{- $_ := set $configMapFound $configMapIndex ( include "cf-common-0.1.2.tplrender" (dict "Values" $configMapItem.data "context" $) | sha256sum) -}}
   {{- end -}}
 
   {{- if $configMapFound -}}
@@ -25,7 +25,7 @@ Usage:
 {{- range $secretIndex, $secretItem := .Values.secrets -}}
 
   {{- if $secretItem.enabled -}}
-    {{- $_ := set $secretFound $secretIndex ( include "cf-common-0.1.1.tplrender" (dict "Values" $secretItem.stringData "context" $) | sha256sum) -}}
+    {{- $_ := set $secretFound $secretIndex ( include "cf-common-0.1.2.tplrender" (dict "Values" $secretItem.stringData "context" $) | sha256sum) -}}
   {{- end -}}
 
   {{- if $secretFound -}}
