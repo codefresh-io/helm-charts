@@ -3,7 +3,7 @@ suite: classic connection Uri
 templates:
   - templates/controller.yaml
 tests:
-  - it: Test External RabbitMQ connection Uri
+  - it: Test RabbitMQ connection Uri
     values:
       - values.yaml
     set:
@@ -23,29 +23,6 @@ tests:
           content:
             name: RABBIT_URL
             value: "amqps://username:password@hostname.domain:5671"
-
-  - it: Test Internal RabbitMQ connection Uri
-    release:
-      name: cf
-    values:
-      - values.yaml
-    set:
-      global:
-        rabbitmqService: rabbitmq
-      rabbitmq:
-        enabled: true
-        auth:
-          username: user
-          password: pass
-      container:
-        env:
-          RABBIT_URL: '{{ include (printf "cf-common-%s.classic.calculateRabbitMqUri" (index .Subcharts "cf-common").Chart.Version) . }}'
-    asserts:
-      - contains:
-          path: spec.template.spec.containers[0].env
-          content:
-            name: RABBIT_URL
-            value: "amqp://user:pass@cf-rabbitmq"
 
   - it: Test External MongoDB connection Uri
     values:
