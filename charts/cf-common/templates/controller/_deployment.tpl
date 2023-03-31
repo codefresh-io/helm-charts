@@ -1,10 +1,10 @@
 {{/*
 Renders deployment template
 Usage:
-{{ include "cf-common-0.1.1.controller.deployment" . | nindent 0 }}
+{{ include "cf-common-0.1.2.controller.deployment" . | nindent 0 }}
 */}}
 
-{{- define "cf-common-0.1.1.controller.deployment" -}}
+{{- define "cf-common-0.1.2.controller.deployment" -}}
 
 {{- $strategy := default "RollingUpdate" .Values.controller.deployment.strategy -}}
 
@@ -12,7 +12,7 @@ Usage:
   {{- fail (printf "ERROR: %s is invalid Deployment strategy!" $strategy) -}}
 {{- end -}}
 
-{{- $deploymentName := include "cf-common-0.1.1.names.fullname" . -}}
+{{- $deploymentName := include "cf-common-0.1.2.names.fullname" . -}}
 {{- if and (hasKey .Values.controller "nameOverride") .Values.controller.nameOverride -}}
   {{- $deploymentName = printf "%v-%v" $deploymentName .Values.controller.nameOverride -}}
 {{- end -}}
@@ -22,13 +22,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: {{ $deploymentName }}
-  labels: {{ include "cf-common-0.1.1.labels.standard" . | nindent 4 }}
+  labels: {{ include "cf-common-0.1.2.labels.standard" . | nindent 4 }}
   {{- if .Values.controller.labels }}
-  {{- include "cf-common-0.1.1.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
+  {{- include "cf-common-0.1.2.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
   {{- end }}
   {{- if .Values.controller.annotations }}
   annotations:
-  {{- include "cf-common-0.1.1.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
+  {{- include "cf-common-0.1.2.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | int | default 5 }}
@@ -36,7 +36,7 @@ spec:
   replicas: {{ coalesce .Values.controller.replicas .Values.replicaCount | int | default 1 }}
   {{- end }}
   selector:
-    matchLabels: {{ include "cf-common-0.1.1.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{ include "cf-common-0.1.2.labels.matchLabels" . | nindent 6 }}
   strategy:
     type: {{ $strategy }}
     {{- with .Values.controller.deployment.rollingUpdate }}
@@ -52,13 +52,13 @@ spec:
     {{- end }}
   template:
     metadata:
-      labels: {{ include "cf-common-0.1.1.labels.matchLabels" . | nindent 8 }}
+      labels: {{ include "cf-common-0.1.2.labels.matchLabels" . | nindent 8 }}
       {{- if .Values.podLabels }}
-      {{- include "cf-common-0.1.1.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
+      {{- include "cf-common-0.1.2.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.podAnnotations }}
       annotations:
-      {{- include "cf-common-0.1.1.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
+      {{- include "cf-common-0.1.2.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
-    spec: {{- include "cf-common-0.1.1.controller.pod" . | trim | nindent 6 -}}
+    spec: {{- include "cf-common-0.1.2.controller.pod" . | trim | nindent 6 -}}
 {{- end -}}
