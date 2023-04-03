@@ -7,7 +7,7 @@ Renders PersistentVolumeClaim objects
 {{- range $pvcIndex, $pvcItem := .Values.persistence }}
 
 {{- $pvcEnabled := include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.enabled "context" $) }}
-{{- if ( ternary true false (eq $pvcEnabled "true") }}
+{{- if ( ternary true false (eq $pvcEnabled "true")) }}
 {{- $pvcName := printf "%s-%s" (include "cf-common-0.2.0.names.fullname" $) $pvcIndex }}
 
 {{- if and (hasKey $pvcItem "nameOverride") $pvcItem.nameOverride  }}
