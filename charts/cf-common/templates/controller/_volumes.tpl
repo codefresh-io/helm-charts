@@ -28,8 +28,6 @@ Usage:
 
 {{- if $volumeItem.enabled }}
 - name: {{ $volumeIndex }}
-  {{- if or (eq $volumeItem.type "configMap") (eq $volumeItem.type "secret") }}
-
   {{- $volumeName := printf "%s-%s" (include "cf-common-0.2.0.names.fullname" $) $volumeIndex -}}
 
   {{- if and (hasKey $volumeItem "existingName") $volumeItem.existingName  }}
@@ -66,7 +64,6 @@ Usage:
   {{- else }}
     {{ fail (printf "ERROR: %s is invalid volume type for volume %s!" $volumeItem.type $volumeIndex) }}
   {{- end }}
-{{- end }}
 
 {{- end }}
 
