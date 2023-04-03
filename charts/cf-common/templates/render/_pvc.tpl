@@ -4,16 +4,18 @@ Renders PersistentVolumeClaim objects
 */}}
 {{- define "cf-common-0.2.0.pvc" -}}
 
+{{/* Handle legacy values for onprem */}}
+{{- $existingPvc := coalesce .Values.existingPvc .Values.existingClaim .Values.pvcName "" -}}
+{{- $storageSize := coalesce .Values.storageSize ""-}}
+
 {{- range $pvcIndex, $pvcItem := .Values.persistence }}
 
-{{- $pvcEnabled := include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.enabled "context" $) }}
-{{- if ( ternary true false (eq $pvcEnabled "true")) }}
+{{- if and (not $existingPvc) $pvcItem.enabled  }}
 {{- $pvcName := printf "%s-%s" (include "cf-common-0.2.0.names.fullname" $) $pvcIndex }}
 
 {{- if and (hasKey $pvcItem "nameOverride") $pvcItem.nameOverride  }}
-{{- $pvcName = include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.nameOverride "context" $) -}}
+{{- $pvcName = include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.nameOverride "context" $) }}
 {{- end }}
-
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
@@ -36,10 +38,9 @@ spec:
     - {{ required (printf "accessMode is required for PVC %v" $pvcName) $pvcItem.accessMode | quote }}
   resources:
     requests:
-      storage: {{ include "cf-common-0.2.0.tplrender" (dict "Values" $pvcSize "context" $)  | quote }}
+      storage: {{ coalesce $storageSize $pvcItem.size | quote }}
   {{- if $pvcItem.storageClass }}
-  {{- $pvcStorageClassName := include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.storageClass "context" $)  }}
-  storageClassName: {{ if (eq "-" $pvcItem.storageClass) }}""{{- else }}{{ $pvcStorageClassName | quote }}{{- end }}
+  storageClassName: {{ include "cf-common-0.2.0.storageclass" ( dict "persistence" $pvcItem "global" $) }}
   {{- end }}
   {{- if $pvcItem.volumeName }}
   volumeName: {{ $pvcItem.volumeName | quote }}
