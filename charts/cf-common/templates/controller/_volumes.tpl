@@ -40,9 +40,8 @@ Usage:
   {{- with $volumeItem.optional }}
     optional: {{ . }}
   {{- end }}
-  {{- end }}
 
-  {{- if eq $volumeItem.type "secret" }}
+  {{- else if eq $volumeItem.type "secret" }}
   secret:
     secretName: {{ $volumeName }}
   {{- with $volumeItem.optional }}
@@ -54,9 +53,8 @@ Usage:
   {{- with $volumeItem.items }}
     items: {{ toYaml . | nindent 4 }}
   {{- end }}
-  {{- end }}
 
-  {{- if eq $volumeItem.type "pvc" }}
+  {{- else if eq $volumeItem.type "pvc" }}
   persistentVolumeClaim:
     claimName: {{ $volumeName }}
   {{- end }}
