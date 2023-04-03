@@ -1,6 +1,6 @@
 {{/*
 Renders PersistentVolumeClaim objects
-{{- include "cf-common-0.2.0.secrets" . -}}
+{{- include "cf-common-0.2.0.pvc" . -}}
 */}}
 {{- define "cf-common-0.2.0.pvc" -}}
 
@@ -19,7 +19,7 @@ metadata:
   {{- end }}
   annotations:
   {{- if $pvcItem.retain }}
-  "helm.sh/resource-policy": keep
+    "helm.sh/resource-policy": keep
   {{- end }}
   {{- if $pvcItem.annotations }}
   {{- include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.annotations "context" $) | nindent 4 }}
@@ -40,8 +40,5 @@ spec:
 {{- end }}
 
 {{- end }}
-
-
-
 
 {{- end -}}
