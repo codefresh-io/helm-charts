@@ -57,7 +57,6 @@ Usage:
   {{- else if eq $volumeItem.type "pvc" }}
   persistentVolumeClaim:
     claimName: {{ $volumeName }}
-  {{- end }}
 
   {{- else }}
     {{ fail (printf "ERROR: %s is invalid volume type for volume %s!" $volumeItem.type $volumeIndex) }}
