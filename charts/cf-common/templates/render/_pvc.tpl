@@ -18,7 +18,7 @@ metadata:
   {{- include "cf-common-0.1.2.tplrender" (dict "Values" $pvcItem.labels "context" $) | nindent 4 }}
   {{- end }}
   annotations:
-  {{- if $values.retain }}
+  {{- if $pvcItem.retain }}
   "helm.sh/resource-policy": keep
   {{- end }}
   {{- if $pvcItem.annotations }}
@@ -31,7 +31,7 @@ spec:
     requests:
       storage: {{ required (printf "size is required for PVC %v" $pvcName) $pvcItem.size | quote }}
   {{- if $pvcItem.storageClass }}
-  storageClassName: {{ if (eq "-" $pvcItem.storageClass) }}""{{- else }}{{ $values.storageClass | quote }}{{- end }}
+  storageClassName: {{ if (eq "-" $pvcItem.storageClass) }}""{{- else }}{{ $pvcItem.storageClass | quote }}{{- end }}
   {{- end }}
   {{- if $pvcItem.volumeName }}
   volumeName: {{ $pvcItem.volumeName | quote }}
