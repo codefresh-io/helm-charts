@@ -6,7 +6,7 @@ Renders PersistentVolumeClaim objects
 
 {{/* Handle legacy values for onprem */}}
 {{- $existingPvc := coalesce .Values.existingPvc .Values.existingClaim .Values.pvcName "" -}}
-{{- $storageSize := coalesce .Values.storageSize ""-}}
+{{- $storageSize := coalesce .Values.storageSize "" -}}
 
 {{- range $pvcIndex, $pvcItem := .Values.persistence }}
 
