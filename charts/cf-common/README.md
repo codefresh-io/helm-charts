@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.1.2](https://img.shields.io/badge/Version-0.1.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.1.2
+  version: 0.2.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -121,6 +121,13 @@ dependencies:
 | pdb.enabled | bool | `false` | Enable PDB |
 | pdb.maxUnavailable | string | `""` | Set number of pods that are unavailable after eviction as number of percentage |
 | pdb.minAvailable | string | `""` | Set number of pods that are available after eviction as number of percentage |
+| persistence | object | See below | Configure persistence for the chart Additional items can be added by adding a dictionary key similar to the 'data' key. |
+| persistence.data | object | `{"accessMode":"ReadWriteOnce","enabled":false,"retain":false,"size":"8Gi","storageClass":null}` | PersistentVolumeClaim name. |
+| persistence.data.accessMode | string | `"ReadWriteOnce"` | Set AccessMode for persistent volume |
+| persistence.data.enabled | bool | `false` | Enable the PVC |
+| persistence.data.retain | bool | `false` | Set to true to retain the PVC upon `helm uninstall` |
+| persistence.data.size | string | `"8Gi"` | Set the requested size for persistent volume |
+| persistence.data.storageClass | string | `nil` | Set Storage Class for PVC object If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | podAnnotations | object | `{}` | Set additional pod annotations |
 | podLabels | object | `{}` | Set additional pod labels |
 | podSecurityContext | object | `{}` | Set security context for the pod |
@@ -155,7 +162,7 @@ dependencies:
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |
 | volumes | object | See below | Configure volume for the controller. Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key. |
-| volumes.config | object | `{"enabled":false,"type":"configMap"}` | Volume name. Make sure to use the same name in `configMaps`/`secrets` and `container.volumeMounts` |
+| volumes.config | object | `{"enabled":false,"type":"configMap"}` | Volume name. Make sure to use the same name in `configMaps`/`secrets`/`persistence` and `container.volumeMounts` |
 | volumes.config.enabled | bool | `false` | Enable the volume |
 | volumes.config.type | string | `"configMap"` | Volume type (configMap/secret) |
 
