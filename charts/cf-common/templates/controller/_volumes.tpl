@@ -26,7 +26,7 @@ Usage:
 
 {{- range $volumeIndex, $volumeItem := $mergedVolumes }}
 
-{{- if $volumeItem.enabled }}
+  {{- if $volumeItem.enabled }}
 - name: {{ $volumeIndex }}
   {{- $volumeName := printf "%s-%s" (include "cf-common-0.2.0.names.fullname" $) $volumeIndex -}}
 
