@@ -13,16 +13,16 @@ kind: PersistentVolumeClaim
 apiVersion: v1
 metadata:
   name: {{ $pvcName }}
-  labels: {{ include "cf-common-0.1.2.labels.standard" $ | nindent 4 }}
+  labels: {{ include "cf-common-0.2.0.labels.standard" $ | nindent 4 }}
   {{- if $pvcItem.labels }}
-  {{- include "cf-common-0.1.2.tplrender" (dict "Values" $pvcItem.labels "context" $) | nindent 4 }}
+  {{- include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.labels "context" $) | nindent 4 }}
   {{- end }}
   annotations:
   {{- if $pvcItem.retain }}
   "helm.sh/resource-policy": keep
   {{- end }}
   {{- if $pvcItem.annotations }}
-  {{- include "cf-common-0.1.2.tplrender" (dict "Values" $pvcItem.annotations "context" $) | nindent 4 }}
+  {{- include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   accessModes:
