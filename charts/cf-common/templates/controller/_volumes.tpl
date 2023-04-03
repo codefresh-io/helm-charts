@@ -62,6 +62,8 @@ Usage:
     {{ fail (printf "ERROR: %s is invalid volume type for volume %s!" $volumeItem.type $volumeIndex) }}
   {{- end }}
 
+  {{- end }}
+
 {{- end }}
 
 {{- end -}}
