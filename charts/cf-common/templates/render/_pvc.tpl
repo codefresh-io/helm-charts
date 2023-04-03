@@ -34,7 +34,7 @@ spec:
     - {{ required (printf "accessMode is required for PVC %v" $pvcName) $pvcItem.accessMode | quote }}
   resources:
     requests:
-      storage: {{ required (printf "size is required for PVC %v" $pvcName) $pvcItem.size | quote }}
+      storage: {{ required (printf "size is required for PVC %v" $pvcName) include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.size "context" $) | quote }}
   {{- if $pvcItem.storageClass }}
   storageClassName: {{ if (eq "-" $pvcItem.storageClass) }}""{{- else }}{{ $pvcItem.storageClass | quote }}{{- end }}
   {{- end }}
