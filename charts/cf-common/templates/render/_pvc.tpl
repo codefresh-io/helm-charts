@@ -8,6 +8,11 @@ Renders PersistentVolumeClaim objects
 
 {{- if $pvcItem.enabled }}
 {{- $pvcName := printf "%s-%s" (include "cf-common-0.2.0.names.fullname" $) $pvcIndex }}
+
+{{- if and (hasKey $pvcItem "nameOverride") $pvcItem.nameOverride  }}
+{{- $pvcName = include "cf-common-0.2.0.tplrender" (dict "Values" $pvcItem.nameOverride "context" $) -}}
+{{- end }}
+
 ---
 kind: PersistentVolumeClaim
 apiVersion: v1
