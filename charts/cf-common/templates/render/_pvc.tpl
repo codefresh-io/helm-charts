@@ -6,7 +6,7 @@ Renders PersistentVolumeClaim objects
 
 {{- range $pvcIndex, $pvcItem := .Values.persistence }}
 
-{{- if $pvcItem.enabeled }}
+{{- if $pvcItem.enabled }}
 {{- $pvcName := printf "%s-%s" (include "cf-common-0.2.0.names.fullname" $) $pvcIndex }}
 ---
 kind: PersistentVolumeClaim
