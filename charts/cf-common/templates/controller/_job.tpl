@@ -52,7 +52,7 @@ spec:
       {{- end }}
       {{- with include "cf-common-0.3.0.annotations.podAnnotations" . }}
       annotations:
-        {{- . | nindent 8}}
+        {{- . | nindent 8 }}
       {{- end }}
     spec: {{- include "cf-common-0.3.0.controller.pod" . | trim | nindent 6 -}}
   {{- with .Values.controller.job.ttlSecondsAfterFinished }}

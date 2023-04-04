@@ -35,13 +35,13 @@ spec:
       {{- end }}
       template:
         metadata:
-          labels: {{ include "cf-common-0.3.0.labels.matchLabels" . | nindent 8 }}
+          labels: {{ include "cf-common-0.3.0.labels.matchLabels" . | nindent 12 }}
           {{- if .Values.podLabels }}
-          {{- include "cf-common-0.3.0.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
+          {{- include "cf-common-0.3.0.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 12 }}
           {{- end }}
           {{- with include "cf-common-0.3.0.annotations.podAnnotations" . }}
           annotations:
-            {{- . | nindent 8}}
+            {{- . | nindent 12 }}
           {{- end }}
-        spec: {{- include "cf-common-0.3.0.controller.pod" . | trim | nindent 6 -}}
+        spec: {{- include "cf-common-0.3.0.controller.pod" . | trim | nindent 10 -}}
 {{- end -}}
