@@ -370,10 +370,10 @@ persistence:
   data:
     # -- Enable the PVC
     enabled: false
-    # -- Set AccessMode for persistent volume
+    # -- (required) Set AccessMode for persistent volume
     accessMode: ReadWriteOnce
-    # -- Set the requested size for persistent volume
-    size: 8Gi
+    # -- (required) Set the requested size for persistent volume
+    size: 1Gi
     # -- Set Storage Class for PVC object
     # If set to `-`, dynamic provisioning is disabled.
     # If set to something else, the given storageClass is used.
@@ -381,6 +381,8 @@ persistence:
     storageClass:
     # -- Set to true to retain the PVC upon `helm uninstall`
     retain: false
+    # -- Override the PVC name
+    nameOverride:
 
 # -- Configure volume for the controller.
 # Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key.
@@ -399,7 +401,7 @@ volumes:
     enabled: false
     type: pvc
   # Configure existing volumes (from other/parent chart) for the contoller.
-  # Make sure to specify `existingName` property. Helm template supported.
+  # Make sure to specify `existingName` or `nameOverride` property. Helm template supported.
   # E.g.
   # volumes:
   #   dind-clusters:
@@ -410,7 +412,7 @@ volumes:
   #   extra-data:
   #     enabled: true
   #     type: pvc
-  #     existingName: "{{ .Values.config.extraDataPvcName }}"
+  #     nameOverride: "{{ .Values.config.extraDataPvcName }}"
 
 # -- Configure services fo the chart.
 # Additional services can be added by adding a dictionary key similar to the 'main' service.

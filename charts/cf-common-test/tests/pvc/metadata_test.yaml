@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: pvc metadata
+templates:
+  - templates/pvc.yaml
+tests:
+  - it: Test pvc default metadata
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PersistentVolumeClaim
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test-data
+
+  - it: Test retain enabled
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          retain: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PersistentVolumeClaim
+      - equal:
+          path: metadata.annotations
+          value:
+            helm.sh/resource-policy: keep
+
+  - it: Test pvc disabled
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test pvc nameOverride
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          nameOverride: alice-pvc
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PersistentVolumeClaim
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: alice-pvc

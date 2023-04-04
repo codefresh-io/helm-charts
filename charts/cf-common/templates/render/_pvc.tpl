@@ -35,9 +35,7 @@ spec:
   resources:
     requests:
       storage: {{ $pvcItem.size | quote }}
-  {{- if $pvcItem.storageClass }}
-  {{ include "cf-common-0.2.0.storageclass" ( dict "persistence" $pvcItem "global" $) }}
-  {{- end }}
+  {{ include "cf-common-0.2.0.storageclass" ( dict "persistence" $pvcItem "context" $) }}
   {{- if $pvcItem.volumeName }}
   volumeName: {{ $pvcItem.volumeName | quote }}
   {{- end }}
