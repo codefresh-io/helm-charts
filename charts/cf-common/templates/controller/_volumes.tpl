@@ -30,7 +30,7 @@ Usage:
 - name: {{ $volumeIndex }}
   {{- $volumeName := printf "%s-%s" (include "cf-common-0.2.0.names.fullname" $) $volumeIndex -}}
 
-  {{- if and (hasKey $volumeItem "existingName") $volumeItem.existingName  }}
+  {{- if and (or (hasKey $volumeItem "existingName") (hasKey $volumeItem "nameOverride")) (or $volumeItem.existingName $volumeItem.nameOverride) }}
   {{- $volumeName = include "cf-common-0.2.0.tplrender" (dict "Values" $volumeItem.existingName "context" $) -}}
   {{- end }}
 
