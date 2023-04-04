@@ -4,7 +4,7 @@ Return  the proper Storage Class
 */}}
 {{- define "cf-common-0.2.0.storageclass" -}}
 
-{{- $storageClass := .storageClass -}}
+{{- $storageClass := .persistence.storageClass -}}
 {{- if .global -}}
     {{- if .global.storageClass -}}
         {{- $storageClass = .global.storageClass -}}
