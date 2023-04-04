@@ -1,8 +1,8 @@
 {{/*
 Return  the proper Storage Class
-{{ include "cf-common-0.2.0.storageclass" ( dict "persistence" .Values.persistence.data "context" $) }}
+{{ include "cf-common-0.3.0.storageclass" ( dict "persistence" .Values.persistence.data "context" $) }}
 */}}
-{{- define "cf-common-0.2.0.storageclass" -}}
+{{- define "cf-common-0.3.0.storageclass" -}}
 
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
