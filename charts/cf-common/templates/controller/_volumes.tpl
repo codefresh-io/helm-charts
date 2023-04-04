@@ -31,7 +31,7 @@ Usage:
   {{- $volumeName := printf "%s-%s" (include "cf-common-0.2.0.names.fullname" $) $volumeIndex -}}
 
   {{- if and (or (hasKey $volumeItem "existingName") (hasKey $volumeItem "nameOverride")) (or $volumeItem.existingName $volumeItem.nameOverride) }}
-  {{- $volumeName = "debug" -}}
+  {{- $volumeName = include "cf-common-0.2.0.tplrender" (dict "Values" $volumeItem.nameOverride "context" $) -}}
   {{- end }}
 
   {{- if eq $volumeItem.type "configMap" }}
