@@ -122,11 +122,12 @@ dependencies:
 | pdb.maxUnavailable | string | `""` | Set number of pods that are unavailable after eviction as number of percentage |
 | pdb.minAvailable | string | `""` | Set number of pods that are available after eviction as number of percentage |
 | persistence | object | See below | Configure persistence for the chart Additional items can be added by adding a dictionary key similar to the 'data' key. |
-| persistence.data | object | `{"accessMode":"ReadWriteOnce","enabled":false,"retain":false,"size":"8Gi","storageClass":null}` | PersistentVolumeClaim name. |
-| persistence.data.accessMode | string | `"ReadWriteOnce"` | Set AccessMode for persistent volume |
+| persistence.data | object | `{"accessMode":"ReadWriteOnce","enabled":false,"nameOverride":null,"retain":false,"size":"1Gi","storageClass":null}` | PersistentVolumeClaim name. |
+| persistence.data.accessMode | string | `"ReadWriteOnce"` | (required) Set AccessMode for persistent volume |
 | persistence.data.enabled | bool | `false` | Enable the PVC |
+| persistence.data.nameOverride | string | `nil` | Override the PVC name |
 | persistence.data.retain | bool | `false` | Set to true to retain the PVC upon `helm uninstall` |
-| persistence.data.size | string | `"8Gi"` | Set the requested size for persistent volume |
+| persistence.data.size | string | `"1Gi"` | (required) Set the requested size for persistent volume |
 | persistence.data.storageClass | string | `nil` | Set Storage Class for PVC object If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | podAnnotations | object | `{}` | Set additional pod annotations |
 | podLabels | object | `{}` | Set additional pod labels |
