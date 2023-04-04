@@ -1,0 +1,69 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: pvc spec
+templates:
+  - templates/pvc.yaml
+tests:
+  - it: Test pvc accessMode
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    asserts:
+      - equal:
+          path: spec.accessModes
+          value:
+            - ReadWriteOnce
+
+  - it: Test pvc size
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    asserts:
+      - equal:
+          path: spec.resources.requests.storage
+          value: 1Gi
+
+  - it: Test pvc default storage class
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    asserts:
+      - isNull:
+          path: spec.storageClassName
+
+  - it: Test custom storage class
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          storageClass: ebs-csi
+    asserts:
+      - equal:
+          path: spec.storageClassName
+          value: ebs-csi
+
+  - it: Test empty storage class
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          storageClass: "-"
+    asserts:
+      - equal:
+          path: spec.storageClassName
+          value: ""
+
+  - it: Test global storage class
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      global:
+        storageClass: ebs-csi-global
+    asserts:
+      - equal:
+          path: spec.storageClassName
+          value: ebs-csi-global

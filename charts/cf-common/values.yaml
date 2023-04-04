@@ -362,11 +362,33 @@ configMaps:
     #   ALICE: "{{ .Values.global.alice }}"
     #   BOB: "{{ .Values.global.bob }}"
 
+# -- Configure persistence for the chart
+# Additional items can be added by adding a dictionary key similar to the 'data' key.
+# @default -- See below
+persistence:
+  # -- PersistentVolumeClaim name.
+  data:
+    # -- Enable the PVC
+    enabled: false
+    # -- (required) Set AccessMode for persistent volume
+    accessMode: ReadWriteOnce
+    # -- (required) Set the requested size for persistent volume
+    size: 1Gi
+    # -- Set Storage Class for PVC object
+    # If set to `-`, dynamic provisioning is disabled.
+    # If set to something else, the given storageClass is used.
+    # If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
+    storageClass:
+    # -- Set to true to retain the PVC upon `helm uninstall`
+    retain: false
+    # -- Override the PVC name
+    nameOverride:
+
 # -- Configure volume for the controller.
 # Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key.
 # @default -- See below
 volumes:
-  # -- Volume name. Make sure to use the same name in `configMaps`/`secrets` and `container.volumeMounts`
+  # -- Volume name. Make sure to use the same name in `configMaps`/`secrets`/`persistence` and `container.volumeMounts`
   config:
     # -- Enable the volume
     enabled: false
@@ -375,8 +397,11 @@ volumes:
   secret:
     enabled: false
     type: secret
+  data:
+    enabled: false
+    type: pvc
   # Configure existing volumes (from other/parent chart) for the contoller.
-  # Make sure to specify `existingName` property. Helm template supported.
+  # Make sure to specify `existingName` or `nameOverride` property. Helm template supported.
   # E.g.
   # volumes:
   #   dind-clusters:
@@ -384,6 +409,10 @@ volumes:
   #     type: secret
   #     existingName: "{{ .Values.config.dindClustersSecretName }}"
   #     optional: true
+  #   extra-data:
+  #     enabled: true
+  #     type: pvc
+  #     nameOverride: "{{ .Values.config.extraDataPvcName }}"
 
 # -- Configure services fo the chart.
 # Additional services can be added by adding a dictionary key similar to the 'main' service.
