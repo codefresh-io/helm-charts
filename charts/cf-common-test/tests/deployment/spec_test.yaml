@@ -89,6 +89,23 @@ tests:
             command: ['sh', '-c', "sleep 60"]
             imagePullPolicy: IfNotPresent
 
+  - it: Test deployment's initContainer is disabled
+    values:
+      - values.yaml
+    set:
+      initContainers:
+        sleep:
+          enabled: false
+          image:
+            registry: docker.io
+            repository: bitnami/bitnami-shell
+            tag: latest
+            pullPolicy: IfNotPresent
+          command: ['sh', '-c', "sleep 60"]
+    asserts:
+      - isNull:
+          path: spec.template.spec.initContainers
+
   - it: Test deployments nodeSelector
     values:
       - values.yaml
