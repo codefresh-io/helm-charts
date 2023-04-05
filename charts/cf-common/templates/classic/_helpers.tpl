@@ -1,10 +1,11 @@
 {{/*
 Calculate RabbitMQ URI (for On-Prem)
-Usage
-{{ include "cf-common-0.2.0.classic.calculateRabbitMqUri" . }}
+Must me called from chart root context.
+Usage:
+{{ include "cf-common-0.3.0.classic.calculateRabbitMqUri" . }}
 */}}
 
-{{- define "cf-common-0.2.0.classic.calculateRabbitMqUri" }}
+{{- define "cf-common-0.3.0.classic.calculateRabbitMqUri" }}
 
 {{- $rabbitmqProtocol := .Values.global.rabbitmqProtocol | default "amqp" -}}
 {{- $rabbitmqUsername := .Values.global.rabbitmqUsername -}}
@@ -22,9 +23,9 @@ coalesce here for backward compatibility
 {{/*
 Calculate Mongo Uri (for On-Prem)
 Usage:
-{{ include "cf.common-0.2.0.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
+{{ include "cf.common-0.3.0.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
 */}}
-{{- define "cf-common-0.2.0.classic.calculateMongoUri" -}}
+{{- define "cf-common-0.3.0.classic.calculateMongoUri" -}}
   {{- if contains "?" .mongoURI -}}
     {{- $mongoURI :=  (splitList "?" .mongoURI) -}}
     {{- printf "%s%s?%s" (first $mongoURI) .dbName (last $mongoURI) }}

@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: cronjob spec
+templates:
+  - templates/controller.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test cronjob concurrencyPolicy
+    asserts:
+      - equal:
+          path: spec.concurrencyPolicy
+          value: Forbid
+
+  - it: Test cronjob schedule
+    asserts:
+      - equal:
+          path: spec.schedule
+          value: "*/3 * * * *"
+
+  - it: Test cronjob startingDeadlineSeconds
+    asserts:
+      - equal:
+          path: spec.startingDeadlineSeconds
+          value: 30
+
+  - it: Test cronjob successfulJobsHistory
+    asserts:
+      - equal:
+          path: spec.successfulJobsHistoryLimit
+          value: 1
+
+  - it: Test cronjob failedJobsHistory
+    asserts:
+      - equal:
+          path: spec.failedJobsHistoryLimit
+          value: 1
+
+  - it: Test cronjob ttlSecondsAfterFinished
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.ttlSecondsAfterFinished
+          value: 300
+
+  - it: Test cronjob suspend
+    set:
+      controller:
+        cronjob:
+          suspend: true
+    asserts:
+      - equal:
+          path: spec.suspend
+          value: true
+
+  - it: Test cronjob activeDeadlineSeconds
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.activeDeadlineSeconds
+          value: 100
+
+  - it: Test cronjob backoffLimit
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.backoffLimit
+          value: 5
+
+  - it: Test cronjob pod restartPolicy
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.template.spec.restartPolicy
+          value: OnFailure
+
+  - it: Test cronjob parallelism
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.parallelism
+          value: 3
+
+  - it: Test cronjob completions
+    asserts:
+      - equal:
+          path: spec.jobTemplate.spec.completions
+          value: 12

@@ -1,14 +1,10 @@
 {{/*
-Create environment variables from the following structure:
-  env:
-    <variable> : <value>
-  or
-   env:
-     valueFrom:
-       secretKeyRef/configMapKeyRef/fieldRef
-Accepts: env Dict
+Renders env vars in container template.
+Called from container template.
+Usage:
+env: {{ include "cf-common-0.3.0.env-vars" (dict "Values" .Values.container.env "context" $) | nindent }}
 */}}
-{{- define "cf-common-0.2.0.env-vars"}}
+{{- define "cf-common-0.3.0.env-vars"}}
 {{- $ := .context }}
   {{- if .Values }}
     {{- if not (kindIs "map" .Values) }}
@@ -16,7 +12,7 @@ Accepts: env Dict
     {{- end }}
   {{- end }}
   {{- $env := .Values }}
-  {{- $templatedEnv := include "cf-common-0.2.0.tplrender" (dict "Values" $env "context" $) | fromYaml }}
+  {{- $templatedEnv := include "cf-common-0.3.0.tplrender" (dict "Values" $env "context" $) | fromYaml }}
   {{- range $name, $val := $templatedEnv }}
     {{- if or (kindIs "string" $val) (kindIs "bool" $val) (kindIs "int" $val) (kindIs "float64" $val) }}
 - name: {{ $name }}

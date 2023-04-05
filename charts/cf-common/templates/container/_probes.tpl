@@ -1,11 +1,10 @@
 {{/*
-Renders probes map in container
+Renders probes map in container.
+Called from container template.
 Usage:
-  {{- with .Values.probes }}
-  {{- include "cf-common-0.2.0.probes" . | trim | nindent 2 }}
-  {{- end }}
+probes: {{ include "cf-common-0.3.0.probes" .Values.container.probes | nindent 2 }}
 */}}
-{{- define "cf-common-0.2.0.probes" -}}
+{{- define "cf-common-0.3.0.probes" -}}
 
 {{- range $probeName, $probeItem := . }}
 

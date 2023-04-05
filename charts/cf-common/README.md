@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.2.0
+  version: 0.3.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -63,6 +63,13 @@ dependencies:
 | container.volumeMounts | object | `{}` | Set volume mounts for container |
 | controller | object | See below | Controller parameters |
 | controller.annotations | object | `{}` | Set annotations on controller |
+| controller.cronjob.concurrencyPolicy | string | `"Forbid"` | Specifies how to treat concurrent executions of a job that is created by this cron job, valid values are Allow, Forbid or Replace |
+| controller.cronjob.failedJobsHistory | int | `1` | The number of failed Jobs to keep |
+| controller.cronjob.schedule | string | `"*/20 * * * *"` | Sets the CronJob time when to execute your jobs |
+| controller.cronjob.startingDeadlineSeconds | int | `30` | The deadline in seconds for starting the job if it misses its scheduled time for any reason |
+| controller.cronjob.successfulJobsHistory | int | `1` | The number of succesful Jobs to keep |
+| controller.cronjob.suspend | string | `nil` | This flag tells the controller to suspend subsequent executions, it does not apply to already started executions. Defaults to false. |
+| controller.cronjob.ttlSecondsAfterFinished | string | `nil` | If this field is set, ttlSecondsAfterFinished after the Job finishes, it is eligible to be automatically deleted. |
 | controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
 | controller.deployment.rollingUpdate.maxUnavailable | string | `nil` | Set RollingUpdate max unavailable (absolute number or percentage) |
 | controller.deployment.strategy | string | `nil` | Set deployment upgrade strategy (`RollingUpdate`/`Recreate`) |
@@ -87,7 +94,7 @@ dependencies:
 | controller.rollout.canary.steps[0] | object | `{"setWeight":null}` | Sets the ratio of canary ReplicaSet in percentage. |
 | controller.rollout.canary.steps[1] | object | `{"pause":{"duration":null}}` | Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed |
 | controller.rollout.strategy | string | `nil` | Rollout update strategy - can be Canary or BlueGreen. |
-| controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`) |
+| controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`/`cronjob`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | global | object | `{"controller":{"deployment":{"rollingUpdate":{"maxSurge":null,"maxUnavailable":null},"strategy":null},"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"analysisTemplate":{"args":null,"enabled":null,"metrics":[{"failureCondition":null,"failureLimit":null,"name":null,"provider":{"newRelic":{"profile":null,"query":null}},"successCondition":null}]},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":""},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
 | global.controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |

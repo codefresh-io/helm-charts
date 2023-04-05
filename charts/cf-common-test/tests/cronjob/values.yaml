@@ -1,0 +1,41 @@
+# mock values for tests
+controller:
+  enabled: true
+  type: cronjob
+  labels: {}
+  annotations: {}
+  cronjob:
+    concurrencyPolicy: Forbid
+    schedule: "*/3 * * * *"
+    startingDeadlineSeconds: 30
+    successfulJobsHistory: 1
+    failedJobsHistory: 1
+    ttlSecondsAfterFinished: 300
+
+    activeDeadlineSeconds: 100
+    backoffLimit: 5
+    completions: 12
+    parallelism: 3
+
+  restartPolicy: OnFailure
+
+container:
+  image:
+    registry: docker.io
+    repository: bitnami/kubectl
+    tag: latest
+    pullPolicy: Always
+
+  command:
+    - "/bin/sh"
+  args:
+    - "-c"
+    - "sleep 10"
+
+  resources:
+    limits:
+      cpu: 100m
+      memory: 128Mi
+    requests:
+      cpu: 100m
+      memory: 128Mi
