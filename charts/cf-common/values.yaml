@@ -187,12 +187,12 @@ controller:
     ttlSecondsAfterFinished:
 
     # Parameters for jobTemplate in CronJob spec
-    # activeDeadlineSeconds:
-    # backoffLimit:
-    # completions:
-    # manualSelector:
-    # selector:
-    # parallelism:
+    activeDeadlineSeconds:
+    backoffLimit:
+    completions:
+    manualSelector:
+    selector:
+    parallelism:
 
 # -- Set image pull secrets as array
 imagePullSecrets: []
