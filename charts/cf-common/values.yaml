@@ -632,7 +632,8 @@ extraResources: []
 #     restartPolicy: Always
 
 # -- Map of init containers to add
-initContainers: []
+# Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name.
+initContainers: {}
 # E.g.
 # initContainers:
 #   sleep:

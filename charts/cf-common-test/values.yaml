@@ -31,7 +31,7 @@ tolerations: []
 
 affinity: {}
 
-initContainers: []
+initContainers: {}
 
 additionalContainers: []
 
