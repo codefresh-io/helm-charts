@@ -1,5 +1,5 @@
 {{/*
-Renders Ingress objects.
+Iterates over Ingress objects and calls render template.
 Must be called from chart root context.
 {{- include "cf-common-0.5.0.ingress" . -}}
 */}}
@@ -20,10 +20,11 @@ Must be called from chart root context.
   {{- end -}}
 {{- end -}}
 
-
-
+{{/*
+Renders Ingress objects.
+Called from the template above.
+*/}}
 {{- define "cf-common-0.5.0.ingress.render" -}}
-
   {{- $fullName := include "cf-common-0.5.0.names.fullname" . -}}
   {{- $ingressName := $fullName -}}
   {{- $ingressItem := .Values.ingress -}}
@@ -44,7 +45,6 @@ Must be called from chart root context.
     {{- $primaryService := get .Values.service (include "cf-common-0.5.0.service.primary" (dict "values" .Values.service)) -}}
     {{- $defaultServicePort = get $primaryService.ports (include "cf-common-0.5.0.service.primaryPort" (dict "values" $primaryService.ports)) -}}
   {{- end -}}
-
 ---
 apiVersion: networking.k8s.io/v1
 kind: Ingress
@@ -103,5 +103,4 @@ spec:
                   number: {{ include "cf-common-0.5.0.tplrender" (dict "Values" $port "context" $) }}
           {{- end }}
   {{- end }}
-
 {{- end -}}

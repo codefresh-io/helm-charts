@@ -1,5 +1,6 @@
 {{/*
-Return the primary service object
+Return the primary service object.
+Called from ingress template.
 Usage:
 {{ include "cf-common-0.5.0.service.primary" (dict "values" .Values.service) }}
 */}}

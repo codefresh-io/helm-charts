@@ -1,4 +1,9 @@
-{{/* Return the name of the primary(default) ingress object */}}
+{{/*
+Return the name of the primary ingress object.
+Called from ingress template.
+Usage:
+{{ include "cf-common-0.5.0.ingress.primary" $ }}
+*/}}
 {{- define "cf-common-0.5.0.ingress.primary" -}}
   {{- $result := "" -}}
   {{- range $name, $ingress := .Values.ingress -}}
