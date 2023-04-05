@@ -43,7 +43,7 @@ Called from the template above.
   {{- $defaultServicePort := dict -}}
   {{- if .Values.service -}}
     {{- $primaryService := get .Values.service (include "cf-common-0.5.0.service.primary" (dict "values" .Values.service)) -}}
-    {{- $defaultServicePort = get $primaryService.ports (include "cf-common-0.5.0.service.primaryPort" (dict "values" $primaryService.ports)) -}}
+    {{- $defaultServicePort = get $primaryService.ports (include "cf-common-0.5.0.service.primaryPort" (dict "values" $primaryService)) -}}
   {{- end -}}
 ---
 apiVersion: networking.k8s.io/v1
