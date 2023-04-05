@@ -186,6 +186,14 @@ controller:
     # --  If this field is set, ttlSecondsAfterFinished after the Job finishes, it is eligible to be automatically deleted.
     ttlSecondsAfterFinished:
 
+    # Parameters for jobTemplate in CronJob spec
+    # activeDeadlineSeconds:
+    # backoffLimit:
+    # completions:
+    # manualSelector:
+    # selector:
+    # parallelism:
+
 # -- Set image pull secrets as array
 imagePullSecrets: []
 # E.g.

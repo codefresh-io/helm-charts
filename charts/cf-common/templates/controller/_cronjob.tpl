@@ -30,8 +30,17 @@ spec:
   {{- end }}
   jobTemplate:
     spec:
-      {{- with .Values.controller.cronjob.ttlSecondsAfterFinished }}
-      ttlSecondsAfterFinished: {{ . }}
+      {{- with .Values.controller.cronjob.activeDeadlineSeconds }}
+      activeDeadlineSeconds: {{ . | int }}
+      {{- end }}
+      {{- with .Values.controller.cronjob.backoffLimit }}
+      backoffLimit: {{ . | int }}
+      {{- end }}
+      {{- with .Values.controller.cronjob.completions }}
+      completions: {{ . | int }}
+      {{- end }}
+      {{- with .Values.controller.cronjob.parallelism }}
+      parallelism: {{ . | int }}
       {{- end }}
       template:
         metadata:
@@ -44,4 +53,7 @@ spec:
             {{- . | nindent 12 }}
           {{- end }}
         spec: {{- include "cf-common-0.3.0.controller.pod" . | trim | nindent 10 -}}
+      {{- with .Values.controller.cronjob.ttlSecondsAfterFinished }}
+      ttlSecondsAfterFinished: {{ . }}
+      {{- end }}
 {{- end -}}
