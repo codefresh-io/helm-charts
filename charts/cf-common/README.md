@@ -122,7 +122,7 @@ dependencies:
 | ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for the ingress. |
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
-| initContainers | list | `[]` | Map of init containers to add |
+| initContainers | object | `{}` | Map of init containers to add Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name. |
 | nodeSelector | object | `{}` | Set node selection constrains |
 | pdb | object | See below | Configure Pod Disruption Budget |
 | pdb.enabled | bool | `false` | Enable PDB |
