@@ -69,9 +69,14 @@ tests:
       - values.yaml
     set:
       initContainers:
-      - name: init-myservice
-        image: busybox:1.28
-        command: ['sh', '-c', "sleep 60"]
+        sleep:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: bitnami/bitnami-shell
+            tag: latest
+            pullPolicy: IfNotPresent
+          command: ['sh', '-c', "sleep 60"]
     asserts:
       - lengthEqual:
           path: spec.template.spec.initContainers
@@ -79,9 +84,10 @@ tests:
       - contains:
           path: spec.template.spec.initContainers
           content:
-            name: init-myservice
-            image: busybox:1.28
+            name: sleep
+            image: docker.io/bitnami/bitnami-shell:latest
             command: ['sh', '-c', "sleep 60"]
+            imagePullPolicy: IfNotPresent
 
   - it: Test deployments nodeSelector
     values:
