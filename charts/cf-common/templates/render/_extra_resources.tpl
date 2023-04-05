@@ -1,5 +1,6 @@
 {{/*
 Renders Extra objects defined at .Values.extraResources
+Must be called from chart root context.
 Usage:
 {{- include "cf-common-0.3.0.extraResources" . -}}
 */}}

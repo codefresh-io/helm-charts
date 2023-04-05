@@ -1,5 +1,6 @@
 {{/*
-Renders HorizontalPodAutoscaler template
+Renders HorizontalPodAutoscaler template.
+Must be called from chart root context.
 Usage:
 {{- include "cf-common-0.3.0.hpa" . -}}
 */}}

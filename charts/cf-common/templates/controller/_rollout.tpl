@@ -1,7 +1,8 @@
 {{/*
-Renders rollout template
+Renders rollout template.
+Must be called from chart root context.
 Usage:
-{{ include "cf-common-0.3.0.controller.rollout" . | nindent 0 }}
+{{ include "cf-common-0.3.0.controller.rollout" . }}
 */}}
 {{- define "cf-common-0.3.0.controller.rollout" -}}
 

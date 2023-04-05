@@ -1,5 +1,6 @@
 {{/*
-Prints full image name
+Prints full image name.
+Called from container template.
 Usage:
 {{ include "cf-common-0.3.0.image.name" (dict "image" .Values.container.image "context" $) }}
 */}}
@@ -52,7 +53,8 @@ For backward compatibility (onprem with private docker registry)
 
 
 {{/*
-Prints full image name
+Prints full image name.
+Must be called from chart root context.
 Usage:
 {{ include "cf-common-0.3.0.image.pullSecrets" . }}
 */}}

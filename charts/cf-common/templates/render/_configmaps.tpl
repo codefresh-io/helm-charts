@@ -1,5 +1,6 @@
 {{/*
-Renders ConfigMaps templates
+Renders ConfigMaps templates.
+Must be called from chart root context.
 {{- include "cf-common-0.3.0.configmaps" . -}}
 */}}
 

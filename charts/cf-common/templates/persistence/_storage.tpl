@@ -1,5 +1,6 @@
 {{/*
-Return  the proper Storage Class
+Return  the proper Storage Class.
+Called from pvc template. Root $ context must be passed.
 {{ include "cf-common-0.3.0.storageclass" ( dict "persistence" .Values.persistence.data "context" $) }}
 */}}
 {{- define "cf-common-0.3.0.storageclass" -}}

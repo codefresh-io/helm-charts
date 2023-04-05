@@ -1,5 +1,6 @@
 {{/*
-Renders pod in controller template
+Renders pod spec.
+Called from contoller template.
 Usage:
 {{ include "cf-common-0.3.0.controller.pod" . }}
 */}}

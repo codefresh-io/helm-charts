@@ -1,5 +1,6 @@
 {{/*
-Renders Ingress templates
+Renders Ingress objects.
+Must be called from chart root context.
 {{- include "cf-common-0.3.0.ingress" . -}}
 */}}
 {{- define "cf-common-0.3.0.ingress" -}}

@@ -1,5 +1,6 @@
 {{/*
-Renders main container in pod template
+Renders main container in pod template.
+Called from pod template.
 Usage:
 {{ include "cf-common-0.3.0.container" (dict "Values" .Values.container "context" $) }}
 */}}

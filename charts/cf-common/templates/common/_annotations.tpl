@@ -1,6 +1,8 @@
 {{/*
 Render checksum annotation
+Must be called from chart root context.
 Usage:
+annotations: {{ include "cf-common-0.3.0.annotations.podAnnotations" . | nindent }}
 */}}
 {{- define "cf-common-0.3.0.annotations.podAnnotations" -}}
 

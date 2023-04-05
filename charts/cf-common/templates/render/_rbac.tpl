@@ -1,5 +1,6 @@
 {{/*
-Renders ServiceAccount/Role/RoleBinding
+Renders ServiceAccount/Role/RoleBinding objects.
+Must be called from chart root context.
 Usage:
 {{- include "cf-common-0.3.0.rbac" . -}}
 */}}

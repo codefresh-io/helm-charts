@@ -1,5 +1,7 @@
 {{/*
-Renders PersistentVolumeClaim objects
+Renders PersistentVolumeClaim objects.
+Must be called from chart root context.
+Usage:
 {{- include "cf-common-0.3.0.pvc" . -}}
 */}}
 {{- define "cf-common-0.3.0.pvc" -}}

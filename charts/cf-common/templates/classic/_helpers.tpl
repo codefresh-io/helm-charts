@@ -1,6 +1,7 @@
 {{/*
 Calculate RabbitMQ URI (for On-Prem)
-Usage
+Must me called from chart root context.
+Usage:
 {{ include "cf-common-0.3.0.classic.calculateRabbitMqUri" . }}
 */}}
 

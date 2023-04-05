@@ -1,7 +1,8 @@
 {{/*
-Renders job template
+Renders job template.
+Must be called from chart root context.
 Usage:
-{{ include "cf-common-0.3.0.controller.job" . | nindent 0 }}
+{{ include "cf-common-0.3.0.controller.job" . }}
 */}}
 
 {{- define "cf-common-0.3.0.controller.job" -}}

@@ -10,5 +10,6 @@ Render all underlying templates
 {{- include "cf-common-0.3.0.secrets" . -}}
 {{- include "cf-common-0.3.0.serviceaccount" . -}}
 {{- include "cf-common-0.3.0.rbac" . -}}
+{{- include "cf-common-0.3.0.pvc" . -}}
 
 {{- end -}}

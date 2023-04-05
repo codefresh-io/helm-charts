@@ -1,5 +1,6 @@
 {{/*
-Renders Secrets templates
+Renders Secrets objects.
+Must be called from chart root context.
 {{- include "cf-common-0.3.0.secrets" . -}}
 */}}
 {{- define "cf-common-0.3.0.secrets" -}}

@@ -75,7 +75,7 @@ tests:
           path: spec.jobTemplate.spec.parallelism
           value: 3
 
-  - it: Test job completions
+  - it: Test cronjob completions
     asserts:
       - equal:
           path: spec.jobTemplate.spec.completions

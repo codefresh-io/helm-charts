@@ -1,5 +1,6 @@
 {{/*
-Renders PodDisruptionBudget template
+Renders PodDisruptionBudget object.
+Must be called from chart root context.
 {{- include "cf-common-0.3.0.pdb" . -}}
 */}}
 

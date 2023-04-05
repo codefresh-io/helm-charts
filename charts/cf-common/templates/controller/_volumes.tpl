@@ -1,10 +1,8 @@
 {{/*
-Renders volumes in controller template
+Renders volumes in controller template.
+Called from pod template.
 Usage:
-  {{- with .Values.volumes }}
-  volumes:
-  {{ include "cf-common-0.3.0.volumes" (dict "Values" . "context" $) | trim }}
-  {{- end }}
+volumes: {{ include "cf-common-0.3.0.volumes" (dict "Values" .Values.volumes "context" $) | nindent }}
 */}}
 
 {{- define "cf-common-0.3.0.volumes" -}}

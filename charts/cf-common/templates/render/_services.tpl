@@ -1,5 +1,6 @@
 {{/*
-Renders Services templates
+Renders Services objects.
+Must be called from chart root context.
 Usage:
 {{- include "cf-common-0.3.0.service" . -}}
 */}}

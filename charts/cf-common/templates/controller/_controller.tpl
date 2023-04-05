@@ -1,5 +1,6 @@
 {{/*
-Renders contoller object
+Renders contoller object.
+Must be called from chart root context.
 Usage:
 {{- include "cf-common-0.3.0.controller" . -}}
 */}}

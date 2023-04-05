@@ -1,12 +1,8 @@
 {{/*
-Create environment variables from the following structure:
-  env:
-    <variable> : <value>
-  or
-   env:
-     valueFrom:
-       secretKeyRef/configMapKeyRef/fieldRef
-Accepts: env Dict
+Renders env vars in container template.
+Called from container template.
+Usage:
+env: {{ include "cf-common-0.3.0.env-vars" (dict "Values" .Values.container.env "context" $) | nindent }}
 */}}
 {{- define "cf-common-0.3.0.env-vars"}}
 {{- $ := .context }}
