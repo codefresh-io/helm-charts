@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.5.0](https://img.shields.io/badge/Version-0.5.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.4.0
+  version: 0.5.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -117,8 +117,8 @@ dependencies:
 | ingress.main.hosts[0].host | string | `"domain.example.com"` | Host address. Helm template can be passed. |
 | ingress.main.hosts[0].paths[0].path | string | `"/"` | Path. Helm template can be passed. |
 | ingress.main.hosts[0].paths[0].pathType | string | `nil` | Path Type (`Prefix`/`ImplementationSpecific`(default)/`Exact`) |
-| ingress.main.hosts[0].paths[0].service.name | string | `nil` | Set the service name reference for this path. Helm template can be passed. |
-| ingress.main.hosts[0].paths[0].service.port | string | `nil` | Set the service port reference for this path. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].service.name | string | `nil` | Overrides the service name reference for this path. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].service.port | string | `nil` | Overrides the service port reference for this path. Helm template can be passed. |
 | ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for the ingress. |
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
