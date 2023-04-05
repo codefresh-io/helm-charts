@@ -2,10 +2,10 @@
 Renders ports map in container. Ports are obtained from .Values.service
 Called from container template.
 Usage:
-ports: {{- include "cf-common-0.3.0.ports" $ | nindent }}
+ports: {{- include "cf-common-0.4.0.ports" $ | nindent }}
 */}}
 
-{{- define "cf-common-0.3.0.ports" -}}
+{{- define "cf-common-0.4.0.ports" -}}
 
 {{- $ports := list -}}
 {{- range $serviceName, $serviceItem := .Values.service }}
@@ -15,8 +15,8 @@ ports: {{- include "cf-common-0.3.0.ports" $ | nindent }}
   {{- end }}
 {{- end }}
 
-{{- if $ports -}}
-
+{{- if $ports }}
+ports:
 {{- range $i, $port := $ports }}
 - name: {{ $port.name }}
   containerPort: {{ $port.targetPort | default $port.port }}
@@ -31,6 +31,6 @@ ports: {{- include "cf-common-0.3.0.ports" $ | nindent }}
   {{- end }}
 {{- end }}
 
-{{- end -}}
+{{- end }}
 
 {{- end -}}

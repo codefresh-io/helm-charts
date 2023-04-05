@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.3.0](https://img.shields.io/badge/Version-0.3.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.4.0](https://img.shields.io/badge/Version-0.4.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.3.0
+  version: 0.4.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -122,7 +122,7 @@ dependencies:
 | ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for the ingress. |
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
-| initContainers | list | `[]` | Array of init containers to add |
+| initContainers | object | `{}` | Map of init containers to add Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name. |
 | nodeSelector | object | `{}` | Set node selection constrains |
 | pdb | object | See below | Configure Pod Disruption Budget |
 | pdb.enabled | bool | `false` | Enable PDB |

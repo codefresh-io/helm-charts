@@ -69,9 +69,14 @@ tests:
       - values.yaml
     set:
       initContainers:
-      - name: init-myservice
-        image: busybox:1.28
-        command: ['sh', '-c', "sleep 60"]
+        sleep:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: bitnami/bitnami-shell
+            tag: latest
+            pullPolicy: IfNotPresent
+          command: ['sh', '-c', "sleep 60"]
     asserts:
       - lengthEqual:
           path: spec.template.spec.initContainers
@@ -79,9 +84,54 @@ tests:
       - contains:
           path: spec.template.spec.initContainers
           content:
-            name: init-myservice
-            image: busybox:1.28
+            name: sleep
+            image: docker.io/bitnami/bitnami-shell:latest
             command: ['sh', '-c', "sleep 60"]
+            imagePullPolicy: IfNotPresent
+
+  - it: Test deployment's initContainer is disabled
+    values:
+      - values.yaml
+    set:
+      initContainers:
+        sleep:
+          enabled: false
+          image:
+            registry: docker.io
+            repository: bitnami/bitnami-shell
+            tag: latest
+            pullPolicy: IfNotPresent
+          command: ['sh', '-c', "sleep 60"]
+    asserts:
+      - isNull:
+          path: spec.template.spec.initContainers
+
+  - it: Test deployment's initContainer with global.imageRegistry
+    values:
+      - values.yaml
+    set:
+      global:
+        imageRegistry: myregistry.io
+      initContainers:
+        sleep:
+          enabled: true
+          image:
+            registry: docker.io
+            repository: bitnami/bitnami-shell
+            tag: latest
+            pullPolicy: IfNotPresent
+          command: ['sh', '-c', "sleep 60"]
+    asserts:
+      - lengthEqual:
+          path: spec.template.spec.initContainers
+          count: 1
+      - contains:
+          path: spec.template.spec.initContainers
+          content:
+            name: sleep
+            image: myregistry.io/bitnami/bitnami-shell:latest
+            command: ['sh', '-c', "sleep 60"]
+            imagePullPolicy: IfNotPresent
 
   - it: Test deployments nodeSelector
     values:
