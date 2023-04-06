@@ -2,14 +2,14 @@
 Render all underlying templates
 */}}
 
-{{- define "cf-common-0.5.0.all" -}}
+{{- define "cf-common-0.5.1.all" -}}
 
-{{- include "cf-common-0.5.0.controller" . -}}
-{{- include "cf-common-0.5.0.service" . -}}
-{{- include "cf-common-0.5.0.configmaps" . -}}
-{{- include "cf-common-0.5.0.secrets" . -}}
-{{- include "cf-common-0.5.0.serviceaccount" . -}}
-{{- include "cf-common-0.5.0.rbac" . -}}
-{{- include "cf-common-0.5.0.pvc" . -}}
+{{- include "cf-common-0.5.1.controller" . -}}
+{{- include "cf-common-0.5.1.service" . -}}
+{{- include "cf-common-0.5.1.configmaps" . -}}
+{{- include "cf-common-0.5.1.secrets" . -}}
+{{- include "cf-common-0.5.1.serviceaccount" . -}}
+{{- include "cf-common-0.5.1.rbac" . -}}
+{{- include "cf-common-0.5.1.pvc" . -}}
 
 {{- end -}}
