@@ -14,7 +14,6 @@ Must be called from chart root context.
   {{- if not $primary -}}
     {{- $primary = keys .Values.ingress | first -}}
   {{- end -}}
-  {{- $primary -}}
 
   {{- range $name, $ingress := .Values.ingress -}}
     {{- if $ingress.enabled -}}
