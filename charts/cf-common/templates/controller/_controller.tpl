@@ -2,10 +2,10 @@
 Renders contoller object.
 Must be called from chart root context.
 Usage:
-{{- include "cf-common-0.5.1.controller" . -}}
+{{- include "cf-common-0.5.2.controller" . -}}
 */}}
 
-{{- define "cf-common-0.5.1.controller" -}}
+{{- define "cf-common-0.5.2.controller" -}}
 
 {{- if .Values.controller.enabled -}}
 
@@ -20,16 +20,16 @@ Usage:
   {{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
 
   {{- if eq .Values.controller.type "rollout" }}
-    {{ include "cf-common-0.5.1.controller.rollout" . | nindent 0 }}
+    {{ include "cf-common-0.5.2.controller.rollout" . | nindent 0 }}
     {{- if .Values.controller.rollout.analysisTemplate.enabled }}
-    {{ include "cf-common-0.5.1.controller.analysis-template" . | nindent 0 }}
+    {{ include "cf-common-0.5.2.controller.analysis-template" . | nindent 0 }}
     {{- end }}
   {{- else if eq .Values.controller.type "deployment" }}
-    {{ include "cf-common-0.5.1.controller.deployment" . | nindent 0 }}
+    {{ include "cf-common-0.5.2.controller.deployment" . | nindent 0 }}
   {{- else if eq .Values.controller.type "job" }}
-    {{ include "cf-common-0.5.1.controller.job" . | nindent 0 }}
+    {{ include "cf-common-0.5.2.controller.job" . | nindent 0 }}
   {{- else if eq .Values.controller.type "cronjob" }}
-    {{ include "cf-common-0.5.1.controller.cronjob" . | nindent 0 }}
+    {{ include "cf-common-0.5.2.controller.cronjob" . | nindent 0 }}
   {{- else }}
     {{ fail (printf "ERROR: %s is invalid controller type!" .Values.controller.type) }}
   {{- end }}
