@@ -36,7 +36,7 @@ spec:
     - {{ required (printf "accessMode is required for PVC %v" $pvcName) $pvcItem.accessMode | quote }}
   resources:
     requests:
-      storage: {{ $pvcItem.size | quote }}
+      storage: {{ $pvcSize | quote }}
   {{ include "cf-common-0.5.1.storageclass" ( dict "persistence" $pvcItem "context" $) }}
   {{- if $pvcItem.volumeName }}
   volumeName: {{ $pvcItem.volumeName | quote }}

@@ -26,6 +26,8 @@ Usage:
     {{- end }}
   {{- else if eq .Values.controller.type "deployment" }}
     {{ include "cf-common-0.5.1.controller.deployment" . | nindent 0 }}
+  {{- else if eq .Values.controller.type "statefulset" }}
+    {{ include "cf-common-0.5.1.controller.statefulset" . | nindent 0 }}
   {{- else if eq .Values.controller.type "job" }}
     {{ include "cf-common-0.5.1.controller.job" . | nindent 0 }}
   {{- else if eq .Values.controller.type "cronjob" }}

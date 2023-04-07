@@ -89,9 +89,11 @@ controller:
   replicas:
   # -- Set ReplicaSet revision history limit
   revisionHistoryLimit:
+  # -- Set statefulset podManagementPolicy (`OrderedReady`(default)/`Parallel`).
+  podManagementPolicy:
   # Deployment parameters (overrides for global.deployment values)
   deployment:
-    # -- Set deployment upgrade strategy (`RollingUpdate`/`Recreate`)
+    # -- Set deployment upgrade strategy (`RollingUpdate`(default)/`Recreate`)
     strategy:
     # RollingUpdate strategy parameters
     rollingUpdate:
@@ -99,6 +101,14 @@ controller:
       maxUnavailable:
       # -- Set RollingUpdate max surge (absolute number or percentage)
       maxSurge:
+  # Stateful Set parametes (overrides for global.statefulset values)
+  statefulset:
+    # -- Set statefulset upgrade strategy (`RollingUpdate`(default)/`OnDelete`)
+    strategy:
+    # RollingUpdate strategy parameters
+    rollingUpdate:
+      # -- Set statefulset RollingUpdate partition
+      partition:
   # Rollout parameters (overrides for global.rollout values)
   rollout:
     # Analysis template parameters to run in the background during a rollout update.
@@ -207,6 +217,18 @@ podAnnotations: {}
 
 # -- Duration in seconds the pod needs to terminate gracefully
 terminationGracePeriodSeconds:
+
+# -- Used with `controller.type: statefulset` to create individual disks for each instance.
+volumeClaimTemplates: []
+# E.g.
+# volumeClaimTemplates:
+# - name: data
+#   labels: {}
+#   annotations: {}
+#   mountPath: /data
+#   accessMode: "ReadWriteOnce"
+#   size: 1Gi
+#   storageClass: ebs-csi
 
 # -- Main Container parameters
 # @default -- See below
