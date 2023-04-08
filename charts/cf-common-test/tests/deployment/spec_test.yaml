@@ -237,3 +237,18 @@ tests:
     asserts:
       - isNull:
           path: spec.template.spec.securityContext
+
+  - it: Test pod security context (omit enabled)
+    values:
+      - values.yaml
+    set:
+      podSecurityContext:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext
+          value:
+            runAsGroup: 0
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 0
