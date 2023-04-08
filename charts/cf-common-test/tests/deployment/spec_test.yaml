@@ -215,3 +215,40 @@ tests:
             volumeMounts:
             - name: var-logs
               mountPath: /var/log
+
+  - it: Test pod security context
+    values:
+      - values.yaml
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext
+          value:
+            runAsGroup: 0
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 0
+
+  - it: Test disabled pod security context
+    values:
+      - values.yaml
+    set:
+      podSecurityContext:
+        enabled: false
+    asserts:
+      - isNull:
+          path: spec.template.spec.securityContext
+
+  - it: Test pod security context (omit enabled)
+    values:
+      - values.yaml
+    set:
+      podSecurityContext:
+        enabled: true
+    asserts:
+      - equal:
+          path: spec.template.spec.securityContext
+          value:
+            runAsGroup: 0
+            runAsNonRoot: true
+            runAsUser: 1000
+            fsGroup: 0

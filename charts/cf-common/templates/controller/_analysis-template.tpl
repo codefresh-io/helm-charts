@@ -1,6 +1,6 @@
-{{- define "cf-common-0.5.2.controller.analysis-template" -}}
+{{- define "cf-common-0.6.0.controller.analysis-template" -}}
 
-{{- $fullName:= include "cf-common-0.5.2.names.fullname" . }}
+{{- $fullName:= include "cf-common-0.6.0.names.fullname" . }}
 
 ---
 apiVersion: argoproj.io/v1alpha1
@@ -9,7 +9,7 @@ metadata:
   name: error-rate-{{ $fullName }}
 spec:
   {{- with .Values.controller.rollout.analysisTemplate }}
-  args: {{- include "cf-common-0.5.2.tplrender" (dict "Values" .args "context" $) | nindent 4 }}
+  args: {{- include "cf-common-0.6.0.tplrender" (dict "Values" .args "context" $) | nindent 4 }}
   metrics: {{- .metrics | toYaml | nindent 4 }}
   {{- end }}
 

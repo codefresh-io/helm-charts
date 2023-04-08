@@ -2,9 +2,9 @@
 Return the primary service object.
 Called from ingress template.
 Usage:
-{{ include "cf-common-0.5.2.service.primary" (dict "values" .Values.service) }}
+{{ include "cf-common-0.6.0.service.primary" (dict "values" .Values.service) }}
 */}}
-{{- define "cf-common-0.5.2.service.primary" -}}
+{{- define "cf-common-0.6.0.service.primary" -}}
   {{- $result := "" -}}
 
   {{- range $name, $service := .values -}}
