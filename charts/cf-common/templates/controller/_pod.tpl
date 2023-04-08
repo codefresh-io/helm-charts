@@ -16,7 +16,9 @@ automountServiceAccountToken: {{ .Values.automountServiceAccountToken | default 
   {{- if not (kindIs "map" .) }}
     {{- fail "ERROR: podSecurityContext block must be a map!" }}
   {{- end }}
-securityContext: {{ toYaml . | nindent 2 }}
+{{- if not (eq .enabled false ) }}
+securityContext: {{ omit . "enabled" | toYaml | nindent 2 }}
+{{- end }}
 {{- end }}
 
 {{- with .Values.priorityClassName }}
