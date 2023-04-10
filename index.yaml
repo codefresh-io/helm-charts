@@ -566,4 +566,25 @@ entries:
     urls:
     - https://github.com/codefresh-io/helm-charts/releases/download/cf-common-test-0.0.0/cf-common-test-0.0.0.tgz
     version: 0.0.0
-generated: "2023-04-08T16:21:48.495306228Z"
+  internal-gateway:
+  - apiVersion: v2
+    appVersion: v0.0.0
+    created: "2023-04-10T06:54:31.228531394Z"
+    dependencies:
+    - name: cf-common
+      repository: https://chartmuseum.codefresh.io/cf-common
+      version: 0.6.0
+    description: A Helm chart for Codefresh Internal Gateway
+    digest: f49719a88c26ea1775cea25cc2041d255a350bf33a14218080aca9f25afc2995
+    home: https://github.com/codefresh-io/helm-charts
+    keywords:
+    - codefresh
+    - gateway
+    maintainers:
+    - name: codefresh
+      url: https://codefresh-io.github.io/
+    name: internal-gateway
+    urls:
+    - https://github.com/codefresh-io/helm-charts/releases/download/internal-gateway-0.1.0/internal-gateway-0.1.0.tgz
+    version: 0.1.0
+generated: "2023-04-10T06:54:31.228613895Z"
