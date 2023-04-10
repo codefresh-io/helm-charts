@@ -3,7 +3,7 @@ suite: classic connection Uri
 templates:
   - templates/controller.yaml
 tests:
-  - it: Test External RabbitMQ connection Uri
+  - it: Test RabbitMQ connection Uri
     values:
       - values.yaml
     set:
@@ -24,25 +24,19 @@ tests:
             name: RABBIT_URL
             value: "amqps://username:password@hostname.domain:5671"
 
-  - it: Test Internal RabbitMQ connection Uri
-    release:
-      name: cf
+  - it: Test External MongoDB connection Uri
     values:
       - values.yaml
     set:
       global:
-        rabbitmqService: rabbitmq
-      rabbitmq:
-        enabled: true
-        auth:
-          username: user
-          password: pass
+        mongoURI: mongodb+srv://username:password@domain.com:27017/?tls=true&tlsInsecure=true
+        pipelineManagerService: pipeline-manager
       container:
         env:
-          RABBIT_URL: '{{ include (printf "cf-common-%s.classic.calculateRabbitMqUri" (index .Subcharts "cf-common").Chart.Version) . }}'
+          MONGO_URI: '{{ include (printf "cf-common-%s.classic.calculateMongoUri" (index .Subcharts "cf-common").Chart.Version) (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}'
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
           content:
-            name: RABBIT_URL
-            value: "amqp://user:pass@cf-rabbitmq"
+            name: MONGO_URI
+            value: "mongodb+srv://username:password@domain.com:27017/pipeline-manager?tls=true&tlsInsecure=true"

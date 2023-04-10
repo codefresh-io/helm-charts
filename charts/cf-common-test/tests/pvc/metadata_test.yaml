@@ -1,16 +1,17 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
-suite: job metadata
+suite: pvc metadata
 templates:
-  - templates/controller.yaml
+  - templates/pvc.yaml
 tests:
-  - it: Test job default metadata
+  - it: Test pvc default metadata
+    template: templates/pvc.yaml
     values:
       - values.yaml
     asserts:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Job
+          of: PersistentVolumeClaim
       - isNull:
           path: metadata.annotations
       - equal:
@@ -22,26 +23,53 @@ tests:
             helm.sh/chart: cf-common-test-0.0.0
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-cf-common-test
+          value: RELEASE-NAME-cf-common-test-data
 
-  - it: Test job custom metadata
+  - it: Test retain enabled
+    template: templates/pvc.yaml
     values:
       - values.yaml
     set:
-      controller:
-        labels:
-          alice: bob
-        annotations:
-          foo: bar
+      persistence:
+        data:
+          retain: true
     asserts:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Job
+          of: PersistentVolumeClaim
       - equal:
           path: metadata.annotations
           value:
-            foo: bar
+            helm.sh/resource-policy: keep
+
+  - it: Test pvc disabled
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          enabled: false
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test pvc nameOverride
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          nameOverride: alice-pvc
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: PersistentVolumeClaim
+      - isNull:
+          path: metadata.annotations
       - equal:
           path: metadata.labels
           value:
@@ -49,20 +77,6 @@ tests:
             app.kubernetes.io/managed-by: Helm
             app.kubernetes.io/name: cf-common-test
             helm.sh/chart: cf-common-test-0.0.0
-            alice: bob
-
-  - it: Test pod labels and annotations
-    values:
-      - values.yaml
-    set:
-      podLabels:
-        alice: bob
-      podAnnotations:
-        foo: bar
-    asserts:
       - equal:
-          path: spec.template.metadata.labels.alice
-          value: bob
-      - equal:
-          path: spec.template.metadata.annotations.foo
-          value: bar
+          path: metadata.name
+          value: alice-pvc

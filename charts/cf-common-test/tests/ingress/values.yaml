@@ -11,6 +11,15 @@ ingress:
           - path: /path
             pathType: ImplementationSpecific
             service:
-              name: svc-test
-              port: 8080
+              port: 80
     tls: []
+
+service:
+  main:
+    enabled: false
+    type: ClusterIP
+    ports:
+      http:
+        port: 80
+        protocol: HTTP
+        targetPort: 8080

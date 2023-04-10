@@ -1,0 +1,61 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: deployment with pvc
+templates:
+  - templates/controller.yaml
+  - templates/pvc.yaml
+tests:
+  - it: Test pvc volume in deployment
+    template: templates/controller.yaml
+    values:
+      - values.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            persistentVolumeClaim:
+              claimName: RELEASE-NAME-cf-common-test-data
+
+  - it: Test pvc volume mount in deployment container
+    template: templates/controller.yaml
+    values:
+      - values.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: data
+            mountPath: /var/lib/data
+
+  - it: Test existing PVC
+    templates:
+      - templates/controller.yaml
+      - templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          enabled: false
+      volumes:
+        data:
+          enabled: true
+          type: pvc
+          nameOverride: some-external-pvc
+    asserts:
+      - hasDocuments:
+          count: 0
+        template: templates/pvc.yaml
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: data
+            persistentVolumeClaim:
+              claimName: some-external-pvc
+        template: templates/controller.yaml
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: data
+            mountPath: /var/lib/data
+        template: templates/controller.yaml

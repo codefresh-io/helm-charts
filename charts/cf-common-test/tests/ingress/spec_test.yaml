@@ -14,13 +14,35 @@ tests:
           path: spec.rules[0].http.paths[0].path
           value: /path
 
-  - it: Test service and port
+  - it: Test default (from service) service and port
     values:
       - values.yaml
     asserts:
       - equal:
           path: spec.rules[0].http.paths[0].backend.service.name
-          value: svc-test
+          value: RELEASE-NAME-cf-common-test
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.port.number
+          value: 80
+
+  - it: Test override service and port
+    values:
+      - values.yaml
+    set:
+      ingress:
+        main:
+          hosts:
+            - host: host.domain.local
+              paths:
+                - path: /path
+                  pathType: ImplementationSpecific
+                  service:
+                    name: some-other-svc
+                    port: 8080
+    asserts:
+      - equal:
+          path: spec.rules[0].http.paths[0].backend.service.name
+          value: some-other-svc
       - equal:
           path: spec.rules[0].http.paths[0].backend.service.port.number
           value: 8080

@@ -1,24 +1,15 @@
 {{/*
-Calculate RabbitMQ URI
-Usage
-{{ include "cf-common-0.1.0.classic.calculateRabbitMqUri" . }}
+Calculate RabbitMQ URI (for On-Prem)
+Must me called from chart root context.
+Usage:
+{{ include "cf-common-0.6.0.classic.calculateRabbitMqUri" . }}
 */}}
 
-{{- define "cf-common-0.1.0.classic.calculateRabbitMqUri" }}
+{{- define "cf-common-0.6.0.classic.calculateRabbitMqUri" }}
 
-{{- $rabbitmqProtocol := $.Values.global.rabbitmqProtocol | default "amqp" -}}
+{{- $rabbitmqProtocol := .Values.global.rabbitmqProtocol | default "amqp" -}}
 {{- $rabbitmqUsername := .Values.global.rabbitmqUsername -}}
 {{- $rabbitmqPassword := .Values.global.rabbitmqPassword -}}
-
-{{- /*
-If built-in bitnami/rabbitmq chart enabled get username/password there
-*/}}
-{{- if $.Values.rabbitmq }}
-  {{- if $.Values.rabbitmq.enabled }}
-    {{- $rabbitmqUsername = .Values.rabbitmq.auth.username -}}
-    {{- $rabbitmqPassword = .Values.rabbitmq.auth.password -}}
-  {{- end }}
-{{- end }}
 
 {{- /*
 coalesce here for backward compatibility
@@ -28,3 +19,17 @@ coalesce here for backward compatibility
 {{- printf "%s://%s:%s@%s" $rabbitmqProtocol $rabbitmqUsername $rabbitmqPassword $rabbitmqHostname -}}
 
 {{- end }}
+
+{{/*
+Calculate Mongo Uri (for On-Prem)
+Usage:
+{{ include "cf.common-0.6.0.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
+*/}}
+{{- define "cf-common-0.6.0.classic.calculateMongoUri" -}}
+  {{- if contains "?" .mongoURI -}}
+    {{- $mongoURI :=  (splitList "?" .mongoURI) -}}
+    {{- printf "%s%s?%s" (first $mongoURI) .dbName (last $mongoURI) }}
+  {{- else -}}
+    {{- printf "%s/%s" .mongoURI .dbName -}}
+  {{- end -}}
+{{- end -}}

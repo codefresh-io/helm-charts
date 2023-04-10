@@ -1,16 +1,16 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
-suite: job metadata
+suite: cronjob metadata
 templates:
   - templates/controller.yaml
 tests:
-  - it: Test job default metadata
+  - it: Test cronjob default metadata
     values:
       - values.yaml
     asserts:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Job
+          of: CronJob
       - isNull:
           path: metadata.annotations
       - equal:
@@ -24,7 +24,7 @@ tests:
           path: metadata.name
           value: RELEASE-NAME-cf-common-test
 
-  - it: Test job custom metadata
+  - it: Test cronjob custom metadata
     values:
       - values.yaml
     set:
@@ -37,7 +37,7 @@ tests:
       - hasDocuments:
           count: 1
       - isKind:
-          of: Job
+          of: CronJob
       - equal:
           path: metadata.annotations
           value:
@@ -61,8 +61,8 @@ tests:
         foo: bar
     asserts:
       - equal:
-          path: spec.template.metadata.labels.alice
+          path: spec.jobTemplate.spec.template.metadata.labels.alice
           value: bob
       - equal:
-          path: spec.template.metadata.annotations.foo
+          path: spec.jobTemplate.spec.template.metadata.annotations.foo
           value: bar

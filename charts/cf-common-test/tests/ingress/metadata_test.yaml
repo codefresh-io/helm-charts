@@ -22,7 +22,7 @@ tests:
             helm.sh/chart: cf-common-test-0.0.0
       - equal:
           path: metadata.name
-          value: RELEASE-NAME-cf-common-test-main
+          value: RELEASE-NAME-cf-common-test
 
   - it: Test Ingress custom metadata
     values:

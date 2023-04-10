@@ -1,0 +1,30 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: pvc error handlers
+templates:
+  - templates/pvc.yaml
+tests:
+  - it: Test required pvc size
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          enabled: true
+          size: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "size is required for PVC RELEASE-NAME-cf-common-test-data"
+
+  - it: Test required pvc accessMode
+    template: templates/pvc.yaml
+    values:
+      - values.yaml
+    set:
+      persistence:
+        data:
+          enabled: true
+          accessMode: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "accessMode is required for PVC RELEASE-NAME-cf-common-test-data"

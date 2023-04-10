@@ -19,6 +19,12 @@ controller:
       maxSurge: "50%"
   revisionHistoryLimit: 5
 
+podSecurityContext:
+  runAsGroup: 0
+  runAsNonRoot: true
+  runAsUser: 1000
+  fsGroup: 0
+
 container:
   image:
     registry: 839151377425.dkr.ecr.us-east-1.amazonaws.com/codefresh-inc

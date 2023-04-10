@@ -1,0 +1,39 @@
+# mock values for tests
+global: {}
+
+controller:
+  enabled: true
+  type: deployment
+  labels: {}
+  annotations: {}
+  replicas: 2
+  deployment:
+    strategy: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: "50%"
+  revisionHistoryLimit: 5
+
+container:
+  image:
+    registry: 839151377425.dkr.ecr.us-east-1.amazonaws.com/codefresh-inc
+    repository: codefresh/cf-api
+    tag: master
+    pullPolicy: Always
+
+
+  volumeMounts:
+    data:
+      path:
+      - mountPath: /var/lib/data
+
+persistence:
+  data:
+    enabled: true
+    size: 1Gi
+    accessMode: ReadWriteOnce
+
+volumes:
+  data:
+    enabled: true
+    type: pvc

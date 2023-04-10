@@ -3,36 +3,6 @@ suite: ingress error handler
 templates:
   - templates/ingress.yaml
 tests:
-  - it: Test no service name specified
-    set:
-      ingress:
-        main:
-          enabled: true
-          hosts:
-            - host: host.domain.local
-              paths:
-                - path: /path
-                  service:
-                    port: 80
-    asserts:
-      - failedTemplate:
-          errorMessage: "service.name is required for ingress main!"
-
-  - it: Test no service port specified
-    set:
-      ingress:
-        main:
-          enabled: true
-          hosts:
-            - host: host.domain.local
-              paths:
-                - path: /path
-                  service:
-                    name: svc-test
-    asserts:
-      - failedTemplate:
-          errorMessage: "service.port is required for ingress main!"
-
   - it: Test tls as invalid type
     values:
       - values.yaml

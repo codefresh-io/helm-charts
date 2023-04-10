@@ -77,7 +77,7 @@ global:
 # -- Controller parameters
 # @default -- See below
 controller:
-  # -- Define the controller type (`deployment`/`rollout`/`job`)
+  # -- Define the controller type (`deployment`/`rollout`/`job`/`cronjob`)
   type: ""
   # -- Set labels on controller
   labels: {}
@@ -169,6 +169,30 @@ controller:
     suspend:
     # -- Set the limit on the lifetime of a Job that has finished execution (either Complete or Failed). (int)
     ttlSecondsAfterFinished:
+  # CronJob parameters
+  cronjob:
+    # -- Specifies how to treat concurrent executions of a job that is created by this cron job, valid values are Allow, Forbid or Replace
+    concurrencyPolicy: Forbid
+    # -- Sets the CronJob time when to execute your jobs
+    schedule: "*/20 * * * *"
+    # -- The deadline in seconds for starting the job if it misses its scheduled time for any reason
+    startingDeadlineSeconds: 30
+    # -- The number of succesful Jobs to keep
+    successfulJobsHistory: 1
+    # -- The number of failed Jobs to keep
+    failedJobsHistory: 1
+    # -- This flag tells the controller to suspend subsequent executions, it does not apply to already started executions. Defaults to false.
+    suspend:
+    # --  If this field is set, ttlSecondsAfterFinished after the Job finishes, it is eligible to be automatically deleted.
+    ttlSecondsAfterFinished:
+
+    # Parameters for jobTemplate in CronJob spec
+    activeDeadlineSeconds:
+    backoffLimit:
+    completions:
+    manualSelector:
+    selector:
+    parallelism:
 
 # -- Set image pull secrets as array
 imagePullSecrets: []
@@ -362,11 +386,33 @@ configMaps:
     #   ALICE: "{{ .Values.global.alice }}"
     #   BOB: "{{ .Values.global.bob }}"
 
+# -- Configure persistence for the chart
+# Additional items can be added by adding a dictionary key similar to the 'data' key.
+# @default -- See below
+persistence:
+  # -- PersistentVolumeClaim name.
+  data:
+    # -- Enable the PVC
+    enabled: false
+    # -- (required) Set AccessMode for persistent volume
+    accessMode: ReadWriteOnce
+    # -- (required) Set the requested size for persistent volume
+    size: 1Gi
+    # -- Set Storage Class for PVC object
+    # If set to `-`, dynamic provisioning is disabled.
+    # If set to something else, the given storageClass is used.
+    # If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner.
+    storageClass:
+    # -- Set to true to retain the PVC upon `helm uninstall`
+    retain: false
+    # -- Override the PVC name
+    nameOverride:
+
 # -- Configure volume for the controller.
 # Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key.
 # @default -- See below
 volumes:
-  # -- Volume name. Make sure to use the same name in `configMaps`/`secrets` and `container.volumeMounts`
+  # -- Volume name. Make sure to use the same name in `configMaps`/`secrets`/`persistence` and `container.volumeMounts`
   config:
     # -- Enable the volume
     enabled: false
@@ -375,8 +421,11 @@ volumes:
   secret:
     enabled: false
     type: secret
+  data:
+    enabled: false
+    type: pvc
   # Configure existing volumes (from other/parent chart) for the contoller.
-  # Make sure to specify `existingName` property. Helm template supported.
+  # Make sure to specify `existingName` or `nameOverride` property. Helm template supported.
   # E.g.
   # volumes:
   #   dind-clusters:
@@ -384,6 +433,10 @@ volumes:
   #     type: secret
   #     existingName: "{{ .Values.config.dindClustersSecretName }}"
   #     optional: true
+  #   extra-data:
+  #     enabled: true
+  #     type: pvc
+  #     nameOverride: "{{ .Values.config.extraDataPvcName }}"
 
 # -- Configure services fo the chart.
 # Additional services can be added by adding a dictionary key similar to the 'main' service.
@@ -447,9 +500,9 @@ ingress:
             # -- Path Type (`Prefix`/`ImplementationSpecific`(default)/`Exact`)
             pathType:
             service:
-              # -- Set the service name reference for this path. Helm template can be passed.
+              # -- Overrides the service name reference for this path. Helm template can be passed.
               name:
-              # -- Set the service port reference for this path. Helm template can be passed.
+              # -- Overrides the service port reference for this path. Helm template can be passed.
               port:
 
     # -- Configure TLS for the ingress. Both secretName and hosts can process a Helm template.
@@ -578,12 +631,18 @@ extraResources: []
 #       imagePullPolicy: IfNotPresent
 #     restartPolicy: Always
 
-# -- Array of init containers to add
-initContainers: []
+# -- Map of init containers to add
+# Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name.
+initContainers: {}
 # E.g.
 # initContainers:
-#   - name: init-myservice
-#     image: busybox:1.28
+#   sleep:
+#     enabled: true
+#     image:
+#       registry: docker.io
+#       repository: bitnami/bitnami-shell
+#       tag: latest
+#       pullPolicy: IfNotPresent
 #     command: ['sh', '-c', "sleep 60"]
 
 # -- Array of extra (sidecar) containers to add

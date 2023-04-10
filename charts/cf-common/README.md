@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.1.0
+  version: 0.6.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -63,6 +63,13 @@ dependencies:
 | container.volumeMounts | object | `{}` | Set volume mounts for container |
 | controller | object | See below | Controller parameters |
 | controller.annotations | object | `{}` | Set annotations on controller |
+| controller.cronjob.concurrencyPolicy | string | `"Forbid"` | Specifies how to treat concurrent executions of a job that is created by this cron job, valid values are Allow, Forbid or Replace |
+| controller.cronjob.failedJobsHistory | int | `1` | The number of failed Jobs to keep |
+| controller.cronjob.schedule | string | `"*/20 * * * *"` | Sets the CronJob time when to execute your jobs |
+| controller.cronjob.startingDeadlineSeconds | int | `30` | The deadline in seconds for starting the job if it misses its scheduled time for any reason |
+| controller.cronjob.successfulJobsHistory | int | `1` | The number of succesful Jobs to keep |
+| controller.cronjob.suspend | string | `nil` | This flag tells the controller to suspend subsequent executions, it does not apply to already started executions. Defaults to false. |
+| controller.cronjob.ttlSecondsAfterFinished | string | `nil` | If this field is set, ttlSecondsAfterFinished after the Job finishes, it is eligible to be automatically deleted. |
 | controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
 | controller.deployment.rollingUpdate.maxUnavailable | string | `nil` | Set RollingUpdate max unavailable (absolute number or percentage) |
 | controller.deployment.strategy | string | `nil` | Set deployment upgrade strategy (`RollingUpdate`/`Recreate`) |
@@ -87,7 +94,7 @@ dependencies:
 | controller.rollout.canary.steps[0] | object | `{"setWeight":null}` | Sets the ratio of canary ReplicaSet in percentage. |
 | controller.rollout.canary.steps[1] | object | `{"pause":{"duration":null}}` | Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed |
 | controller.rollout.strategy | string | `nil` | Rollout update strategy - can be Canary or BlueGreen. |
-| controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`) |
+| controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`/`cronjob`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | global | object | `{"controller":{"deployment":{"rollingUpdate":{"maxSurge":null,"maxUnavailable":null},"strategy":null},"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"analysisTemplate":{"args":null,"enabled":null,"metrics":[{"failureCondition":null,"failureLimit":null,"name":null,"provider":{"newRelic":{"profile":null,"query":null}},"successCondition":null}]},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":""},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
 | global.controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
@@ -110,17 +117,25 @@ dependencies:
 | ingress.main.hosts[0].host | string | `"domain.example.com"` | Host address. Helm template can be passed. |
 | ingress.main.hosts[0].paths[0].path | string | `"/"` | Path. Helm template can be passed. |
 | ingress.main.hosts[0].paths[0].pathType | string | `nil` | Path Type (`Prefix`/`ImplementationSpecific`(default)/`Exact`) |
-| ingress.main.hosts[0].paths[0].service.name | string | `nil` | Set the service name reference for this path. Helm template can be passed. |
-| ingress.main.hosts[0].paths[0].service.port | string | `nil` | Set the service port reference for this path. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].service.name | string | `nil` | Overrides the service name reference for this path. Helm template can be passed. |
+| ingress.main.hosts[0].paths[0].service.port | string | `nil` | Overrides the service port reference for this path. Helm template can be passed. |
 | ingress.main.ingressClassName | string | `nil` | Set the ingressClass that is used for the ingress. |
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
-| initContainers | list | `[]` | Array of init containers to add |
+| initContainers | object | `{}` | Map of init containers to add Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name. |
 | nodeSelector | object | `{}` | Set node selection constrains |
 | pdb | object | See below | Configure Pod Disruption Budget |
 | pdb.enabled | bool | `false` | Enable PDB |
 | pdb.maxUnavailable | string | `""` | Set number of pods that are unavailable after eviction as number of percentage |
 | pdb.minAvailable | string | `""` | Set number of pods that are available after eviction as number of percentage |
+| persistence | object | See below | Configure persistence for the chart Additional items can be added by adding a dictionary key similar to the 'data' key. |
+| persistence.data | object | `{"accessMode":"ReadWriteOnce","enabled":false,"nameOverride":null,"retain":false,"size":"1Gi","storageClass":null}` | PersistentVolumeClaim name. |
+| persistence.data.accessMode | string | `"ReadWriteOnce"` | (required) Set AccessMode for persistent volume |
+| persistence.data.enabled | bool | `false` | Enable the PVC |
+| persistence.data.nameOverride | string | `nil` | Override the PVC name |
+| persistence.data.retain | bool | `false` | Set to true to retain the PVC upon `helm uninstall` |
+| persistence.data.size | string | `"1Gi"` | (required) Set the requested size for persistent volume |
+| persistence.data.storageClass | string | `nil` | Set Storage Class for PVC object If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | podAnnotations | object | `{}` | Set additional pod annotations |
 | podLabels | object | `{}` | Set additional pod labels |
 | podSecurityContext | object | `{}` | Set security context for the pod |
@@ -155,7 +170,7 @@ dependencies:
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |
 | volumes | object | See below | Configure volume for the controller. Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key. |
-| volumes.config | object | `{"enabled":false,"type":"configMap"}` | Volume name. Make sure to use the same name in `configMaps`/`secrets` and `container.volumeMounts` |
+| volumes.config | object | `{"enabled":false,"type":"configMap"}` | Volume name. Make sure to use the same name in `configMaps`/`secrets`/`persistence` and `container.volumeMounts` |
 | volumes.config.enabled | bool | `false` | Enable the volume |
 | volumes.config.type | string | `"configMap"` | Volume type (configMap/secret) |
 

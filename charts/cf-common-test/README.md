@@ -31,7 +31,7 @@ Codefresh library chart - test chart - not for deployment!
 | global | object | `{}` |  |
 | hpa | object | `{}` |  |
 | ingress | object | `{}` |  |
-| initContainers | list | `[]` |  |
+| initContainers | object | `{}` |  |
 | nodeSelector | object | `{}` |  |
 | pdb | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
