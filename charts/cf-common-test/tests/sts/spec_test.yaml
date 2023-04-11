@@ -129,3 +129,14 @@ tests:
             name: data
             mountPath: /data
             subPath: subpath
+
+  - it: Test sts volumeClaimTemplates disabled
+    values:
+      - values.yaml
+    set:
+      volumeClaimTemplates:
+        data:
+          enabled: false
+    asserts:
+      - isEmpty:
+          path: spec.volumeClaimTemplates
