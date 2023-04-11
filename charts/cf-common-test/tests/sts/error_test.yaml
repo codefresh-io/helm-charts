@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: sts error handlers
+templates:
+  - templates/controller.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test invalid controller strategy for sts
+    values:
+      - values.yaml
+    set:
+      controller:
+        strategy: RollingStones
+    asserts:
+      - failedTemplate:
+          errorMessage: "RollingStones is invalid controller strategy for Stateful Set!"
+
+  - it: Test invalid sts podManagementPolicy
+    values:
+      - values.yaml
+    set:
+      controller:
+        podManagementPolicy: Sequential
+    asserts:
+      - failedTemplate:
+          errorMessage: "Sequential is invalid Stateful Set podManagementPolicy!"

@@ -1,0 +1,131 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: sts spec
+templates:
+  - templates/controller.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test sts matchLabels
+    asserts:
+      - isNotEmpty:
+          path: spec.selector.matchLabels
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: cf-common-test
+
+  - it: Test sts updateStrategy
+    asserts:
+      - equal:
+          path: spec.updateStrategy.type
+          value: RollingUpdate
+
+  - it: Test sts updateStrategy override
+    values:
+      - values.yaml
+    set:
+      controller:
+        strategy: OnDelete
+    asserts:
+      - equal:
+          path: spec.updateStrategy.type
+          value: OnDelete
+
+  - it: Test sts replica number
+    asserts:
+      - equal:
+          path: spec.replicas
+          value: 2
+
+  - it: Test sts revisionHistoryLimit
+    asserts:
+      - equal:
+          path: spec.revisionHistoryLimit
+          value: 5
+
+  - it: Test sts serviceName
+    asserts:
+      - equal:
+          path: spec.serviceName
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test sts serviceName
+    asserts:
+      - equal:
+          path: spec.serviceName
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test sts podManagementPolicy
+    asserts:
+      - equal:
+          path: spec.podManagementPolicy
+          value: OrderedReady
+
+  - it: Test sts podManagementPolicy override
+    values:
+      - values.yaml
+    set:
+      controller:
+        podManagementPolicy: Parallel
+    asserts:
+      - equal:
+          path: spec.podManagementPolicy
+          value: Parallel
+
+  - it: Test sts volumeClaimTemplates
+    asserts:
+      - isNotEmpty:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.volumeClaimTemplates
+          content:
+            metadata:
+              name: data
+            spec:
+              accessModes:
+                - "ReadWriteOnce"
+              resources:
+                requests:
+                  storage: "100Mi"
+
+  - it: Test sts volumeClaimTemplates overrides
+    values:
+      - values.yaml
+    set:
+      volumeClaimTemplates:
+      - name: data
+        labels:
+          alice: bob
+        annotations:
+          foo: bar
+        mountPath: /data
+        subPath: subpath
+        accessMode: "ReadWriteOnce"
+        size: 200Mi
+        storageClass: hostpath
+    asserts:
+      - isNotEmpty:
+          path: spec.volumeClaimTemplates
+      - contains:
+          path: spec.volumeClaimTemplates
+          content:
+            metadata:
+              name: data
+              labels:
+                alice: bob
+              annotations:
+                foo: bar
+            spec:
+              accessModes:
+                - "ReadWriteOnce"
+              resources:
+                requests:
+                  storage: "200Mi"
+              storageClassName: hostpath
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: data
+            mountPath: /data
+            subPath: subpath
