@@ -73,8 +73,9 @@ spec:
     spec: {{- include "cf-common-0.7.0.controller.pod" . | trim | nindent 6 }}
   volumeClaimTemplates:
   {{- range $claimIndex, $claimItem := .Values.volumeClaimTemplates }}
+    {{- if not (eq $claimItem.enabled false ) }}
     - metadata:
-        name: {{ $claimItem.name }}
+        name: {{ $claimIndex }}
         {{- with ($claimItem.labels | default dict) }}
         labels: {{- include "cf-common-0.7.0.tplrender" (dict "Values" . "context" $) | nindent 10 }}
         {{- end }}
@@ -89,5 +90,6 @@ spec:
           requests:
             storage: {{ $claimSize | quote }}
         {{ include "cf-common-0.7.0.storageclass" ( dict "persistence" $claimItem "context" $) }}
+      {{- end }}
     {{- end }}
 {{- end -}}

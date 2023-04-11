@@ -44,11 +44,11 @@ volumeMounts: {{- include "cf-common-0.7.0.volumeMounts" (dict "Values" .Values.
 {{- end }}
 
 {{- if eq $.Values.controller.type "statefulset" }}
-  {{- range $index, $claim := $.Values.volumeClaimTemplates }}
-- mountPath: {{ $claim.mountPath }}
-  name: {{ $claim.name }}
-    {{- if $claim.subPath }}
-  subPath: {{ $claim.subPath }}
+  {{- range $claimIndex, $claimItem := $.Values.volumeClaimTemplates }}
+- mountPath: {{ $claimItem.mountPath }}
+  name: {{ $claimIndex }}
+    {{- if $claimItem.subPath }}
+  subPath: {{ $claimItem.subPath }}
     {{- end }}
   {{- end }}
 {{- end }}
