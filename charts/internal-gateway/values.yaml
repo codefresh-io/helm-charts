@@ -132,6 +132,9 @@ nginx:
           }
 
           location /api/auth/authenticate {
+            proxy_http_version 1.1;
+            proxy_set_header "Connection" "";
+
             # Authenticate through Classic CF platform
             set $cfapi_svc {{ .Values.codefresh.cfApiEndpointsSvc }};
             set $cfapi_port {{ .Values.codefresh.cfApiEndpointsPort }};
