@@ -167,7 +167,7 @@ dependencies:
 | terminationGracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully |
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |
-| volumeClaimTemplates | list | `[]` | Used with `controller.type: statefulset` to create individual disks for each instance. |
+| volumeClaimTemplates | object | `{}` | Used with `controller.type: statefulset` to create individual disks for each instance. |
 | volumes | object | See below | Configure volume for the controller. Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key. |
 | volumes.config | object | `{"enabled":false,"type":"configMap"}` | Volume name. Make sure to use the same name in `configMaps`/`secrets`/`persistence` and `container.volumeMounts` |
 | volumes.config.enabled | bool | `false` | Enable the volume |
