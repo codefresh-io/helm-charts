@@ -5,11 +5,7 @@ Usage:
 {{- include "cf-common-0.6.0.service" . -}}
 */}}
 
-<<<<<<< HEAD
-{{- define "cf-common-0.5.1.service" -}}
-=======
 {{- define "cf-common-0.6.0.service" }}
->>>>>>> origin/master
 
 {{- if not (kindIs "map" .Values.service) }}
   {{- fail "ERROR: service block must be a map!" }}
@@ -26,13 +22,8 @@ Usage:
   {{ fail ( printf "ERROR: service.%s.type is invalid service type!" $serviceIndex ) }}
 {{- end -}}
 
-<<<<<<< HEAD
 {{- if eq $serviceIndex $primary }}
-  {{- $serviceName = include "cf-common-0.5.1.names.fullname" $ -}}
-=======
-{{- if and (hasKey $serviceItem "primary") $serviceItem.primary }}
   {{- $serviceName = include "cf-common-0.6.0.names.fullname" $ -}}
->>>>>>> origin/master
 {{- else }}
   {{- $serviceName = printf "%s-%s" (include "cf-common-0.6.0.names.fullname" $) $serviceIndex -}}
 {{- end }}
