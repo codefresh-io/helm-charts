@@ -29,12 +29,11 @@ controller:
   revisionHistoryLimit:
   # -- Set statefulset podManagementPolicy (`OrderedReady`(default)/`Parallel`).
   podManagementPolicy:
-
   # -- Set controller upgrade strategy
   # For Deployment: `RollingUpdate`(default) / `Recreate`
   # For StatefulSet: `RollingUpdate`(default) / `OnDelete`
   strategy:
-  # RollingUpdate strategy parameters
+  # -- RollingUpdate strategy parameters
   rollingUpdate:
     # -- (Deployment) Set RollingUpdate max unavailable (absolute number or percentage)
     maxUnavailable:
@@ -42,7 +41,6 @@ controller:
     maxSurge:
     # -- (StatefulSet) Set RollingUpdate partition
     partition:
-
   # Deployment parameters (overrides for global.deployment values)
   deployment:
     # Override upgrade strategy and its parameters
