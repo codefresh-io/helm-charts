@@ -169,13 +169,13 @@ terminationGracePeriodSeconds:
 volumeClaimTemplates: {}
 # E.g.
 # volumeClaimTemplates:
-# data:
-#   labels: {}
-#   annotations: {}
-#   mountPath: /data
-#   accessMode: "ReadWriteOnce"
-#   size: 1Gi
-#   storageClass: ebs-csi
+#   data:
+#     labels: {}
+#     annotations: {}
+#     mountPath: /data
+#     accessMode: "ReadWriteOnce"
+#     size: 1Gi
+#     storageClass: ebs-csi
 
 # -- Main Container parameters
 # @default -- See below
