@@ -7,15 +7,24 @@ Usage:
 
 {{- define "cf-common-0.5.1.controller.statefulset" -}}
 
-{{- $strategy := "RollingUpdate"  -}}
+{{/*Merge .Values.controller with .Values.controller.statefulset*/}}
+{{- $controllerValues := deepCopy .Values.controller -}}
+{{- $stsValues := dict -}}
 {{- if .Values.controller.statefulset -}}
-  {{- if .Values.controller.statefulset.strategy -}}
-    {{- $strategy = .Values.controller.statefulset.strategy  -}}
-  {{- end -}}
+    {{- $stsValues = deepCopy .Values.controller.statefulset -}}
 {{- end -}}
+{{- $mergedControllerValues := mergeOverwrite $controllerValues $stsValues -}}
+{{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
+
+{{- $strategy := default "RollingUpdate" .Values.controller.strategy -}}
+{{- $podManagementPolicy := default "OrderedReady" .Values.controller.podManagementPolicy -}}
 
 {{- if and (ne $strategy "OnDelete") (ne $strategy "RollingUpdate") -}}
-  {{- fail (printf "ERROR: %s is invalid Stateful Set strategy!" $strategy) -}}
+  {{- fail (printf "ERROR: %s is invalid controller strategy for Stateful Set!" $strategy) -}}
+{{- end -}}
+
+{{- if and (ne $podManagementPolicy "Parallel") (ne $podManagementPolicy "OrderedReady") -}}
+  {{- fail (printf "ERROR: %s is invalid Stateful Set podManagementPolicy!" $podManagementPolicy) -}}
 {{- end -}}
 
 {{- $stsName := include "cf-common-0.5.1.names.fullname" . -}}
@@ -42,14 +51,13 @@ spec:
   podManagementPolicy: {{ default "OrderedReady" .Values.controller.podManagementPolicy }}
   selector:
     matchLabels: {{ include "cf-common-0.5.1.labels.matchLabels" . | nindent 6 }}
+  serviceName: {{ include "cf-common-0.5.1.names.fullname" . }}
   updateStrategy:
     type: {{ $strategy }}
-    {{- if .Values.controller.statefulset }}
-      {{- with .Values.controller.statefulset.rollingUpdate }}
-        {{- if and (eq $strategy "RollingUpdate") .partition }}
+    {{- with .Values.controller.rollingUpdate }}
+      {{- if and (eq $strategy "RollingUpdate") .partition }}
     rollingUpdate:
       partition: {{ .partition }}
-        {{- end }}
       {{- end }}
     {{- end }}
   template:

@@ -7,7 +7,15 @@ Usage:
 
 {{- define "cf-common-0.5.1.controller.deployment" -}}
 
-{{- $strategy := default "RollingUpdate" .Values.controller.deployment.strategy -}}
+{{- $controllerValues := deepCopy .Values.controller -}}
+{{- $deploymentValues := dict -}}
+{{- if .Values.controller.deployment -}}
+    {{- $deploymentValues = deepCopy .Values.controller.deployment -}}
+{{- end -}}
+{{- $mergedControllerValues := mergeOverwrite $controllerValues $deploymentValues -}}
+{{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
+
+{{- $strategy := default "RollingUpdate" .Values.controller.strategy -}}
 
 {{- if and (ne $strategy "RollingUpdate") (ne $strategy "Recreate") -}}
   {{- fail (printf "ERROR: %s is invalid Deployment strategy!" $strategy) -}}
@@ -40,7 +48,7 @@ spec:
     matchLabels: {{ include "cf-common-0.5.1.labels.matchLabels" . | nindent 6 }}
   strategy:
     type: {{ $strategy }}
-    {{- with .Values.controller.deployment.rollingUpdate }}
+    {{- with .Values.controller.rollingUpdate }}
       {{- if eq $strategy "RollingUpdate" }}
     rollingUpdate:
         {{- with .maxUnavailable }}

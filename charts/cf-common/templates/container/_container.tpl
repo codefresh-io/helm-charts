@@ -14,7 +14,6 @@ Usage:
 {{- $containerName = include "cf-common-0.5.1.tplrender" (dict "Values" .Values.nameOverride "context" $) -}}
 {{- end }}
 
-
 - name: {{ $containerName }}
   image: {{ include "cf-common-0.5.1.image.name" (dict "image" .Values.image "context" $) }}
   imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
@@ -78,9 +77,9 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
 
   {{- include "cf-common-0.5.1.ports" $ | trim | nindent 2 }}
 
-  {{- with .Values.volumeMounts }}
+  {{- if or .Values.volumeMounts $.Values.volumeClaimTemplates }}
   volumeMounts:
-  {{- include "cf-common-0.5.1.volumeMounts" (dict "Values" . "context" $) | trim | nindent 2 }}
+  {{- include "cf-common-0.5.1.volumeMounts" (dict "Values" .Values.volumeMounts "context" $) | trim | nindent 2 }}
   {{- end }}
 
   {{- with .Values.probes }}

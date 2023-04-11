@@ -5,11 +5,13 @@ Usage:
 {{- include "cf-common-0.5.1.service" . -}}
 */}}
 
-{{- define "cf-common-0.5.1.service" }}
+{{- define "cf-common-0.5.1.service" -}}
 
 {{- if not (kindIs "map" .Values.service) }}
   {{- fail "ERROR: service block must be a map!" }}
 {{- end }}
+
+{{- $primary := include "cf-common-0.5.1.service.primary" (dict "values" .Values.service) -}}
 
 {{- range $serviceIndex, $serviceItem := .Values.service }}
 
@@ -20,7 +22,7 @@ Usage:
   {{ fail ( printf "ERROR: service.%s.type is invalid service type!" $serviceIndex ) }}
 {{- end -}}
 
-{{- if and (hasKey $serviceItem "primary") $serviceItem.primary }}
+{{- if eq $serviceIndex $primary }}
   {{- $serviceName = include "cf-common-0.5.1.names.fullname" $ -}}
 {{- else }}
   {{- $serviceName = printf "%s-%s" (include "cf-common-0.5.1.names.fullname" $) $serviceIndex -}}
@@ -92,4 +94,4 @@ spec:
   {{- end }}
 {{- end }}
 
-{{- end }}
+{{- end -}}

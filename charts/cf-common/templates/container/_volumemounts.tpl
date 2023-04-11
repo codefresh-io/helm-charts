@@ -39,9 +39,18 @@ volumeMounts: {{- include "cf-common-0.5.1.volumeMounts" (dict "Values" .Values.
   {{- with $pathItem.readOnly }}
   readOnly: {{ . }}
   {{- end }}
+{{- end }}
 
 {{- end }}
 
+{{- if eq $.Values.controller.type "statefulset" }}
+  {{- range $index, $claim := $.Values.volumeClaimTemplates }}
+- mountPath: {{ $claim.mountPath }}
+  name: {{ $claim.name }}
+    {{- if $claim.subPath }}
+  subPath: {{ $claim.subPath }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 {{- end -}}

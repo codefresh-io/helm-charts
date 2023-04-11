@@ -7,7 +7,6 @@ controller:
   labels: {}
   annotations: {}
   replicas: 2
-  revisionHistoryLimit: 5
 
 container:
   image:
@@ -28,5 +27,14 @@ volumeClaimTemplates:
   annotations: {}
   mountPath: /data
   accessMode: "ReadWriteOnce"
-  size: 1Gi
-  storageClass: default
+  size: 100Mi
+  storageClass:
+
+service:
+  main:
+    enabled: true
+    type: ClusterIP
+    ports:
+      http:
+        port: 80
+        targetPort: 8080
