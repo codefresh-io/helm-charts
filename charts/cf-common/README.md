@@ -83,6 +83,7 @@ dependencies:
 | controller.podManagementPolicy | string | `nil` | Set statefulset podManagementPolicy (`OrderedReady`(default)/`Parallel`). |
 | controller.replicas | string | `nil` | Set number of pods |
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
+| controller.rollingUpdate | object | `{"maxSurge":null,"maxUnavailable":null,"partition":null}` | RollingUpdate strategy parameters |
 | controller.rollingUpdate.maxSurge | Deployment | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
 | controller.rollingUpdate.maxUnavailable | Deployment | `nil` | Set RollingUpdate max unavailable (absolute number or percentage) |
 | controller.rollingUpdate.partition | StatefulSet | `nil` | Set RollingUpdate partition |
