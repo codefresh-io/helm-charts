@@ -7,70 +7,8 @@ global:
   # E.g.
   # imagePullSecrets:
   #   - myRegistrySecret
-  # Global controller parameters
-  controller:
-    # -- Define the controller type (`deployment` \ `rollout`)
-    type: ""
-    # Deployment parameters (overrides for global.deployment values)
-    deployment:
-      # -- Set deployment upgrade strategy (`RollingUpdate`/`Recreate`)
-      strategy:
-      # RollingUpdate strategy parameters
-      rollingUpdate:
-        # -- Set RollingUpdate max unavailable (absolute number or percentage)
-        maxUnavailable:
-        # -- Set RollingUpdate max surge (absolute number or percentage)
-        maxSurge:
-    # Global Rollout parameters
-    rollout:
-      # Analysis template parameters to run in the background during a rollout update.
-      analysisTemplate:
-        # Enable analysis template
-        enabled:
-        # Array of arguments to pass
-        args:
-        # The metrics which the analysis should perform
-        metrics:
-            # The name of the metric
-          - name:
-            # The maximum number of failed run an analysis is allowed.
-            failureLimit:
-            # Determines if a measurement is considered failed
-            failureCondition:
-            # Determines if a measurement is considered successful
-            successCondition:
-            # The external metrics system to use to verify the analysis
-            provider:
-              # Defines NewRelic as the external metrics system
-              newRelic:
-                # The name of the secret holding NewRelic account configuration
-                profile:
-                # A raw NewRelic NRQL query to perform
-                query:
-      # Analysis history configuration
-      analysis:
-        # Limits the number of successful analysis runs and experiments to be stored in a history
-        successfulRunHistoryLimit:
-        # Limits the number of unsuccessful analysis runs and experiments to be stored in a history. ( Stages for unsuccessful: "Error", "Failed", "Inconclusive" )
-        unsuccessfulRunHistoryLimit:
-      # Rollout update strategy - can be Canary or BlueGreen.
-      strategy:
-      # Canary update strategy parameters
-      canary:
-        # The maximum number of pods that can be unavailable during the update. Value can be an absolute number / percentage
-        maxUnavailable:
-        # The maximum number of pods that can be scheduled above the original number of pods. Value can be an absolute number / percentage
-        maxSurge:
-        # Steps define sequence of steps to take during an update of the canary.
-        steps:
-          # Sets the ratio of canary ReplicaSet in percentage.
-          - setWeight:
-          # Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed
-          - pause:
-              duration:
-          - setWeight:
-          - pause:
-              duration:
+  # Global controller parameters. No precedence over `.Values.controller`
+  controller: {}
   # -- Global Env vars. NO precedence over `.Values.container.env`
   env: {}
 
@@ -89,16 +27,33 @@ controller:
   replicas:
   # -- Set ReplicaSet revision history limit
   revisionHistoryLimit:
+  # -- Set statefulset podManagementPolicy (`OrderedReady`(default)/`Parallel`).
+  podManagementPolicy:
+  # -- Set controller upgrade strategy
+  # For Deployment: `RollingUpdate`(default) / `Recreate`
+  # For StatefulSet: `RollingUpdate`(default) / `OnDelete`
+  strategy:
+  # -- RollingUpdate strategy parameters
+  rollingUpdate:
+    # -- (Deployment) Set RollingUpdate max unavailable (absolute number or percentage)
+    maxUnavailable:
+    # -- (Deployment) Set RollingUpdate max surge (absolute number or percentage)
+    maxSurge:
+    # -- (StatefulSet) Set RollingUpdate partition
+    partition:
   # Deployment parameters (overrides for global.deployment values)
   deployment:
-    # -- Set deployment upgrade strategy (`RollingUpdate`/`Recreate`)
+    # Override upgrade strategy and its parameters
     strategy:
-    # RollingUpdate strategy parameters
     rollingUpdate:
-      # -- Set RollingUpdate max unavailable (absolute number or percentage)
       maxUnavailable:
-      # -- Set RollingUpdate max surge (absolute number or percentage)
       maxSurge:
+  # Stateful Set parameters (overrides for global.deployment values)
+  statefulset:
+    # Override upgrade strategy and its parameters
+    strategy:
+    rollingUpdate:
+      partition:
   # Rollout parameters (overrides for global.rollout values)
   rollout:
     # Analysis template parameters to run in the background during a rollout update.
@@ -207,6 +162,18 @@ podAnnotations: {}
 
 # -- Duration in seconds the pod needs to terminate gracefully
 terminationGracePeriodSeconds:
+
+# -- Used with `controller.type: statefulset` to create individual disks for each instance.
+volumeClaimTemplates: {}
+# E.g.
+# volumeClaimTemplates:
+#   data:
+#     labels: {}
+#     annotations: {}
+#     mountPath: /data
+#     accessMode: "ReadWriteOnce"
+#     size: 1Gi
+#     storageClass: ebs-csi
 
 # -- Main Container parameters
 # @default -- See below

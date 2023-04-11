@@ -1,0 +1,40 @@
+# mock values for tests
+global: {}
+
+controller:
+  enabled: true
+  type: statefulset
+  labels: {}
+  annotations: {}
+  replicas: 2
+
+container:
+  image:
+    registry: docker.io
+    repository: bitnami/nginx
+    tag: latest
+    pullPolicy: Always
+
+  command: []
+  args: []
+
+  env:
+    ALICE: BOB
+
+volumeClaimTemplates:
+  data:
+    labels: {}
+    annotations: {}
+    mountPath: /data
+    accessMode: "ReadWriteOnce"
+    size: 100Mi
+    storageClass:
+
+service:
+  main:
+    enabled: true
+    type: ClusterIP
+    ports:
+      http:
+        port: 80
+        targetPort: 8080

@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.6.0
+  version: 0.7.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -70,9 +70,6 @@ dependencies:
 | controller.cronjob.successfulJobsHistory | int | `1` | The number of succesful Jobs to keep |
 | controller.cronjob.suspend | string | `nil` | This flag tells the controller to suspend subsequent executions, it does not apply to already started executions. Defaults to false. |
 | controller.cronjob.ttlSecondsAfterFinished | string | `nil` | If this field is set, ttlSecondsAfterFinished after the Job finishes, it is eligible to be automatically deleted. |
-| controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
-| controller.deployment.rollingUpdate.maxUnavailable | string | `nil` | Set RollingUpdate max unavailable (absolute number or percentage) |
-| controller.deployment.strategy | string | `nil` | Set deployment upgrade strategy (`RollingUpdate`/`Recreate`) |
 | controller.job.activeDeadlineSeconds | string | `nil` | Set the duration in seconds relative to the startTime that the job may be continuously active before the system tries to terminate it; value must be positive integer. (int) |
 | controller.job.backoffLimit | string | `nil` | Set the number of retries before marking this job failed. Defaults to 6. (int) |
 | controller.job.completions | string | `nil` | Set the desired number of successfully finished pods the job should be run with. (int) |
@@ -83,8 +80,13 @@ dependencies:
 | controller.job.ttlSecondsAfterFinished | string | `nil` | Set the limit on the lifetime of a Job that has finished execution (either Complete or Failed). (int) |
 | controller.labels | object | `{}` | Set labels on controller |
 | controller.nameOverride | string | `""` | Override the name suffix that is used for this controller |
+| controller.podManagementPolicy | string | `nil` | Set statefulset podManagementPolicy (`OrderedReady`(default)/`Parallel`). |
 | controller.replicas | string | `nil` | Set number of pods |
 | controller.revisionHistoryLimit | string | `nil` | Set ReplicaSet revision history limit |
+| controller.rollingUpdate | object | `{"maxSurge":null,"maxUnavailable":null,"partition":null}` | RollingUpdate strategy parameters |
+| controller.rollingUpdate.maxSurge | Deployment | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
+| controller.rollingUpdate.maxUnavailable | Deployment | `nil` | Set RollingUpdate max unavailable (absolute number or percentage) |
+| controller.rollingUpdate.partition | StatefulSet | `nil` | Set RollingUpdate partition |
 | controller.rollout.analysis.successfulRunHistoryLimit | string | `nil` | Limits the number of successful analysis runs and experiments to be stored in a history |
 | controller.rollout.analysis.unsuccessfulRunHistoryLimit | string | `nil` | Limits the number of unsuccessful analysis runs and experiments to be stored in a history. ( Stages for unsuccessful: "Error", "Failed", "Inconclusive" ) |
 | controller.rollout.canary | object | `{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]}` | Canary update strategy parameters |
@@ -94,13 +96,10 @@ dependencies:
 | controller.rollout.canary.steps[0] | object | `{"setWeight":null}` | Sets the ratio of canary ReplicaSet in percentage. |
 | controller.rollout.canary.steps[1] | object | `{"pause":{"duration":null}}` | Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed |
 | controller.rollout.strategy | string | `nil` | Rollout update strategy - can be Canary or BlueGreen. |
+| controller.strategy | string | `nil` | Set controller upgrade strategy For Deployment: `RollingUpdate`(default) / `Recreate` For StatefulSet: `RollingUpdate`(default) / `OnDelete` |
 | controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`/`cronjob`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
-| global | object | `{"controller":{"deployment":{"rollingUpdate":{"maxSurge":null,"maxUnavailable":null},"strategy":null},"rollout":{"analysis":{"successfulRunHistoryLimit":null,"unsuccessfulRunHistoryLimit":null},"analysisTemplate":{"args":null,"enabled":null,"metrics":[{"failureCondition":null,"failureLimit":null,"name":null,"provider":{"newRelic":{"profile":null,"query":null}},"successCondition":null}]},"canary":{"maxSurge":null,"maxUnavailable":null,"steps":[{"setWeight":null},{"pause":{"duration":null}},{"setWeight":null},{"pause":{"duration":null}}]},"strategy":null},"type":""},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
-| global.controller.deployment.rollingUpdate.maxSurge | string | `nil` | Set RollingUpdate max surge (absolute number or percentage) |
-| global.controller.deployment.rollingUpdate.maxUnavailable | string | `nil` | Set RollingUpdate max unavailable (absolute number or percentage) |
-| global.controller.deployment.strategy | string | `nil` | Set deployment upgrade strategy (`RollingUpdate`/`Recreate`) |
-| global.controller.type | string | `""` | Define the controller type (`deployment` \ `rollout`) |
+| global | object | `{"controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
 | global.env | object | `{}` | Global Env vars. NO precedence over `.Values.container.env` |
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
 | global.imageRegistry | string | `""` | Global Docker image registry |
@@ -169,6 +168,7 @@ dependencies:
 | terminationGracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully |
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |
+| volumeClaimTemplates | object | `{}` | Used with `controller.type: statefulset` to create individual disks for each instance. |
 | volumes | object | See below | Configure volume for the controller. Additional items can be added by adding a dictionary key similar to the 'config'/`secret` key. |
 | volumes.config | object | `{"enabled":false,"type":"configMap"}` | Volume name. Make sure to use the same name in `configMaps`/`secrets`/`persistence` and `container.volumeMounts` |
 | volumes.config.enabled | bool | `false` | Enable the volume |

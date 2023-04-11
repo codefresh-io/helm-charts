@@ -2,10 +2,10 @@
 Renders volumeMounts list in container.
 Called from container template.
 Usage:
-volumeMounts: {{- include "cf-common-0.6.0.volumeMounts" (dict "Values" .Values.container.volumeMounts "context" $) | nindent 2 }}
+volumeMounts: {{- include "cf-common-0.7.0.volumeMounts" (dict "Values" .Values.container.volumeMounts "context" $) | nindent 2 }}
 */}}
 
-{{- define "cf-common-0.6.0.volumeMounts" -}}
+{{- define "cf-common-0.7.0.volumeMounts" -}}
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
@@ -39,9 +39,18 @@ volumeMounts: {{- include "cf-common-0.6.0.volumeMounts" (dict "Values" .Values.
   {{- with $pathItem.readOnly }}
   readOnly: {{ . }}
   {{- end }}
+{{- end }}
 
 {{- end }}
 
+{{- if eq $.Values.controller.type "statefulset" }}
+  {{- range $claimIndex, $claimItem := $.Values.volumeClaimTemplates }}
+- mountPath: {{ $claimItem.mountPath }}
+  name: {{ $claimIndex }}
+    {{- if $claimItem.subPath }}
+  subPath: {{ $claimItem.subPath }}
+    {{- end }}
+  {{- end }}
 {{- end }}
 
 {{- end -}}
