@@ -33,3 +33,14 @@ Usage:
     {{- printf "%s/%s" .mongoURI .dbName -}}
   {{- end -}}
 {{- end -}}
+
+{{/*
+Calculate Consul host Uri (for On-Prem)
+*/}}
+{{- define "cf-common-0.7.0.classic.calculateConsulUri" }}
+	{{- if .Values.global.consulHost }}
+	{{- printf "http://%s:%v" .Values.global.consulHost .Values.global.consulHttpPort -}}
+	{{- else }}
+	{{- printf "http://%s-%s.%s.svc:%v" .Release.Name .Values.global.consulService .Release.Namespace .Values.global.consulHttpPort }}
+	{{- end }}
+{{- end }}
