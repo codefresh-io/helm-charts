@@ -94,16 +94,16 @@ tests:
       - values.yaml
     set:
       volumeClaimTemplates:
-      - name: data
-        labels:
-          alice: bob
-        annotations:
-          foo: bar
-        mountPath: /data
-        subPath: subpath
-        accessMode: "ReadWriteOnce"
-        size: 200Mi
-        storageClass: hostpath
+        data:
+          labels:
+            alice: bob
+          annotations:
+            foo: bar
+          mountPath: /data
+          subPath: subpath
+          accessMode: "ReadWriteOnce"
+          size: 200Mi
+          storageClass: hostpath
     asserts:
       - isNotEmpty:
           path: spec.volumeClaimTemplates

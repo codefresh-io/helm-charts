@@ -22,13 +22,13 @@ container:
     ALICE: BOB
 
 volumeClaimTemplates:
-- name: data
-  labels: {}
-  annotations: {}
-  mountPath: /data
-  accessMode: "ReadWriteOnce"
-  size: 100Mi
-  storageClass:
+  data:
+    labels: {}
+    annotations: {}
+    mountPath: /data
+    accessMode: "ReadWriteOnce"
+    size: 100Mi
+    storageClass:
 
 service:
   main:
