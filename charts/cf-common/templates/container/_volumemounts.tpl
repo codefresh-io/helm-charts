@@ -21,6 +21,9 @@ volumeMounts: {{- include "cf-common-0.8.0.volumeMounts" (dict "Values" .Values.
       {{- $globalVolumeMounts = deepCopy $.Values.global.container.volumeMounts -}}
     {{- end -}}
   {{- end -}}
+  {{- if $.Values.global.volumeMounts -}}
+      {{- $globalVolumeMounts = deepCopy $.Values.global.volumeMounts -}}
+  {{- end -}}
 {{- end -}}
 {{- $mergedVolumeMounts := mergeOverwrite $globalVolumeMounts $defaultVolumeMounts -}}
 
