@@ -133,6 +133,7 @@ tests:
             image: myregistry.io/bitnami/bitnami-shell:latest
             command: ['sh', '-c', "sleep 60"]
             imagePullPolicy: IfNotPresent
+            volumeMounts: null
 
   - it: Test deployments nodeSelector
     values:
