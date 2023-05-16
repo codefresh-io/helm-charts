@@ -88,6 +88,7 @@ tests:
             image: docker.io/bitnami/bitnami-shell:latest
             command: ['sh', '-c', "sleep 60"]
             imagePullPolicy: IfNotPresent
+            volumeMounts: null
 
   - it: Test deployment's initContainer is disabled
     values:
