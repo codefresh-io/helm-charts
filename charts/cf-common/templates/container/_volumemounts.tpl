@@ -2,10 +2,10 @@
 Renders volumeMounts list in container.
 Called from container template.
 Usage:
-volumeMounts: {{- include "cf-common-0.7.1.volumeMounts" (dict "Values" .Values.container.volumeMounts "context" $) | nindent 2 }}
+volumeMounts: {{- include "cf-common-0.8.0.volumeMounts" (dict "Values" .Values.container.volumeMounts "context" $) | nindent 2 }}
 */}}
 
-{{- define "cf-common-0.7.1.volumeMounts" -}}
+{{- define "cf-common-0.8.0.volumeMounts" -}}
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
@@ -20,6 +20,9 @@ volumeMounts: {{- include "cf-common-0.7.1.volumeMounts" (dict "Values" .Values.
     {{- if $.Values.global.container.volumeMounts -}}
       {{- $globalVolumeMounts = deepCopy $.Values.global.container.volumeMounts -}}
     {{- end -}}
+  {{- end -}}
+  {{- if $.Values.global.volumeMounts -}}
+      {{- $globalVolumeMounts = deepCopy $.Values.global.volumeMounts -}}
   {{- end -}}
 {{- end -}}
 {{- $mergedVolumeMounts := mergeOverwrite $globalVolumeMounts $defaultVolumeMounts -}}
