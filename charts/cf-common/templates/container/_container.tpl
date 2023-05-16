@@ -79,10 +79,7 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
 
   {{- include "cf-common-0.7.0.ports" $ | trim | nindent 2 }}
 
-  {{- if or .Values.volumeMounts $.Values.volumeClaimTemplates }}
-  volumeMounts:
-  {{- include "cf-common-0.7.0.volumeMounts" (dict "Values" .Values.volumeMounts "context" $) | trim | nindent 2 }}
-  {{- end }}
+  volumeMounts: {{ include "cf-common-0.7.0.volumeMounts" (dict "Values" .Values.volumeMounts "context" $) | trim | nindent 2 }}
 
   {{- with .Values.probes }}
   {{- include "cf-common-0.7.0.probes" . | trim | nindent 2 }}

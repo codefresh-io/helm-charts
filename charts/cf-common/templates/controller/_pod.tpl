@@ -70,10 +70,7 @@ containers: {{ include "cf-common-0.7.0.container" (dict "Values" . "context" $)
 {{ toYaml . | nindent 0 }}
 {{- end }}
 
-{{- with .Values.volumes }}
-volumes:
-{{ include "cf-common-0.7.0.volumes" (dict "Values" . "context" $) | trim }}
-{{- end }}
+volumes:  {{ include "cf-common-0.7.0.volumes" (dict "Values" .Values.volumes "context" $) | trim | nindent 0 }}
 
 {{- with .Values.extraVolumes }}
 {{ include "cf-common-0.7.0.volumes" (dict "Values" . "context" $) | trim }}
