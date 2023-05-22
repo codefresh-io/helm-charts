@@ -1,4 +1,4 @@
-# mock deployment for service
+# mock deployment for service monitor
 controller:
   enabled: true
   type: deployment
@@ -23,17 +23,26 @@ service:
     type: ClusterIP
     ports:
       http:
-        port: 80
+        port: 8080
         protocol: HTTP
-        targetPort: 30080
-      internal-api:
-        port: 3000
+  metrics:
+    enabled: true
+    type: ClusterIP
+    ports:
+      metrics:
+        port: 8082
         protocol: HTTP
-        targetPort: 40000
-  # metrics:
-  #   enabled: true
-  #   type: ClusterIP
-  #   ports:
-  #     metrics:
-  #       port: 8082
-  #       protocol: HTTP
+
+serviceMonitor:
+  main:
+    enabled: true
+    nameOverride: ""
+    labels: {}
+    annotations: {}
+    selector: {}
+    endpoints:
+    - port: metrics
+      scheme: http
+      path: /metrics
+      interval: 1m
+      scrapeTimeout: 10s

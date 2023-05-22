@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.8.1](https://img.shields.io/badge/Version-0.8.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.9.0](https://img.shields.io/badge/Version-0.9.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.8.1
+  version: 0.9.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -165,6 +165,14 @@ dependencies:
 | serviceAccount.annotations | object | `{}` | Set annotations for Service Account |
 | serviceAccount.enabled | bool | `false` | Enable and create Service Account |
 | serviceAccount.nameOverride | string | `""` | Override Service Account name (by default, name is generated with `fullname` template) |
+| serviceMonitor | object | See below | Configure ServiceMonitors fo the chart. Additional ServiceMonitors can be added by adding a dictionary key similar to the 'main' service monitor. |
+| serviceMonitor.main | object | `{"annotations":{},"enabled":false,"endpoints":[],"labels":{},"nameOverride":"","selector":{}}` | Service monitor name |
+| serviceMonitor.main.annotations | object | `{}` | Add additional annotations for the service monitor |
+| serviceMonitor.main.enabled | bool | `false` | Enable service monitor |
+| serviceMonitor.main.endpoints | list | `[]` | Set endpoints for service monitor |
+| serviceMonitor.main.labels | object | `{}` | Add additional labels for the service monitor |
+| serviceMonitor.main.nameOverride | string | `""` | Override service monitor name |
+| serviceMonitor.main.selector | object | `{}` | Override the default selector for the serviceMonitor. Rakes precedence over default labels. Helm template can be used. |
 | terminationGracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully |
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |

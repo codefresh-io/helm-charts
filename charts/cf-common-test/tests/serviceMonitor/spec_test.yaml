@@ -1,0 +1,50 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: service monitor spec
+templates:
+  - templates/serviceMonitor.yaml
+  #- templates/service.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test main service monitor selector
+    template: templates/serviceMonitor.yaml
+    asserts:
+      - isNotEmpty:
+          path: spec.selector.matchLabels
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: cf-common-test
+
+  - it: Test main service monitor with selector override
+    template: templates/serviceMonitor.yaml
+    values:
+      - values.yaml
+    set:
+      serviceMonitor:
+        main:
+          selector:
+            alice: bob
+    asserts:
+      - isNotEmpty:
+          path: spec.selector.matchLabels
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            alice: bob
+
+  - it: Test main service monitor endpoints
+    template: templates/serviceMonitor.yaml
+    values:
+      - values.yaml
+    asserts:
+      - contains:
+          path: spec.endpoints
+          content:
+            interval: 1m
+            path: /metrics
+            port: metrics
+            scheme: http
+            scrapeTimeout: 10s
+          count: 1
