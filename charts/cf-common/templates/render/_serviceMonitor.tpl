@@ -32,7 +32,7 @@ spec:
     {{- else }}
       {{- include "cf-common-0.9.0.labels.matchLabels" $ | nindent 6 }}
     {{- end }}
-  endpoints: {{- required (printf "endpoints are required for serviceMonitor %v" $serviceMonitorName) $serviceMonitorItem.endpoints | toYaml | nindent 4 }}
+  endpoints: {{- toYaml ( required (printf "endpoints are required for serviceMonitor %v" $serviceMonitorName) $serviceMonitorItem.endpoints ) | nindent 4 }}
 {{- end }}
   {{- end -}}
 

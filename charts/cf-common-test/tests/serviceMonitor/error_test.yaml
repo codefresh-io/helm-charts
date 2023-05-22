@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: service monitor error handler
+templates:
+  - templates/serviceMonitor.yaml
+tests:
+  - it: Test main service monitor with no endpoints
+    values:
+      - values.yaml
+    set:
+      serviceMonitor:
+        main:
+          endpoints: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "endpoints are required for serviceMonitor RELEASE-NAME-cf-common-test"

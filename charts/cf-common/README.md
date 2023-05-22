@@ -166,13 +166,13 @@ dependencies:
 | serviceAccount.enabled | bool | `false` | Enable and create Service Account |
 | serviceAccount.nameOverride | string | `""` | Override Service Account name (by default, name is generated with `fullname` template) |
 | serviceMonitor | object | See below | Configure ServiceMonitors for the chart. Additional ServiceMonitors can be added by adding a dictionary key similar to the 'main' service monitor. |
-| serviceMonitor.main | object | `{"annotations":{},"enabled":false,"endpoints":[],"labels":{},"nameOverride":"","selector":{}}` | Service monitor name |
+| serviceMonitor.main | object | `{"annotations":{},"enabled":false,"endpoints":[{"interval":"1m","path":"/metrics","port":"http","scheme":"http","scrapeTimeout":"10s"}],"labels":{},"nameOverride":"","selector":{}}` | Service monitor name |
 | serviceMonitor.main.annotations | object | `{}` | Add additional annotations for the service monitor |
 | serviceMonitor.main.enabled | bool | `false` | Enable service monitor |
-| serviceMonitor.main.endpoints | list | `[]` | Set endpoints for service monitor |
+| serviceMonitor.main.endpoints | list | `[{"interval":"1m","path":"/metrics","port":"http","scheme":"http","scrapeTimeout":"10s"}]` | Set endpoints for service monitor |
 | serviceMonitor.main.labels | object | `{}` | Add additional labels for the service monitor |
 | serviceMonitor.main.nameOverride | string | `""` | Override service monitor name |
-| serviceMonitor.main.selector | object | `{}` | Override the default selector for the serviceMonitor. Rakes precedence over default labels. Helm template can be used. |
+| serviceMonitor.main.selector | object | `{}` | Override the default selector for the serviceMonitor. Takes precedence over default labels. Helm template can be used. |
 | terminationGracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully |
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |

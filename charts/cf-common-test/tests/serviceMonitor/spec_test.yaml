@@ -2,7 +2,6 @@
 suite: service monitor spec
 templates:
   - templates/serviceMonitor.yaml
-  #- templates/service.yaml
 values:
   - values.yaml
 tests:
@@ -48,3 +47,15 @@ tests:
             scheme: http
             scrapeTimeout: 10s
           count: 1
+
+  - it: Test main service monitor disabled
+    template: templates/serviceMonitor.yaml
+    set:
+      serviceMonitor:
+        main:
+          enabled: false
+    values:
+      - values.yaml
+    asserts:
+      - hasDocuments:
+          count: 0
