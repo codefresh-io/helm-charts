@@ -635,6 +635,8 @@ serviceMonitor:
     enabled: false
     # -- Override service monitor name suffix
     nameOverride: ""
+    # -- Override service monitor full name
+    fullNameOverride: ""
     # -- Add additional labels for the service monitor
     labels: {}
     # -- Add additional annotations for the service monitor

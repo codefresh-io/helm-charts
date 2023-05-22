@@ -10,6 +10,9 @@ Renders Service Monitor objects.
 {{- if and (hasKey $serviceMonitorItem "nameOverride") $serviceMonitorItem.nameOverride -}}
   {{- $serviceMonitorName = printf "%v-%v" $serviceMonitorName $serviceMonitorItem.nameOverride -}}
 {{- end -}}
+{{- if and (hasKey $serviceMonitorItem "fullnameOverride") $serviceMonitorItem.fullnameOverride -}}
+  {{- $serviceMonitorName = $serviceMonitorItem.fullnameOverride -}}
+{{- end -}}
 
   {{- if $serviceMonitorItem.enabled -}}
 ---
