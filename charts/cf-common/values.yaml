@@ -625,7 +625,7 @@ additionalContainers: []
 #     - name: var-logs
 #       mountPath: /var/log
 
-# -- Configure ServiceMonitors fo the chart.
+# -- Configure ServiceMonitors for the chart.
 # Additional ServiceMonitors can be added by adding a dictionary key similar to the 'main' service monitor.
 # @default -- See below
 serviceMonitor:

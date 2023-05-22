@@ -165,7 +165,7 @@ dependencies:
 | serviceAccount.annotations | object | `{}` | Set annotations for Service Account |
 | serviceAccount.enabled | bool | `false` | Enable and create Service Account |
 | serviceAccount.nameOverride | string | `""` | Override Service Account name (by default, name is generated with `fullname` template) |
-| serviceMonitor | object | See below | Configure ServiceMonitors fo the chart. Additional ServiceMonitors can be added by adding a dictionary key similar to the 'main' service monitor. |
+| serviceMonitor | object | See below | Configure ServiceMonitors for the chart. Additional ServiceMonitors can be added by adding a dictionary key similar to the 'main' service monitor. |
 | serviceMonitor.main | object | `{"annotations":{},"enabled":false,"endpoints":[],"labels":{},"nameOverride":"","selector":{}}` | Service monitor name |
 | serviceMonitor.main.annotations | object | `{}` | Add additional annotations for the service monitor |
 | serviceMonitor.main.enabled | bool | `false` | Enable service monitor |
