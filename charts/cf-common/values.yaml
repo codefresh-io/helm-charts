@@ -633,7 +633,7 @@ serviceMonitor:
   main:
     # -- Enable service monitor
     enabled: false
-    # -- Override service monitor name
+    # -- Override service monitor name suffix
     nameOverride: ""
     # -- Add additional labels for the service monitor
     labels: {}

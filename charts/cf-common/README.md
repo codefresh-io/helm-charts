@@ -171,7 +171,7 @@ dependencies:
 | serviceMonitor.main.enabled | bool | `false` | Enable service monitor |
 | serviceMonitor.main.endpoints | list | `[{"interval":"1m","path":"/metrics","port":"http","scheme":"http","scrapeTimeout":"10s"}]` | Set endpoints for service monitor |
 | serviceMonitor.main.labels | object | `{}` | Add additional labels for the service monitor |
-| serviceMonitor.main.nameOverride | string | `""` | Override service monitor name |
+| serviceMonitor.main.nameOverride | string | `""` | Override service monitor name suffix |
 | serviceMonitor.main.selector | object | `{}` | Override the default selector for the serviceMonitor. Takes precedence over default labels. Helm template can be used. |
 | terminationGracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully |
 | tolerations | list | `[]` | Set tolerations constrains |
