@@ -2,18 +2,18 @@
 Renders rollout template.
 Must be called from chart root context.
 Usage:
-{{ include "cf-common-0.9.0.controller.rollout" . }}
+{{ include "cf-common-0.9.1.controller.rollout" . }}
 */}}
-{{- define "cf-common-0.9.0.controller.rollout" -}}
+{{- define "cf-common-0.9.1.controller.rollout" -}}
 
 {{- $strategy := .Values.controller.rollout.strategy -}}
-{{- $fullName:= include "cf-common-0.9.0.names.fullname" . }}
+{{- $fullName:= include "cf-common-0.9.1.names.fullname" . }}
 
 {{- if and (ne $strategy "Canary") (ne $strategy "BlueGreen") -}}
   {{- fail (printf "ERROR: %s is invalid Rollout strategy!" $strategy) -}}
 {{- end -}}
 
-{{- $rolloutName := include "cf-common-0.9.0.names.fullname" . -}}
+{{- $rolloutName := include "cf-common-0.9.1.names.fullname" . -}}
 {{- if and (hasKey .Values.controller "nameOverride") .Values.controller.nameOverride -}}
   {{- $rolloutName = printf "%v-%v" $rolloutName .Values.controller.nameOverride -}}
 {{- end -}}
@@ -23,13 +23,13 @@ apiVersion: argoproj.io/v1alpha1
 kind: Rollout
 metadata:
   name: {{ $rolloutName }}
-  labels: {{ include "cf-common-0.9.0.labels.standard" . | nindent 4 }}
+  labels: {{ include "cf-common-0.9.1.labels.standard" . | nindent 4 }}
   {{- if .Values.controller.labels }}
-  {{- include "cf-common-0.9.0.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
+  {{- include "cf-common-0.9.1.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
   {{- end }}
   {{- if .Values.controller.annotations }}
   annotations:
-  {{- include "cf-common-0.9.0.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
+  {{- include "cf-common-0.9.1.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | int | default 5 }}
@@ -37,7 +37,7 @@ spec:
   replicas: {{ coalesce .Values.controller.replicas .Values.replicaCount | int | default 1 }}
   {{- end }}
   selector:
-    matchLabels: {{ include "cf-common-0.9.0.labels.matchLabels" . | nindent 6 }}
+    matchLabels: {{ include "cf-common-0.9.1.labels.matchLabels" . | nindent 6 }}
     {{- with .Values.controller.rollout }}
   analysis: {{ .analysis | toYaml | nindent 4 }}
     {{- end }}
@@ -59,13 +59,13 @@ spec:
     {{- end }}
   template:
     metadata:
-      labels: {{ include "cf-common-0.9.0.labels.matchLabels" . | nindent 8 }}
+      labels: {{ include "cf-common-0.9.1.labels.matchLabels" . | nindent 8 }}
       {{- if .Values.podLabels }}
-      {{- include "cf-common-0.9.0.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
+      {{- include "cf-common-0.9.1.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.podAnnotations }}
       annotations:
-      {{- include "cf-common-0.9.0.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
+      {{- include "cf-common-0.9.1.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
-    spec: {{- include "cf-common-0.9.0.controller.pod" . | trim | nindent 6 -}}
+    spec: {{- include "cf-common-0.9.1.controller.pod" . | trim | nindent 6 -}}
 {{- end -}}

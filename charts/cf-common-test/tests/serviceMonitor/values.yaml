@@ -39,7 +39,9 @@ serviceMonitor:
     nameOverride: ""
     labels: {}
     annotations: {}
-    selector: {}
+    selector:
+      matchLabels:
+        alice: bob
     namespaceSelector: {}
     endpoints:
     - port: metrics
