@@ -166,13 +166,14 @@ dependencies:
 | serviceAccount.enabled | bool | `false` | Enable and create Service Account |
 | serviceAccount.nameOverride | string | `""` | Override Service Account name (by default, name is generated with `fullname` template) |
 | serviceMonitor | object | See below | Configure ServiceMonitors for the chart. Additional ServiceMonitors can be added by adding a dictionary key similar to the 'main' service monitor. |
-| serviceMonitor.main | object | `{"annotations":{},"enabled":false,"endpoints":[{"interval":"1m","path":"/metrics","port":"http","scheme":"http","scrapeTimeout":"10s"}],"fullNameOverride":"","labels":{},"nameOverride":"","selector":{}}` | Service monitor name |
+| serviceMonitor.main | object | `{"annotations":{},"enabled":false,"endpoints":[{"interval":"1m","path":"/metrics","port":"http","scheme":"http","scrapeTimeout":"10s"}],"fullNameOverride":"","labels":{},"nameOverride":"","namespaceSelector":{},"selector":{}}` | Service monitor name |
 | serviceMonitor.main.annotations | object | `{}` | Add additional annotations for the service monitor |
 | serviceMonitor.main.enabled | bool | `false` | Enable service monitor |
 | serviceMonitor.main.endpoints | list | `[{"interval":"1m","path":"/metrics","port":"http","scheme":"http","scrapeTimeout":"10s"}]` | Set endpoints for service monitor |
 | serviceMonitor.main.fullNameOverride | string | `""` | Override service monitor full name |
 | serviceMonitor.main.labels | object | `{}` | Add additional labels for the service monitor |
 | serviceMonitor.main.nameOverride | string | `""` | Override service monitor name suffix |
+| serviceMonitor.main.namespaceSelector | object | `{}` | Set namespace selector. If nil, release namespace is used. |
 | serviceMonitor.main.selector | object | `{}` | Override the default selector for the serviceMonitor. Takes precedence over default labels. Helm template can be used. |
 | terminationGracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully |
 | tolerations | list | `[]` | Set tolerations constrains |

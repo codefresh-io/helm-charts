@@ -646,7 +646,14 @@ serviceMonitor:
     selector: {}
     # E.g.
     # selector:
-    #   alice: bob
+    #   matchLabels:
+    #     alice: bob
+    # -- Set namespace selector. If nil, release namespace is used.
+    namespaceSelector: {}
+    # E.g.
+    #   namespaceSelector:
+    #     matchNames:
+    #       - default
     # -- Set endpoints for service monitor
     endpoints:
     - port: http

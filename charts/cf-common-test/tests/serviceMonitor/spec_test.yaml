@@ -24,7 +24,8 @@ tests:
       serviceMonitor:
         main:
           selector:
-            alice: bob
+            matchLabels:
+              alice: bob
     asserts:
       - isNotEmpty:
           path: spec.selector.matchLabels
@@ -32,6 +33,22 @@ tests:
           path: spec.selector.matchLabels
           value:
             alice: bob
+
+  - it: Test main service monitor with namespace selector
+    template: templates/serviceMonitor.yaml
+    values:
+      - values.yaml
+    set:
+      serviceMonitor:
+        main:
+          namespaceSelector:
+            matchNames:
+              - foobar
+    asserts:
+      - contains:
+          path: spec.namespaceSelector.matchNames
+          content:
+            foobar
 
   - it: Test main service monitor endpoints
     template: templates/serviceMonitor.yaml

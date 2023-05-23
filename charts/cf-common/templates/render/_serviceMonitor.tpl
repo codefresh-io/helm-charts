@@ -29,12 +29,20 @@ metadata:
   {{- end }}
 spec:
   selector:
-    matchLabels:
     {{- if $serviceMonitorItem.selector }}
       {{- include "cf-common-0.9.0.tplrender" (dict "Values" $serviceMonitorItem.selector "context" $) | nindent 6 }}
     {{- else }}
+    matchLabels:
       {{- include "cf-common-0.9.0.labels.matchLabels" $ | nindent 6 }}
     {{- end }}
+  {{- if $serviceMonitorItem.namespaceSelector }}
+  namespaceSelector:
+    {{- include "cf-common-0.9.0.tplrender" (dict "Values" $serviceMonitorItem.namespaceSelector "context" $) | nindent 6 }}
+  {{- else }}
+  namespaceSelector:
+    matchNames:
+      - {{ $.Release.Namespace }}
+  {{- end }}
   endpoints: {{- toYaml ( required (printf "endpoints are required for serviceMonitor %v" $serviceMonitorName) $serviceMonitorItem.endpoints ) | nindent 4 }}
 {{- end }}
   {{- end -}}
