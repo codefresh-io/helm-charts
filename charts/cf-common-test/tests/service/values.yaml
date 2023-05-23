@@ -1,4 +1,4 @@
-# mock deployment for HPA
+# mock deployment for service
 controller:
   enabled: true
   type: deployment

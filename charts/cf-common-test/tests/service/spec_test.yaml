@@ -45,7 +45,7 @@ tests:
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/name: cf-common-test
 
-  - it: Test main service with extart selector label
+  - it: Test main service with extra selector label
     template: templates/service.yaml
     values:
       - values.yaml

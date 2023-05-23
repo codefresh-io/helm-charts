@@ -624,3 +624,40 @@ additionalContainers: []
 #     volumeMounts:
 #     - name: var-logs
 #       mountPath: /var/log
+
+# -- Configure ServiceMonitors for the chart.
+# Additional ServiceMonitors can be added by adding a dictionary key similar to the 'main' service monitor.
+# @default -- See below
+serviceMonitor:
+  # -- Service monitor name
+  main:
+    # -- Enable service monitor
+    enabled: false
+    # -- Override service monitor name suffix
+    nameOverride: ""
+    # -- Override service monitor full name
+    fullNameOverride: ""
+    # -- Add additional labels for the service monitor
+    labels: {}
+    # -- Add additional annotations for the service monitor
+    annotations: {}
+    # -- Override the default selector for the serviceMonitor.
+    # Takes precedence over default labels. Helm template can be used.
+    selector: {}
+    # E.g.
+    # selector:
+    #   matchLabels:
+    #     alice: bob
+    # -- Set namespace selector. If nil, release namespace is used.
+    namespaceSelector: {}
+    # E.g.
+    #   namespaceSelector:
+    #     matchNames:
+    #       - default
+    # -- Set endpoints for service monitor
+    endpoints:
+    - port: http
+      scheme: http
+      path: /metrics
+      interval: 1m
+      scrapeTimeout: 10s

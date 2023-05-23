@@ -1,0 +1,49 @@
+# mock deployment for service monitor
+controller:
+  enabled: true
+  type: deployment
+  replicas: 2
+  deployment:
+    strategy: Recreate
+  revisionHistoryLimit: 5
+
+container:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: master
+    pullPolicy: Always
+
+service:
+  main:
+    enabled: true
+    primary: true
+    labels: {}
+    annotations: {}
+    type: ClusterIP
+    ports:
+      http:
+        port: 8080
+        protocol: HTTP
+  metrics:
+    enabled: true
+    type: ClusterIP
+    ports:
+      metrics:
+        port: 8082
+        protocol: HTTP
+
+serviceMonitor:
+  main:
+    enabled: true
+    nameOverride: ""
+    labels: {}
+    annotations: {}
+    selector: {}
+    namespaceSelector: {}
+    endpoints:
+    - port: metrics
+      scheme: http
+      path: /metrics
+      interval: 1m
+      scrapeTimeout: 10s

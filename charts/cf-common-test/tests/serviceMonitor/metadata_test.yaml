@@ -1,0 +1,79 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: service monitor metadata
+templates:
+  - templates/serviceMonitor.yaml
+tests:
+  - it: Test service monitor default metadata
+    values:
+      - values.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ServiceMonitor
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test service monitor custom metadata
+    values:
+      - values.yaml
+    set:
+      serviceMonitor:
+        main:
+          labels:
+            alice: bob
+          annotations:
+            foo: bar
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ServiceMonitor
+      - equal:
+          path: metadata.annotations
+          value:
+            foo: bar
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+            alice: bob
+
+  - it: Test main service monitor with name override
+    template: templates/serviceMonitor.yaml
+    values:
+      - values.yaml
+    set:
+      serviceMonitor:
+        main:
+          nameOverride: foobar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test-foobar
+
+  - it: Test main service monitor with full name override
+    template: templates/serviceMonitor.yaml
+    values:
+      - values.yaml
+    set:
+      serviceMonitor:
+        main:
+          fullnameOverride: foobar
+    asserts:
+      - equal:
+          path: metadata.name
+          value: foobar
