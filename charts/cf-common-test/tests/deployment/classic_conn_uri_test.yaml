@@ -40,3 +40,37 @@ tests:
           content:
             name: MONGO_URI
             value: "mongodb+srv://username:password@domain.com:27017/pipeline-manager?tls=true&tlsInsecure=true"
+
+  - it: Test External MongoDB connection Uri with trailing /
+    values:
+      - values.yaml
+    set:
+      global:
+        mongoURI: mongodb+srv://username:password@domain.com:27017/
+        pipelineManagerService: pipeline-manager
+      container:
+        env:
+          MONGO_URI: '{{ include (printf "cf-common-%s.classic.calculateMongoUri" (index .Subcharts "cf-common").Chart.Version) (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}'
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MONGO_URI
+            value: "mongodb+srv://username:password@domain.com:27017/pipeline-manager"
+
+  - it: Test External MongoDB connection Uri without trailing /
+    values:
+      - values.yaml
+    set:
+      global:
+        mongoURI: mongodb+srv://username:password@domain.com:27017
+        pipelineManagerService: pipeline-manager
+      container:
+        env:
+          MONGO_URI: '{{ include (printf "cf-common-%s.classic.calculateMongoUri" (index .Subcharts "cf-common").Chart.Version) (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}'
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: MONGO_URI
+            value: "mongodb+srv://username:password@domain.com:27017/pipeline-manager"
