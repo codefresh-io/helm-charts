@@ -2,10 +2,10 @@
 Calculate RabbitMQ URI (for On-Prem)
 Must me called from chart root context.
 Usage:
-{{ include "cf-common-0.9.1.classic.calculateRabbitMqUri" . }}
+{{ include "cf-common-0.9.2.classic.calculateRabbitMqUri" . }}
 */}}
 
-{{- define "cf-common-0.9.1.classic.calculateRabbitMqUri" }}
+{{- define "cf-common-0.9.2.classic.calculateRabbitMqUri" }}
 
 {{- $rabbitmqProtocol := .Values.global.rabbitmqProtocol | default "amqp" -}}
 {{- $rabbitmqUsername := .Values.global.rabbitmqUsername -}}
@@ -23,21 +23,21 @@ coalesce here for backward compatibility
 {{/*
 Calculate Mongo Uri (for On-Prem)
 Usage:
-{{ include "cf.common-0.9.1.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
+{{ include "cf.common-0.9.2.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
 */}}
-{{- define "cf-common-0.9.1.classic.calculateMongoUri" -}}
+{{- define "cf-common-0.9.2.classic.calculateMongoUri" -}}
   {{- if contains "?" .mongoURI -}}
     {{- $mongoURI :=  (splitList "?" .mongoURI) -}}
     {{- printf "%s%s?%s" (first $mongoURI) .dbName (last $mongoURI) }}
   {{- else -}}
-    {{- printf "%s/%s" .mongoURI .dbName -}}
+    {{- printf "%s/%s" (trimSuffix "/" .mongoURI) .dbName -}}
   {{- end -}}
 {{- end -}}
 
 {{/*
 Calculate Consul host Uri (for On-Prem)
 */}}
-{{- define "cf-common-0.9.1.classic.calculateConsulUri" }}
+{{- define "cf-common-0.9.2.classic.calculateConsulUri" }}
 	{{- if .Values.global.consulHost }}
 	{{- printf "http://%s:%v" .Values.global.consulHost .Values.global.consulHttpPort -}}
 	{{- else }}
