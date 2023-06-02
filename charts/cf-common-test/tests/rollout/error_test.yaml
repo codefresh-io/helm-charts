@@ -1,0 +1,14 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: rollout error handlers
+templates:
+  - templates/controller.yaml
+tests:
+  - it: Test no steps for Canary rollout
+    set:
+      controller:
+        rollout: null
+    values:
+      - values.yaml
+    asserts:
+      - failedTemplate:
+          errorMessage: "controller.rollout.canary.steps is required!"

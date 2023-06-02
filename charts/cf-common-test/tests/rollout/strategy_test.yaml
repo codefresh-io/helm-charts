@@ -1,0 +1,116 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: rollout strategy
+templates:
+  - templates/rollout.yaml
+tests:
+  - it: Test rollout Canary strategy from default chart values
+    template: templates/controller.yaml
+    values:
+      - values.yaml
+    asserts:
+      - equal:
+          path: spec.strategy.canary
+          value:
+            maxUnavailable: 0
+            maxSurge: 50%
+            stableMetadata:
+              labels:
+                rollout/stage: stable
+            canaryMetadata:
+              labels:
+                rollout/stage: canary
+            steps:
+            - setWeight: 20
+            - pause:
+                duration: 10s
+
+  - it: Test rollout Canary strategy from globals
+    template: templates/controller.yaml
+    values:
+      - values_empty.yaml
+    set:
+      global:
+        controller:
+          rollout:
+            canary:
+              maxUnavailable: 1
+              maxSurge: 75%
+              stableMetadata:
+                labels:
+                  rollout/stage: stable
+              canaryMetadata:
+                labels:
+                  rollout/stage: canary
+              steps:
+                - setWeight: 20
+                - pause:
+                    duration: 10s
+    asserts:
+      - equal:
+          path: spec.strategy.canary
+          value:
+            maxUnavailable: 1
+            maxSurge: 75%
+            stableMetadata:
+              labels:
+                rollout/stage: stable
+            canaryMetadata:
+              labels:
+                rollout/stage: canary
+            steps:
+            - setWeight: 20
+            - pause:
+                duration: 10s
+
+  - it: Test rollout Canary strategy values priority (default chart values > globals)
+    template: templates/controller.yaml
+    values:
+      - values.yaml
+    set:
+      global:
+        controller:
+          rollout:
+            canary:
+              maxUnavailable: 1
+              maxSurge: 75%
+              stableMetadata:
+                labels:
+                  rollout/stage: stable
+              canaryMetadata:
+                labels:
+                  rollout/stage: canary
+              steps:
+                - setWeight: 20
+                - pause:
+                    duration: 10s
+      controller:
+        rollout:
+          canary:
+            maxUnavailable: 0
+            maxSurge: 50%
+            stableMetadata:
+              labels:
+                rollout/stage: stable
+            canaryMetadata:
+              labels:
+                rollout/stage: canary
+            steps:
+              - setWeight: 30
+              - pause:
+                  duration: 20s
+    asserts:
+      - equal:
+          path: spec.strategy.canary
+          value:
+            maxUnavailable: 0
+            maxSurge: 50%
+            stableMetadata:
+              labels:
+                rollout/stage: stable
+            canaryMetadata:
+              labels:
+                rollout/stage: canary
+            steps:
+            - setWeight: 30
+            - pause:
+                duration: 20s

@@ -1,0 +1,29 @@
+# mock values for tests
+global: {}
+
+controller:
+  enabled: true
+  type: rollout
+  labels: {}
+  annotations: {}
+  rollout:
+    canary:
+      maxUnavailable: 0
+      maxSurge: 50%
+      stableMetadata:
+        labels:
+          rollout/stage: stable
+      canaryMetadata:
+        labels:
+          rollout/stage: canary
+      steps:
+        - setWeight: 20
+        - pause:
+            duration: 10s
+
+container:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: master
+    pullPolicy: Always
