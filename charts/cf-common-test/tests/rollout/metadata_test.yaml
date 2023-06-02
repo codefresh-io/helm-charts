@@ -1,0 +1,82 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: rollout metadata
+templates:
+  - templates/rollout.yaml
+tests:
+  - it: Test rollout default metadata
+    template: templates/controller.yaml
+    values:
+      - values.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Rollout
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test contoller should stay rollout if `.Values.controller.type=rollout` and `.Values.global.controller.type=deployment` are set
+    template: templates/controller.yaml
+    values:
+      - values.yaml
+    set:
+      global:
+        controller:
+          type: deployment
+      controller:
+        type: rollout
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Rollout
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test contoller should stay deployment if `.Values.controller.type=deployment` and `.Values.global.controller.type=rollout` are set
+    template: templates/controller.yaml
+    values:
+      - values.yaml
+    set:
+      global:
+        controller:
+          type: rollout
+      controller:
+        type: deployment
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: Deployment
+      - isNull:
+          path: metadata.annotations
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test

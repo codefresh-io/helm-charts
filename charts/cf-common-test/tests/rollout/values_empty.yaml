@@ -1,0 +1,16 @@
+# mock values for tests
+global: {}
+
+controller:
+  enabled: true
+  type: rollout
+  labels: {}
+  annotations: {}
+  rollout: {}
+
+container:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: master
+    pullPolicy: Always

@@ -2,10 +2,10 @@
 Renders statefulset template
 Must be called from chart root context.
 Usage:
-{{ include "cf-common-0.9.2.controller.statefulset" . }}
+{{ include "cf-common-0.9.3.controller.statefulset" . }}
 */}}
 
-{{- define "cf-common-0.9.2.controller.statefulset" -}}
+{{- define "cf-common-0.9.3.controller.statefulset" -}}
 
 {{/*Merge .Values.controller with .Values.controller.statefulset*/}}
 {{- $controllerValues := deepCopy .Values.controller -}}
@@ -27,7 +27,7 @@ Usage:
   {{- fail (printf "ERROR: %s is invalid Stateful Set podManagementPolicy!" $podManagementPolicy) -}}
 {{- end -}}
 
-{{- $stsName := include "cf-common-0.9.2.names.fullname" . -}}
+{{- $stsName := include "cf-common-0.9.3.names.fullname" . -}}
 {{- if and (hasKey .Values.controller "nameOverride") .Values.controller.nameOverride -}}
   {{- $stsName = printf "%v-%v" $stsName .Values.controller.nameOverride -}}
 {{- end -}}
@@ -37,21 +37,21 @@ apiVersion: apps/v1
 kind: StatefulSet
 metadata:
   name: {{ $stsName }}
-  labels: {{ include "cf-common-0.9.2.labels.standard" . | nindent 4 }}
+  labels: {{ include "cf-common-0.9.3.labels.standard" . | nindent 4 }}
   {{- if .Values.controller.labels }}
-  {{- include "cf-common-0.9.2.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
+  {{- include "cf-common-0.9.3.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
   {{- end }}
   {{- if .Values.controller.annotations }}
   annotations:
-  {{- include "cf-common-0.9.2.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
+  {{- include "cf-common-0.9.3.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   revisionHistoryLimit: {{ .Values.controller.revisionHistoryLimit | int | default 5 }}
   replicas: {{ coalesce .Values.controller.replicas .Values.replicaCount | int | default 1 }}
   podManagementPolicy: {{ default "OrderedReady" .Values.controller.podManagementPolicy }}
   selector:
-    matchLabels: {{ include "cf-common-0.9.2.labels.matchLabels" . | nindent 6 }}
-  serviceName: {{ include "cf-common-0.9.2.names.fullname" . }}
+    matchLabels: {{ include "cf-common-0.9.3.labels.matchLabels" . | nindent 6 }}
+  serviceName: {{ include "cf-common-0.9.3.names.fullname" . }}
   updateStrategy:
     type: {{ $strategy }}
     {{- with .Values.controller.rollingUpdate }}
@@ -62,25 +62,25 @@ spec:
     {{- end }}
   template:
     metadata:
-      labels: {{ include "cf-common-0.9.2.labels.matchLabels" . | nindent 8 }}
+      labels: {{ include "cf-common-0.9.3.labels.matchLabels" . | nindent 8 }}
       {{- if .Values.podLabels }}
-      {{- include "cf-common-0.9.2.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
+      {{- include "cf-common-0.9.3.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}
       {{- if .Values.podAnnotations }}
       annotations:
-      {{- include "cf-common-0.9.2.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
+      {{- include "cf-common-0.9.3.tplrender" (dict "Values" .Values.podAnnotations "context" $) | nindent 8 }}
       {{- end }}
-    spec: {{- include "cf-common-0.9.2.controller.pod" . | trim | nindent 6 }}
+    spec: {{- include "cf-common-0.9.3.controller.pod" . | trim | nindent 6 }}
   volumeClaimTemplates:
   {{- range $claimIndex, $claimItem := .Values.volumeClaimTemplates }}
     {{- if not (eq $claimItem.enabled false ) }}
     - metadata:
         name: {{ $claimIndex }}
         {{- with ($claimItem.labels | default dict) }}
-        labels: {{- include "cf-common-0.9.2.tplrender" (dict "Values" . "context" $) | nindent 10 }}
+        labels: {{- include "cf-common-0.9.3.tplrender" (dict "Values" . "context" $) | nindent 10 }}
         {{- end }}
         {{- with ($claimItem.annotations | default dict) }}
-        annotations: {{- include "cf-common-0.9.2.tplrender" (dict "Values" . "context" $) | nindent 10 }}
+        annotations: {{- include "cf-common-0.9.3.tplrender" (dict "Values" . "context" $) | nindent 10 }}
         {{- end }}
       spec:
         {{- $claimSize := required (printf "size is required for PVC %v" $claimItem.name) $claimItem.size }}
@@ -89,7 +89,7 @@ spec:
         resources:
           requests:
             storage: {{ $claimSize | quote }}
-        {{ include "cf-common-0.9.2.storageclass" ( dict "persistence" $claimItem "context" $) }}
+        {{ include "cf-common-0.9.3.storageclass" ( dict "persistence" $claimItem "context" $) }}
       {{- end }}
     {{- end }}
 {{- end -}}
