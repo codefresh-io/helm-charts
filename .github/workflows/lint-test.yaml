@@ -131,7 +131,7 @@ jobs:
       - name: Run unit tests
         run: |
           echo ${{ matrix.chart }}
-          helm plugin install https://github.com/quintush/helm-unittest --version v0.2.11
+          helm plugin install https://github.com/quintush/helm-unittest --version v0.3.1
           helm dep update ${{ matrix.chart }}
           helm unittest --helm3 --color --debug -f "tests/**/*_test.yaml" ${{ matrix.chart }}
 
