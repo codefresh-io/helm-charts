@@ -2,10 +2,10 @@
 Renders volumes in controller template.
 Called from pod template.
 Usage:
-volumes: {{ include "cf-common-0.9.2.volumes" (dict "Values" .Values.volumes "context" $) | nindent }}
+volumes: {{ include "cf-common-0.9.3.volumes" (dict "Values" .Values.volumes "context" $) | nindent }}
 */}}
 
-{{- define "cf-common-0.9.2.volumes" -}}
+{{- define "cf-common-0.9.3.volumes" -}}
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
@@ -26,10 +26,10 @@ volumes: {{ include "cf-common-0.9.2.volumes" (dict "Values" .Values.volumes "co
 
   {{- if $volumeItem.enabled }}
 - name: {{ $volumeIndex }}
-  {{- $volumeName := printf "%s-%s" (include "cf-common-0.9.2.names.fullname" $) $volumeIndex -}}
+  {{- $volumeName := printf "%s-%s" (include "cf-common-0.9.3.names.fullname" $) $volumeIndex -}}
 
   {{- if and (or (hasKey $volumeItem "existingName") (hasKey $volumeItem "nameOverride")) (or $volumeItem.existingName $volumeItem.nameOverride) }}
-  {{- $volumeName = include "cf-common-0.9.2.tplrender" (dict "Values" (coalesce $volumeItem.nameOverride $volumeItem.existingName) "context" $) -}}
+  {{- $volumeName = include "cf-common-0.9.3.tplrender" (dict "Values" (coalesce $volumeItem.nameOverride $volumeItem.existingName) "context" $) -}}
   {{- end }}
 
   {{- if eq $volumeItem.type "configMap" }}

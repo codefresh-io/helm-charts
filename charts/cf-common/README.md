@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.9.2](https://img.shields.io/badge/Version-0.9.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.9.3](https://img.shields.io/badge/Version-0.9.3-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.9.2
+  version: 0.9.3
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -96,7 +96,7 @@ dependencies:
 | controller.rollout.canary.steps[0] | object | `{"setWeight":null}` | Sets the ratio of canary ReplicaSet in percentage. |
 | controller.rollout.canary.steps[1] | object | `{"pause":{"duration":null}}` | Pauses the rollout for configured duration of time. Supported units: s, m, h. when setting `duration: {}` it will pauses indefinitely until manually resumed |
 | controller.rollout.strategy | string | `nil` | Rollout update strategy - can be Canary or BlueGreen. |
-| controller.strategy | string | `nil` | Set controller upgrade strategy For Deployment: `RollingUpdate`(default) / `Recreate` For StatefulSet: `RollingUpdate`(default) / `OnDelete` |
+| controller.strategy | string | `nil` | Set controller upgrade strategy For Deployment: `RollingUpdate`(default) / `Recreate` For StatefulSet: `RollingUpdate`(default) / `OnDelete` For Rollout: `Canary(default) / `BlueGreen` |
 | controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`/`cronjob`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | global | object | `{"controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |

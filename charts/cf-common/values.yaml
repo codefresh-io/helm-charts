@@ -32,6 +32,7 @@ controller:
   # -- Set controller upgrade strategy
   # For Deployment: `RollingUpdate`(default) / `Recreate`
   # For StatefulSet: `RollingUpdate`(default) / `OnDelete`
+  # For Rollout: `Canary(default) / `BlueGreen`
   strategy:
   # -- RollingUpdate strategy parameters
   rollingUpdate:
