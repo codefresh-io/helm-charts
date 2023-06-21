@@ -235,7 +235,7 @@ data:
           set $cfui_svc {{ index .Values "codefresh" "cfui-svc" }};
           set $cfui_port {{ index .Values "codefresh" "cfui-port" }};
 
-          proxy_pass http://$cfapi_ws_svc:$cfapi_ws_port;
+          proxy_pass http://$cfui_svc:$cfui_port;
         }
 
         {{- with .Values.nginx.config.serverSnippet }}
