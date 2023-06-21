@@ -34,6 +34,9 @@ codefresh:
   cfapi-teams-svc: cfapi-teams
   cfapi-teams-port: 80
 
+  cfapi-ws-svc: cfapi-ws
+  cfapi-ws-port: 80
+
   cfui-svc: cfui
   cfui-port: 80
 
