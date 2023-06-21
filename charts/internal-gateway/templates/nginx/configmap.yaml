@@ -196,10 +196,10 @@ data:
         }
 
         location /api/kubernetes/ {
-          set $cfapi_kubernetes-endpoints_svc {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-svc" }};
-          set $cfapi_kubernetes-endpoints_port {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-port" }};
+          set $cfapi_kubernetes_endpoints_svc {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-svc" }};
+          set $cfapi_kubernetes_endpoints_port {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-port" }};
 
-          proxy_pass http://$cfapi_kubernetes-endpoints_svc:$cfapi_kubernetes-endpoints_port;
+          proxy_pass http://$cfapi_kubernetes_endpoints_svc:$cfapi_kubernetes_endpoints_port;
         }
 
         location /api/admin/ {
