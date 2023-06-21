@@ -1,0 +1,356 @@
+---
+# Source: internal-gateway/templates/nginx/configmap.yaml
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: internal-gateway-config
+  labels:
+    helm.sh/chart: internal-gateway-0.1.1
+    app.kubernetes.io/name: internal-gateway
+    app.kubernetes.io/instance: internal-gateway
+    app.kubernetes.io/version: "v0.0.0"
+    app.kubernetes.io/managed-by: Helm
+data:
+  nginx.conf: |
+    worker_processes 5;  ## Default: 1
+    error_log  /dev/stderr error;
+    pid        /tmp/nginx.pid;
+    worker_rlimit_nofile 8192;
+
+    events {
+      worker_connections  4096;  ## Default: 1024
+    }
+
+    http {
+      client_body_temp_path /tmp/client_temp;
+      proxy_temp_path       /tmp/proxy_temp_path;
+      fastcgi_temp_path     /tmp/fastcgi_temp;
+      uwsgi_temp_path       /tmp/uwsgi_temp;
+      scgi_temp_path        /tmp/scgi_temp;
+
+      default_type application/octet-stream;
+      log_format   main '$remote_addr - $remote_user [$time_local]  $status '
+        '"$request" $body_bytes_sent "$http_referer" '
+        '"$http_user_agent" "$http_x_forwarded_for"';
+      access_log   /dev/stderr  main;
+      sendfile     on;
+      tcp_nopush   on;
+
+      map $http_upgrade $connection_upgrade {
+          default upgrade;
+          ''      close;
+      }
+      resolver kube-dns.kube-system.svc.cluster.local;
+
+      server {
+        listen 8080;
+
+        location = / {
+          return 200 'OK';
+          auth_basic off;
+        }
+
+        location = /ready {
+          return 200 'OK';
+          auth_basic off;
+        }
+
+        location /api/auth/authenticate {
+          # Authenticate through Classic CF platform
+          set $cfapi_svc cfapi-endpoints;
+          set $cfapi_port 80;
+          proxy_pass http://$cfapi_svc:$cfapi_port;
+          proxy_pass_request_body off; # no need to send the POST body
+          proxy_set_header Content-Length "";
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Original-URI $request_uri;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "";
+          client_body_buffer_size 16k;
+          client_max_body_size 5M;
+          proxy_buffer_size 64k;
+          proxy_buffers 4 64k;
+          proxy_connect_timeout 5s;
+          proxy_read_timeout 60s;
+          proxy_send_timeout 60s;
+        }
+
+        location /2.0/api/events {
+          # Any request to this server will first be sent to this URL
+          auth_request /api/auth/authenticate;
+          # Sets the HTTP header 'x-cf-auth-entity' that old platform sends, into $auth_entity variable
+          auth_request_set $auth_entity $upstream_http_x_cf_auth_entity;
+          set $argo_platform_api_events_svc argo-platform-api-events;
+          set $argo_platform_api_events_port 80;
+          proxy_pass  http://$argo_platform_api_events_svc:$argo_platform_api_events_port;
+
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Host $host;
+          proxy_set_header X-CF-Auth-Entity $auth_entity;
+          proxy_cache_bypass $http_upgrade;
+          client_body_buffer_size 16k;
+          client_max_body_size 5M;
+          proxy_buffer_size 64k;
+          proxy_buffers 4 64k;
+          proxy_connect_timeout 5s;
+          proxy_read_timeout 60s;
+          proxy_send_timeout 60s;
+        }
+
+        location /2.0/api/graphql {
+          # Any request to this server will first be sent to this URL
+          auth_request /api/auth/authenticate;
+          # Sets the HTTP header 'x-cf-auth-entity' that old platform sends, into $auth_entity variable
+          auth_request_set $auth_entity $upstream_http_x_cf_auth_entity;
+          set $argo_platform_api_graphql_svc argo-platform-api-graphql;
+          set $argo_platform_api_graphql_port 80;
+          proxy_pass  http://$argo_platform_api_graphql_svc:$argo_platform_api_graphql_port;
+
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Host $host;
+          proxy_set_header X-CF-Auth-Entity $auth_entity;
+          proxy_cache_bypass $http_upgrade;
+          client_body_buffer_size 16k;
+          client_max_body_size 5M;
+          proxy_buffer_size 64k;
+          proxy_buffers 4 64k;
+          proxy_connect_timeout 5s;
+          proxy_read_timeout 60s;
+          proxy_send_timeout 60s;
+        }
+
+        location /2.0 {
+          set $argo_platform_ui_svc ;
+          set $argo_platform_ui_port ;
+          proxy_pass  http://$argo_platform_ui_svc:$argo_platform_ui_port;
+
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Host $host;
+          proxy_set_header X-CF-Auth-Entity $auth_entity;
+          proxy_cache_bypass $http_upgrade;
+          client_body_buffer_size 16k;
+          client_max_body_size 5M;
+          proxy_buffer_size 64k;
+          proxy_buffers 4 64k;
+          proxy_connect_timeout 5s;
+          proxy_read_timeout 60s;
+          proxy_send_timeout 60s;
+        }
+
+        location /api/environments-v2/argo/events/ {
+          set $cfapi_environments_svc cfapi-environments
+          set $cfapi_environments_port 80
+
+          proxy_pass http://$cfapi_environments_svc:$cfapi_environments_port;
+        }
+
+        location /api/public/progress/download/ {
+          set $cfapi_downloadlogmanager_svc cfapi-downloadlogmanager
+          set $cfapi_downloadlogmanager_port 80
+
+          proxy_pass http://$cfapi_downloadlogmanager_svc:$cfapi_downloadlogmanager_port;
+        }
+
+        location /api/progress/download/ {
+          set $cfapi_downloadlogmanager_svc cfapi-downloadlogmanager
+          set $cfapi_downloadlogmanager_port 80
+
+          proxy_pass http://$cfapi_downloadlogmanager_svc:$cfapi_downloadlogmanager_port;
+        }
+
+        location /api/gitops/resources/ {
+          set $cfapi_gitops_resource_receiver_svc cfapi-gitops-resource-receiver
+          set $cfapi_gitops_resource_receiver_port 80
+
+          proxy_pass http://$cfapi_gitops_resource_receiver_svc:$cfapi_gitops_resource_receiver_port;
+        }
+
+        location /api/gitops/rollout/ {
+          set $cfapi_gitops_resource_receiver_svc cfapi-gitops-resource-receiver
+          set $cfapi_gitops_resource_receiver_port 80
+
+          proxy_pass http://$cfapi_gitops_resource_receiver_svc:$cfapi_gitops_resource_receiver_port;
+        }
+
+        location /api/testReporting/ {
+          set $cfapi_test_reporting_svc cfapi-test-reporting
+          set $cfapi_test_reporting_port 80
+
+          proxy_pass http://$cfapi_test_reporting_svc:$cfapi_test_reporting_port;
+        }
+
+        location /api/k8s-monitor/ {
+          set $cfapi_kubernetesresourcemonitor_svc cfapi-kubernetesresourcemonitor
+          set $cfapi_kubernetesresourcemonitor_port 80
+
+          proxy_pass http://$cfapi_kubernetesresourcemonitor_svc:$cfapi_kubernetesresourcemonitor_port;
+        }
+
+        location /api/kubernetes/ {
+          set $cfapi_kubernetes-endpoints_svc cfapi-kubernetes-endpoints
+          set $cfapi_kubernetes-endpoints_port 80
+
+          proxy_pass http://$cfapi_kubernetes-endpoints_svc:$cfapi_kubernetes-endpoints_port;
+        }
+
+        location /api/admin/ {
+          set $cfapi_admin_svc cfapi-admin
+          set $cfapi_admin_port 80
+
+          proxy_pass http://$cfapi_admin_svc:$cfapi_admin_port;
+        }
+
+        location /api/team/ {
+          set $cfapi_teams_svc cfapi-teams
+          set $cfapi_teams_port 80
+
+          proxy_pass http://$cfapi_teams_svc:$cfapi_teams_port;
+        }
+
+        location /api/ {
+          set $cfapi_endpoints_svc cfapi-endpoints
+          set $cfapi_endpoints_port 80
+
+          proxy_pass http://$cfapi_endpoints_svc:$cfapi_endpoints_port;
+        }
+
+        location /ws/ {
+          set $cfapi_ws_svc
+          set $cfapi_ws_port
+
+          proxy_pass http://$cfapi_ws_svc:$cfapi_ws_port;
+        }
+
+        location / {
+          set $cfapi_ws_svc
+          set $cfapi_ws_port
+
+          proxy_pass http://$cfapi_ws_svc:$cfapi_ws_port;
+        }
+      }
+    }
+---
+# Source: internal-gateway/templates/service.yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: internal-gateway
+  labels:
+    app.kubernetes.io/name: internal-gateway
+    helm.sh/chart: internal-gateway-0.1.1
+    app.kubernetes.io/instance: internal-gateway
+    app.kubernetes.io/managed-by: Helm
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 8080
+      name: http
+      protocol: TCP
+  selector:
+    app.kubernetes.io/name: internal-gateway
+    app.kubernetes.io/instance: internal-gateway
+---
+# Source: internal-gateway/templates/deployment.yaml
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: internal-gateway
+  labels:
+    app.kubernetes.io/name: internal-gateway
+    helm.sh/chart: internal-gateway-0.1.1
+    app.kubernetes.io/instance: internal-gateway
+    app.kubernetes.io/managed-by: Helm
+spec:
+  revisionHistoryLimit: 5
+  replicas: 2
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: internal-gateway
+      app.kubernetes.io/instance: internal-gateway
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 50%
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: internal-gateway
+        app.kubernetes.io/instance: internal-gateway
+      annotations:
+        checksum/config: 'e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855'
+    spec:
+      serviceAccountName: default
+
+      automountServiceAccountToken: true
+      securityContext:
+        fsGroup: 101
+        runAsGroup: 101
+        runAsNonRoot: true
+        runAsUser: 101
+      dnsPolicy: ClusterFirst
+      containers:
+      - name: internal-gateway
+        image: docker.io/nginxinc/nginx-unprivileged:1.23-alpine
+        imagePullPolicy: Always
+        ports:
+        - name: http
+          containerPort: 8080
+          protocol: TCP
+        volumeMounts:
+        - name: config
+          mountPath: /etc/nginx
+        livenessProbe:
+          httpGet:
+            path: /
+            port: http
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        readinessProbe:
+          httpGet:
+            path: /ready
+            port: http
+          initialDelaySeconds: 15
+          periodSeconds: 5
+          timeoutSeconds: 3
+          successThreshold: 1
+          failureThreshold: 3
+        resources:
+          limits:
+            cpu: 1000m
+            memory: 2Gi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+      volumes:
+      - name: config
+        configMap:
+          name: internal-gateway-config
+      topologySpreadConstraints:
+        - maxSkew: 1
+          topologyKey: kubernetes.io/hostname
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: internal-gateway
+              app.kubernetes.io/instance: internal-gateway
+        - maxSkew: 1
+          topologyKey: topology.kubernetes.io/zone
+          whenUnsatisfiable: ScheduleAnyway
+          labelSelector:
+            matchLabels:
+              app.kubernetes.io/name: internal-gateway
+              app.kubernetes.io/instance: internal-gateway
