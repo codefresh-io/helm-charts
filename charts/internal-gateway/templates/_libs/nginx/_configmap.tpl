@@ -61,6 +61,10 @@ data:
       server {
         listen 8080;
 
+        {{- range $key, $val := .Values.nginx.config.serverDirectives }}
+        {{ printf "%s %s;" $key $val }}
+        {{- end }}
+
         location = / {
           return 200 'OK';
           auth_basic off;
