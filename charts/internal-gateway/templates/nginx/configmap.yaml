@@ -130,8 +130,8 @@ data:
         }
 
         location /2.0 {
-          set $argo_platform_ui_svc {{ .Values.codefresh.argoPlatformUiSvc }};
-          set $argo_platform_ui_port {{ .Values.codefresh.argoPlatformUiPort }};
+          set $argo_platform_ui_svc {{ index .Values.codefresh "argo-platform-ui-svc" }};
+          set $argo_platform_ui_port {{ index .Values.codefresh "argo-platform-ui-port" }};
           proxy_pass  http://$argo_platform_ui_svc:$argo_platform_ui_port;
 
           proxy_http_version 1.1;
@@ -147,92 +147,92 @@ data:
         }
 
         location /api/environments-v2/argo/events/ {
-          set $cfapi_environments_svc {{ index .Values "codefresh" "cfapi-environments-svc" }}
-          set $cfapi_environments_port {{ index .Values "codefresh" "cfapi-environments-port" }}
+          set $cfapi_environments_svc {{ index .Values "codefresh" "cfapi-environments-svc" }};
+          set $cfapi_environments_port {{ index .Values "codefresh" "cfapi-environments-port" }};
 
           proxy_pass http://$cfapi_environments_svc:$cfapi_environments_port;
         }
 
         location /api/public/progress/download/ {
-          set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }}
-          set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }}
+          set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }};
+          set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }};
 
           proxy_pass http://$cfapi_downloadlogmanager_svc:$cfapi_downloadlogmanager_port;
         }
 
         location /api/progress/download/ {
-          set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }}
-          set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }}
+          set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }};
+          set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }};
 
           proxy_pass http://$cfapi_downloadlogmanager_svc:$cfapi_downloadlogmanager_port;
         }
 
         location /api/gitops/resources/ {
-          set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }}
-          set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }}
+          set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }};
+          set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }};
 
           proxy_pass http://$cfapi_gitops_resource_receiver_svc:$cfapi_gitops_resource_receiver_port;
         }
 
         location /api/gitops/rollout/ {
-          set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }}
-          set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }}
+          set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }};
+          set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }};
 
           proxy_pass http://$cfapi_gitops_resource_receiver_svc:$cfapi_gitops_resource_receiver_port;
         }
 
         location /api/testReporting/ {
-          set $cfapi_test_reporting_svc {{ index .Values "codefresh" "cfapi-test-reporting-svc" }}
-          set $cfapi_test_reporting_port {{ index .Values "codefresh" "cfapi-test-reporting-port" }}
+          set $cfapi_test_reporting_svc {{ index .Values "codefresh" "cfapi-test-reporting-svc" }};
+          set $cfapi_test_reporting_port {{ index .Values "codefresh" "cfapi-test-reporting-port" }};
 
           proxy_pass http://$cfapi_test_reporting_svc:$cfapi_test_reporting_port;
         }
 
         location /api/k8s-monitor/ {
-          set $cfapi_kubernetesresourcemonitor_svc {{ index .Values "codefresh" "cfapi-kubernetesresourcemonitor-svc" }}
-          set $cfapi_kubernetesresourcemonitor_port {{ index .Values "codefresh" "cfapi-kubernetesresourcemonitor-port" }}
+          set $cfapi_kubernetesresourcemonitor_svc {{ index .Values "codefresh" "cfapi-kubernetesresourcemonitor-svc" }};
+          set $cfapi_kubernetesresourcemonitor_port {{ index .Values "codefresh" "cfapi-kubernetesresourcemonitor-port" }};
 
           proxy_pass http://$cfapi_kubernetesresourcemonitor_svc:$cfapi_kubernetesresourcemonitor_port;
         }
 
         location /api/kubernetes/ {
-          set $cfapi_kubernetes-endpoints_svc {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-svc" }}
-          set $cfapi_kubernetes-endpoints_port {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-port" }}
+          set $cfapi_kubernetes-endpoints_svc {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-svc" }};
+          set $cfapi_kubernetes-endpoints_port {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-port" }};
 
           proxy_pass http://$cfapi_kubernetes-endpoints_svc:$cfapi_kubernetes-endpoints_port;
         }
 
         location /api/admin/ {
-          set $cfapi_admin_svc {{ index .Values "codefresh" "cfapi-admin-svc" }}
-          set $cfapi_admin_port {{ index .Values "codefresh" "cfapi-admin-port" }}
+          set $cfapi_admin_svc {{ index .Values "codefresh" "cfapi-admin-svc" }};
+          set $cfapi_admin_port {{ index .Values "codefresh" "cfapi-admin-port" }};
 
           proxy_pass http://$cfapi_admin_svc:$cfapi_admin_port;
         }
 
         location /api/team/ {
-          set $cfapi_teams_svc {{ index .Values "codefresh" "cfapi-teams-svc" }}
-          set $cfapi_teams_port {{ index .Values "codefresh" "cfapi-teams-port" }}
+          set $cfapi_teams_svc {{ index .Values "codefresh" "cfapi-teams-svc" }};
+          set $cfapi_teams_port {{ index .Values "codefresh" "cfapi-teams-port" }};
 
           proxy_pass http://$cfapi_teams_svc:$cfapi_teams_port;
         }
 
         location /api/ {
-          set $cfapi_endpoints_svc {{ index .Values "codefresh" "cfapi-endpoints-svc" }}
-          set $cfapi_endpoints_port {{ index .Values "codefresh" "cfapi-endpoints-port" }}
+          set $cfapi_endpoints_svc {{ index .Values "codefresh" "cfapi-endpoints-svc" }};
+          set $cfapi_endpoints_port {{ index .Values "codefresh" "cfapi-endpoints-port" }};
 
           proxy_pass http://$cfapi_endpoints_svc:$cfapi_endpoints_port;
         }
 
         location /ws/ {
-          set $cfapi_ws_svc {{ index .Values "codefresh" "cfapi-ws-svc" }}
-          set $cfapi_ws_port {{ index .Values "codefresh" "cfapi-ws-port" }}
+          set $cfapi_ws_svc {{ index .Values "codefresh" "cfapi-ws-svc" }};
+          set $cfapi_ws_port {{ index .Values "codefresh" "cfapi-ws-port" }};
 
           proxy_pass http://$cfapi_ws_svc:$cfapi_ws_port;
         }
 
         location / {
-          set $cfapi_ws_svc {{ index .Values "codefresh" "cfapi-ws-svc" }}
-          set $cfapi_ws_port {{ index .Values "codefresh" "cfapi-ws-port" }}
+          set $cfui_svc {{ index .Values "codefresh" "cfui-svc" }};
+          set $cfui_port {{ index .Values "codefresh" "cfui-port" }};
 
           proxy_pass http://$cfapi_ws_svc:$cfapi_ws_port;
         }
