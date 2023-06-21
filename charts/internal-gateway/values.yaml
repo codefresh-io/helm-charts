@@ -65,7 +65,7 @@ ingress:
     hosts:
       - host: '{{ regexReplaceAll "^https?://" .Values.codefresh.url "" }}'
         paths:
-          - path: "/2.0"
+          - path: "/"
             pathType: ImplementationSpecific
             service:
               name: '{{ include "internal-gateway.fullname" . }}'
