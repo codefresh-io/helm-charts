@@ -1,6 +1,6 @@
 # internal-gateway
 
-![Version: 0.1.1](https://img.shields.io/badge/Version-0.1.1-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.2.0](https://img.shields.io/badge/Version-0.2.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 A Helm chart for Codefresh Internal Gateway
 
@@ -16,14 +16,13 @@ A Helm chart for Codefresh Internal Gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://chartmuseum.codefresh.io/cf-common | cf-common | 0.6.0 |
+| https://chartmuseum.codefresh.io/cf-common | cf-common | 0.9.3 |
 
 ## Values
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | codefresh | object | See below | Codefresh platform settings |
-| configMaps | object | See below | Configmap parameters |
 | container | object | See below | Main container parameters |
 | containerSecurityContext | object | See below | Container security context parameters |
 | controller | object | See below | Controller parameters |
@@ -36,13 +35,15 @@ A Helm chart for Codefresh Internal Gateway
 | libraryMode | bool | `false` |  |
 | nginx.config.accessLogEnabled | bool | `true` | Enables NGINX access logs |
 | nginx.config.errorLogLevel | string | `"error"` | Sets the log level of the NGINX error log. One of `debug`, `info`, `notice`, `warn`, `error`, `crit`, `alert`, or `emerg` |
-| nginx.config.file | string | See below | Config file contents for Nginx. Passed through the `tpl` function to allow templating. |
+| nginx.config.file | string | See below | Config file contents for Nginx. Passed through the `tpl` function to allow templating. !! Moved into separate template at `templates/nginx/configmap.yaml` |
 | nginx.config.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
 | nginx.config.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
 | nginx.config.proxyConf | object | `{"client_body_buffer_size":"16k","client_max_body_size":"5M","proxy_buffer_size":"64k","proxy_buffers":"4 64k","proxy_connect_timeout":"5s","proxy_read_timeout":"60s","proxy_send_timeout":"60s"}` | Set proxy parameters Ref: https://nginx.org/en/docs/http/ngx_http_proxy_module.html |
 | nginx.config.resolver | string | `nil` | Allows to set a custom resolver |
 | nginx.config.serverSnippet | string | `""` | Allows appending custom configuration to the server block |
 | nginx.config.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
+| nginx.config.workerConnections | int | `4096` |  |
+| nginx.config.workerProcesses | int | `5` | Description |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
 | podSecurityContext | object | See below | Pod Security Context parameters |
