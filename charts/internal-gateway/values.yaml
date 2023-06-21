@@ -131,7 +131,7 @@ controller:
 # -- Pod annotations
 # @default -- See below
 podAnnotations:
-  checksum/config: '{{ include (print $.Template.BasePath "/configmap.yaml") . | sha256sum }}'
+  checksum/config: '{{ include (printf "cf-common-%s.tplrender" (index .Subcharts "cf-common").Chart.Version) (dict "Values" .Values.nginx.config "context" $) | sha256sum }}'
 
 # -- Pod Security Context parameters
 # @default -- See below
