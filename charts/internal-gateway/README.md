@@ -41,7 +41,7 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
 | nginx.config.resolver | string | `nil` | Allows to set a custom resolver |
 | nginx.config.serverDirectives | object | `{"client_body_buffer_size":"16k","client_max_body_size":"5M","proxy_buffer_size":"64k","proxy_buffers":"4 64k","proxy_connect_timeout":"5s","proxy_read_timeout":"60s","proxy_send_timeout":"60s"}` | Allows appending custom directives to the server block (map) |
-| nginx.config.serverSnippet | string | `"proxy_http_version 1.1;\nproxy_set_header Upgrade $http_upgrade;\nproxy_set_header Connection \"upgrade\";\n"` | Allows appending custom configuration to the server block (string) |
+| nginx.config.serverSnippet | string | `""` | Allows appending custom configuration to the server block (string) |
 | nginx.config.verboseLogging | bool | `false` | Enable logging of 2xx and 3xx HTTP requests |
 | nginx.config.workerConnections | string | `"16384"` | Sets the maximum number of simultaneous connections that can be opened by a worker process. |
 | nginx.config.workerProcesses | string | `"8"` | Defines the number of worker processes. |

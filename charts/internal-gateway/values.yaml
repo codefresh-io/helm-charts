@@ -87,10 +87,7 @@ nginx:
     # -- Enables NGINX access logs
     accessLogEnabled: true
     # -- Allows appending custom configuration to the server block (string)
-    serverSnippet: |
-      proxy_http_version 1.1;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection "upgrade";
+    serverSnippet: ""
     # -- Allows appending custom directives to the server block (map)
     serverDirectives:
       proxy_buffer_size: "64k"

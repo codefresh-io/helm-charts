@@ -61,13 +61,13 @@ data:
       server {
         listen 8080;
 
-        {{- with .Values.nginx.config.serverSnippet }}
-        {{ . | nindent 8 }}
-        {{- end }}
-
         {{- range $key, $val := .Values.nginx.config.serverDirectives }}
         {{ printf "%s %s;" $key $val }}
         {{- end }}
+
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade $http_upgrade;
+        proxy_set_header Connection "upgrade";
 
         location = / {
           return 200 'OK';
@@ -224,6 +224,10 @@ data:
 
           proxy_pass http://$cfui_svc:$cfui_port;
         }
+
+        {{- with .Values.nginx.config.serverSnippet }}
+        {{ . | nindent 8 }}
+        {{- end }}
 
       }
     }
