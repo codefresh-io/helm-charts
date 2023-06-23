@@ -64,12 +64,12 @@ data:
       server {
         listen 8080;
 
-        location = / {
+        location = /ready {
           return 200 'OK';
           auth_basic off;
         }
 
-        location = /ready {
+        location = /healthz {
           return 200 'OK';
           auth_basic off;
         }
@@ -158,9 +158,9 @@ data:
           set $cfapi_environments_svc {{ index .Values "codefresh" "cfapi-environments-svc" }};
           set $cfapi_environments_port {{ index .Values "codefresh" "cfapi-environments-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -173,9 +173,9 @@ data:
           set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }};
           set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -188,9 +188,9 @@ data:
           set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }};
           set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -203,9 +203,9 @@ data:
           set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }};
           set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -218,9 +218,9 @@ data:
           set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }};
           set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -233,9 +233,9 @@ data:
           set $cfapi_test_reporting_svc {{ index .Values "codefresh" "cfapi-test-reporting-svc" }};
           set $cfapi_test_reporting_port {{ index .Values "codefresh" "cfapi-test-reporting-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -248,9 +248,9 @@ data:
           set $cfapi_kubernetesresourcemonitor_svc {{ index .Values "codefresh" "cfapi-kubernetesresourcemonitor-svc" }};
           set $cfapi_kubernetesresourcemonitor_port {{ index .Values "codefresh" "cfapi-kubernetesresourcemonitor-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -263,9 +263,9 @@ data:
           set $cfapi_kubernetes_endpoints_svc {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-svc" }};
           set $cfapi_kubernetes_endpoints_port {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -278,9 +278,9 @@ data:
           set $cfapi_admin_svc {{ index .Values "codefresh" "cfapi-admin-svc" }};
           set $cfapi_admin_port {{ index .Values "codefresh" "cfapi-admin-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -293,9 +293,9 @@ data:
           set $cfapi_teams_svc {{ index .Values "codefresh" "cfapi-teams-svc" }};
           set $cfapi_teams_port {{ index .Values "codefresh" "cfapi-teams-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -308,9 +308,9 @@ data:
           set $cfapi_endpoints_svc {{ index .Values "codefresh" "cfapi-endpoints-svc" }};
           set $cfapi_endpoints_port {{ index .Values "codefresh" "cfapi-endpoints-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -323,9 +323,9 @@ data:
           set $cfapi_ws_svc {{ index .Values "codefresh" "cfapi-ws-svc" }};
           set $cfapi_ws_port {{ index .Values "codefresh" "cfapi-ws-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -338,9 +338,9 @@ data:
           set $nomios_svc {{ index .Values "codefresh" "nomios-svc" }};
           set $nomios_port {{ index .Values "codefresh" "nomios-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -353,9 +353,9 @@ data:
           set $jira_addon_svc {{ index .Values "codefresh" "jira-addon-svc" }};
           set $jira_addon_port {{ index .Values "codefresh" "jira-addon-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -368,9 +368,9 @@ data:
           set $argo_hub_svc {{ index .Values "codefresh" "argo-hub-svc" }};
           set $argo_hub_port {{ index .Values "codefresh" "argo-hub-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
@@ -383,14 +383,9 @@ data:
           set $cfui_svc {{ index .Values "codefresh" "cfui-svc" }};
           set $cfui_port {{ index .Values "codefresh" "cfui-port" }};
 
-          proxy_redirect off;
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Original-URI $request_uri;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
-          proxy_set_header Host $http_host;
-          proxy_set_header Connection "";
-          proxy_http_version 1.1;
+          {{- with .Values.nginx.config.locationSnippet }}
+          {{ . | nindent 10 }}
+          {{- end }}
 
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}

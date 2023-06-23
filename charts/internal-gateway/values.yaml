@@ -107,6 +107,18 @@ nginx:
     httpSnippet: ""
     # -- Allows appending custom directives to the http block (map)
     httpDirectives: {}
+    # -- Allows appending custom configuration to the location blocks (map)
+    locationSnippet: |
+      proxy_http_version 1.1;
+      proxy_set_header Connection $connection_upgrade;
+      proxy_set_header Host $host;
+      proxy_set_header Upgrade $http_upgrade;
+      proxy_set_header Connection $connection_upgrade;
+      proxy_set_header X-Request-ID $request_id;
+      proxy_set_header X-Real-IP $remote_addr;
+      proxy_set_header X-Original-URI $request_uri;
+      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+      proxy_set_header X-Forwarded-Proto $scheme;
     # -- Allows appending custom directives to the location blocks (map)
     locationDirectives:
       proxy_buffer_size: "64k"
@@ -191,7 +203,7 @@ container:
       enabled: true
       type: httpGet
       httpGet:
-        path: /
+        path: /healthz
         port: http
       spec:
         initialDelaySeconds: 30
