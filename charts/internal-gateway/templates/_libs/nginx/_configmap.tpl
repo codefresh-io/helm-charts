@@ -143,42 +143,42 @@ data:
           proxy_cache_bypass $http_upgrade;
         }
 
-        location /api/environments-v2/argo/events/ {
+        location /api/environments-v2/argo/events {
           set $cfapi_environments_svc {{ index .Values "codefresh" "cfapi-environments-svc" }};
           set $cfapi_environments_port {{ index .Values "codefresh" "cfapi-environments-port" }};
 
           proxy_pass http://$cfapi_environments_svc:$cfapi_environments_port;
         }
 
-        location /api/public/progress/download/ {
+        location /api/public/progress/download {
           set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }};
           set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }};
 
           proxy_pass http://$cfapi_downloadlogmanager_svc:$cfapi_downloadlogmanager_port;
         }
 
-        location /api/progress/download/ {
+        location /api/progress/download {
           set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }};
           set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }};
 
           proxy_pass http://$cfapi_downloadlogmanager_svc:$cfapi_downloadlogmanager_port;
         }
 
-        location /api/gitops/resources/ {
+        location /api/gitops/resources {
           set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }};
           set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }};
 
           proxy_pass http://$cfapi_gitops_resource_receiver_svc:$cfapi_gitops_resource_receiver_port;
         }
 
-        location /api/gitops/rollout/ {
+        location /api/gitops/rollout {
           set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }};
           set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }};
 
           proxy_pass http://$cfapi_gitops_resource_receiver_svc:$cfapi_gitops_resource_receiver_port;
         }
 
-        location /api/testReporting/ {
+        location /api/testReporting {
           set $cfapi_test_reporting_svc {{ index .Values "codefresh" "cfapi-test-reporting-svc" }};
           set $cfapi_test_reporting_port {{ index .Values "codefresh" "cfapi-test-reporting-port" }};
 
@@ -192,7 +192,7 @@ data:
           proxy_pass http://$cfapi_kubernetesresourcemonitor_svc:$cfapi_kubernetesresourcemonitor_port;
         }
 
-        location /api/kubernetes/ {
+        location /api/kubernetes {
           set $cfapi_kubernetes_endpoints_svc {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-svc" }};
           set $cfapi_kubernetes_endpoints_port {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-port" }};
 
@@ -206,7 +206,7 @@ data:
           proxy_pass http://$cfapi_admin_svc:$cfapi_admin_port;
         }
 
-        location /api/team/ {
+        location /api/team {
           set $cfapi_teams_svc {{ index .Values "codefresh" "cfapi-teams-svc" }};
           set $cfapi_teams_port {{ index .Values "codefresh" "cfapi-teams-port" }};
 
@@ -225,6 +225,20 @@ data:
           set $cfapi_ws_port {{ index .Values "codefresh" "cfapi-ws-port" }};
 
           proxy_pass http://$cfapi_ws_svc:$cfapi_ws_port;
+        }
+
+        location /nomios/ {
+          set $nomios_svc {{ index .Values "codefresh" "nomios-svc" }};
+          set $nomios_port {{ index .Values "codefresh" "nomios-port" }};
+
+          proxy_pass http://$nomios_svc:$nomios_port;
+        }
+
+        location /atlassian/ {
+          set $jira_addon_svc {{ index .Values "codefresh" "jira-addon-svc" }};
+          set $jira_addon_port {{ index .Values "codefresh" "jira-addon-port" }};
+
+          proxy_pass http://$jira_addon_svc:$jira_addon_port;
         }
 
         location / {
