@@ -1,0 +1,5 @@
+{{- define "internal-gateway.resources.ingress" -}}
+---
+{{ include "internal-gateway.ingress" . }}
+
+{{- end -}}

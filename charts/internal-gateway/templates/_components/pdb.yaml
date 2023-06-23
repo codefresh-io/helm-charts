@@ -1,0 +1,5 @@
+{{- define "internal-gateway.resources.pdb" -}}
+---
+{{ include "internal-gateway.pdb" . }}
+
+{{- end -}}

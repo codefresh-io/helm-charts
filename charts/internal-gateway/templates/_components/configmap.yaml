@@ -1,0 +1,5 @@
+{{- define "internal-gateway.resources.configmap" -}}
+---
+{{ include "internal-gateway.configmap" . }}
+
+{{- end -}}

@@ -1,0 +1,5 @@
+{{- define "internal-gateway.resources.deployment" -}}
+---
+{{ include "internal-gateway.deployment" . }}
+
+{{- end -}}
