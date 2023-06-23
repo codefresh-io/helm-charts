@@ -65,11 +65,13 @@ data:
         listen 8080;
 
         location = /ready {
+          internal;
           return 200 'OK';
           auth_basic off;
         }
 
         location = /healthz {
+          internal;
           return 200 'OK';
           auth_basic off;
         }

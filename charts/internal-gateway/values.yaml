@@ -107,7 +107,7 @@ nginx:
     httpSnippet: ""
     # -- Allows appending custom directives to the http block (map)
     httpDirectives: {}
-    # -- Allows appending custom configuration to the location blocks (map)
+    # -- Allows appending custom configuration to the location blocks (string)
     locationSnippet: |
       proxy_http_version 1.1;
       proxy_set_header Connection $connection_upgrade;
