@@ -43,9 +43,9 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.serverDirectives | object | `{"client_body_buffer_size":"16k","client_max_body_size":"5M","proxy_buffer_size":"64k","proxy_buffers":"4 64k","proxy_connect_timeout":"5s","proxy_read_timeout":"60s","proxy_send_timeout":"60s"}` | Allows appending custom directives to the server block (map) |
 | nginx.config.serverSnippet | string | `"proxy_http_version 1.1;\nproxy_set_header Upgrade $http_upgrade;\nproxy_set_header Connection \"upgrade\";\nproxy_set_header X-Request-ID $request_id;\n"` | Allows appending custom configuration to the server block (string) |
 | nginx.config.verboseLogging | bool | `false` | Enable logging of 2xx and 3xx HTTP requests |
-| nginx.config.workerConnections | int | `16384` | Sets the maximum number of simultaneous connections that can be opened by a worker process. |
-| nginx.config.workerProcesses | int | `8` | Defines the number of worker processes. |
-| nginx.config.workerRlimitNofile | int | `1047552` | Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process. |
+| nginx.config.workerConnections | string | `"16384"` | Sets the maximum number of simultaneous connections that can be opened by a worker process. |
+| nginx.config.workerProcesses | string | `"8"` | Defines the number of worker processes. |
+| nginx.config.workerRlimitNofile | string | `"1047552"` | Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process. |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
 | podSecurityContext | object | See below | Pod Security Context parameters |
