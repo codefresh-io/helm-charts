@@ -23,7 +23,7 @@ data:
       uwsgi_temp_path       /tmp/uwsgi_temp;
       scgi_temp_path        /tmp/scgi_temp;
 
-      variables_hash_max_size 1024;
+      variables_hash_max_size 2048;
       variables_hash_bucket_size 64;
 
       default_type application/octet-stream;
