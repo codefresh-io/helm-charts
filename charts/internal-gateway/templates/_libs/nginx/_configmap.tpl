@@ -61,6 +61,10 @@ data:
       server {
         listen 8080;
 
+        {{- with .Values.nginx.config.serverSnippet }}
+        {{ . | nindent 10 }}
+        {{- end }}
+
         {{- range $key, $val := .Values.nginx.config.serverDirectives }}
         {{ printf "%s %s;" $key $val }}
         {{- end }}
@@ -221,9 +225,6 @@ data:
           proxy_pass http://$cfui_svc:$cfui_port;
         }
 
-        {{- with .Values.nginx.config.serverSnippet }}
-        {{ . | nindent 4 }}
-        {{- end }}
       }
     }
 {{- end }}
