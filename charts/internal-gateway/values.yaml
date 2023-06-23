@@ -95,7 +95,13 @@ nginx:
     # -- Allows appending custom configuration to the server block (string)
     serverSnippet: ""
     # -- Allows appending custom directives to the server block (map)
-    serverDirectives:
+    serverDirectives: {}
+    # -- Allows appending custom configuration to the http block (string)
+    httpSnippet: ""
+    # -- Allows appending custom directives to the http block (map)
+    httpDirectives: {}
+    # -- Allows appending custom directives to the location blocks (map)
+    locationDirectives:
       proxy_buffer_size: "64k"
       proxy_buffers: "4 64k"
       client_max_body_size: "5M"
@@ -103,10 +109,6 @@ nginx:
       proxy_connect_timeout: "5s"
       proxy_send_timeout: "60s"
       proxy_read_timeout: "60s"
-    # -- Allows appending custom configuration to the http block (string)
-    httpSnippet: ""
-    # -- Allows appending custom directives to the http block (map)
-    httpDirectives: {}
 
     # -- Allows to set a custom resolver
     resolver: null
