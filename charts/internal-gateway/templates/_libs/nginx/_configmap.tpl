@@ -51,7 +51,7 @@ data:
       {{- end }}
 
       {{- with .Values.nginx.config.httpSnippet }}
-      {{ . | nindent 2 }}
+      {{ . | nindent 6 }}
       {{- end }}
 
       {{- range $key, $val := .Values.nginx.config.httpDirectives }}
