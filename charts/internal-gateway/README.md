@@ -36,15 +36,16 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.accessLogEnabled | bool | `true` | Enables NGINX access logs |
 | nginx.config.errorLogLevel | string | `"error"` | Sets the log level of the NGINX error log. One of `debug`, `info`, `notice`, `warn`, `error`, `crit`, `alert`, or `emerg` |
 | nginx.config.file | string | See below | Config file contents for Nginx. Passed through the `tpl` function to allow templating. !! Moved into separate template at `templates/nginx/configmap.yaml` |
-| nginx.config.httpDirectives | object | `{}` | Description |
-| nginx.config.httpSnippet | string | `""` | Allows appending custom configuration to the http block |
-| nginx.config.logFormat | string | `"main '$remote_addr - $remote_user [$time_local]  $status '\n        '\"$request\" $body_bytes_sent \"$http_referer\" '\n        '\"$http_user_agent\" \"$http_x_forwarded_for\"';"` | NGINX log format |
+| nginx.config.httpDirectives | object | `{}` | Allows appending custom directives to the http block (map) |
+| nginx.config.httpSnippet | string | `""` | Allows appending custom configuration to the http block (string) |
+| nginx.config.logFormat | string | `"{ \"time\": \"$time_iso8601\", \"remote_addr\": \"$proxy_protocol_addr\",\n  \"x-forward-for\": \"$proxy_add_x_forwarded_for\", \"remote_user\":\n  \"$remote_user\", \"bytes_sent\": $bytes_sent, \"request_time\": $request_time, \"status\":\n  $status, \"vhost\": \"$host\", \"request_proto\": \"$server_protocol\", \"path\": \"$uri\",\n  \"request_query\": \"$args\", \"request_length\": $request_length, \"duration\": $request_time,\n  \"method\": \"$request_method\", \"http_referrer\": \"$http_referer\", \"http_user_agent\":\n  \"$http_user_agent\", \"http_x_github_delivery\": \"$http_x_github_delivery\", \"http_x_hook_uuid\": \"$http_x_hook_uuid\", \"metadata\": { \"correlationId\": \"$request_id\", \"service\": \"ingress\", \"time\": \"$time_iso8601\" } }"` | NGINX log format |
 | nginx.config.resolver | string | `nil` | Allows to set a custom resolver |
-| nginx.config.serverDirectives | object | `{"client_body_buffer_size":"16k","client_max_body_size":"5M","proxy_buffer_size":"64k","proxy_buffers":"4 64k","proxy_connect_timeout":"5s","proxy_read_timeout":"60s","proxy_send_timeout":"60s"}` | Description |
-| nginx.config.serverSnippet | string | `""` | Allows appending custom configuration to the server block |
-| nginx.config.verboseLogging | bool | `true` | Enable logging of 2xx and 3xx HTTP requests |
-| nginx.config.workerConnections | int | `4096` |  |
-| nginx.config.workerProcesses | int | `5` | Description |
+| nginx.config.serverDirectives | object | `{"client_body_buffer_size":"16k","client_max_body_size":"5M","proxy_buffer_size":"64k","proxy_buffers":"4 64k","proxy_connect_timeout":"5s","proxy_read_timeout":"60s","proxy_send_timeout":"60s"}` | Allows appending custom directives to the server block (map) |
+| nginx.config.serverSnippet | string | `"proxy_http_version 1.1;\nproxy_set_header Upgrade $http_upgrade;\nproxy_set_header Connection \"upgrade\";\nproxy_set_header X-Request-ID $request_id;\n"` | Allows appending custom configuration to the server block (string) |
+| nginx.config.verboseLogging | bool | `false` | Enable logging of 2xx and 3xx HTTP requests |
+| nginx.config.workerConnections | int | `16384` | Sets the maximum number of simultaneous connections that can be opened by a worker process. |
+| nginx.config.workerProcesses | int | `8` | Defines the number of worker processes. |
+| nginx.config.workerRlimitNofile | int | `1047552` | Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process. |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
 | podSecurityContext | object | See below | Pod Security Context parameters |
