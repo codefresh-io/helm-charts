@@ -64,18 +64,6 @@ data:
       server {
         listen 8080;
 
-        location = /ready {
-          internal;
-          return 200 'OK';
-          auth_basic off;
-        }
-
-        location = /healthz {
-          internal;
-          return 200 'OK';
-          auth_basic off;
-        }
-
         location /api/auth/authenticate {
           # Authenticate through Classic CF platform
           set $cfapi_svc {{ index .Values.codefresh "cfapi-endpoints-svc" }};

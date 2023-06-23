@@ -189,7 +189,9 @@ container:
   probes:
     readiness:
       enabled: true
-      type: httpGet
+      type: tcpSocket
+      tcpSocket:
+        port: http
       httpGet:
         path: /ready
         port: http
@@ -201,9 +203,11 @@ container:
         successThreshold: 1
     liveness:
       enabled: true
-      type: httpGet
+      type: tcpSocket
+      tcpSocket:
+        port: http
       httpGet:
-        path: /healthz
+        path: /health
         port: http
       spec:
         initialDelaySeconds: 30
