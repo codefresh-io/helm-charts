@@ -65,9 +65,6 @@ data:
         {{ printf "%s %s;" $key $val }}
         {{- end }}
 
-        proxy_http_version 1.1;
-        proxy_set_header Upgrade $http_upgrade;
-        proxy_set_header Connection "upgrade";
 
         location = / {
           return 200 'OK';
@@ -224,6 +221,9 @@ data:
           set $cfapi_ws_svc {{ index .Values "codefresh" "cfapi-ws-svc" }};
           set $cfapi_ws_port {{ index .Values "codefresh" "cfapi-ws-port" }};
 
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection $connection_upgrade;
           proxy_pass http://$cfapi_ws_svc:$cfapi_ws_port;
         }
 
