@@ -105,6 +105,9 @@ data:
           set $argo_platform_api_events_port {{ index .Values.codefresh "argo-platform-api-events-port" }};
           proxy_pass  http://$argo_platform_api_events_svc:$argo_platform_api_events_port;
 
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
           proxy_set_header Host $host;
           proxy_set_header X-CF-Auth-Entity $auth_entity;
           proxy_cache_bypass $http_upgrade;
@@ -119,6 +122,9 @@ data:
           set $argo_platform_api_graphql_port {{ index .Values.codefresh "argo-platform-api-graphql-port" }};
           proxy_pass  http://$argo_platform_api_graphql_svc:$argo_platform_api_graphql_port;
 
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
           proxy_set_header Host $host;
           proxy_set_header X-CF-Auth-Entity $auth_entity;
           proxy_cache_bypass $http_upgrade;
@@ -129,6 +135,9 @@ data:
           set $argo_platform_ui_port {{ index .Values.codefresh "argo-platform-ui-port" }};
           proxy_pass  http://$argo_platform_ui_svc:$argo_platform_ui_port;
 
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
           proxy_set_header Host $host;
           proxy_set_header X-CF-Auth-Entity $auth_entity;
           proxy_cache_bypass $http_upgrade;
