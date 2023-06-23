@@ -1,5 +1,0 @@
-{{- define "internal-gateway.resources.hpa" -}}
----
-{{ include "internal-gateway.hpa" . }}
-
-{{- end -}}

@@ -1,5 +1,0 @@
-{{- define "internal-gateway.resources.rbac" -}}
----
-{{ include "internal-gateway.rbac" . }}
-
-{{- end -}}

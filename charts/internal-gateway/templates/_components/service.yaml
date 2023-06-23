@@ -1,5 +1,0 @@
-{{- define "internal-gateway.resources.service" -}}
----
-{{ include "internal-gateway.service" . }}
-
-{{- end -}}
