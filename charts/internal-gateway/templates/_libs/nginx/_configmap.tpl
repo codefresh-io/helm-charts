@@ -62,7 +62,7 @@ data:
         listen 8080;
 
         {{- with .Values.nginx.config.serverSnippet }}
-        {{ . | nindent 10 }}
+        {{ . | nindent 8 }}
         {{- end }}
 
         {{- range $key, $val := .Values.nginx.config.serverDirectives }}
