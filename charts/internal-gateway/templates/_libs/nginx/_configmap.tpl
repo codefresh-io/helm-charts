@@ -10,7 +10,7 @@ data:
     worker_processes {{ .Values.nginx.config.workerProcesses }};
     error_log  /dev/stderr {{ .Values.nginx.config.errorLogLevel }};
     pid        /tmp/nginx.pid;
-    worker_rlimit_nofile 8192;
+    worker_rlimit_nofile {{ .Values.nginx.config.workerRlimitNofile }};
 
     events {
       worker_connections  {{ .Values.nginx.config.workerConnections }};
@@ -90,7 +90,6 @@ data:
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "";
-
         }
 
         location /2.0/api/events {
@@ -102,13 +101,9 @@ data:
           set $argo_platform_api_events_port {{ index .Values.codefresh "argo-platform-api-events-port" }};
           proxy_pass  http://$argo_platform_api_events_svc:$argo_platform_api_events_port;
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
           proxy_set_header Host $host;
           proxy_set_header X-CF-Auth-Entity $auth_entity;
           proxy_cache_bypass $http_upgrade;
-
         }
 
         location /2.0/api/graphql {
@@ -120,13 +115,9 @@ data:
           set $argo_platform_api_graphql_port {{ index .Values.codefresh "argo-platform-api-graphql-port" }};
           proxy_pass  http://$argo_platform_api_graphql_svc:$argo_platform_api_graphql_port;
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
           proxy_set_header Host $host;
           proxy_set_header X-CF-Auth-Entity $auth_entity;
           proxy_cache_bypass $http_upgrade;
-
         }
 
         location /2.0 {
@@ -134,13 +125,9 @@ data:
           set $argo_platform_ui_port {{ index .Values.codefresh "argo-platform-ui-port" }};
           proxy_pass  http://$argo_platform_ui_svc:$argo_platform_ui_port;
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
           proxy_set_header Host $host;
           proxy_set_header X-CF-Auth-Entity $auth_entity;
           proxy_cache_bypass $http_upgrade;
-
         }
 
         location /api/environments-v2/argo/events/ {
