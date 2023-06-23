@@ -69,6 +69,12 @@ ingress:
 
 nginx:
   config:
+    # -- Defines the number of worker processes.
+    workerProcesses: 8
+    # -- Sets the maximum number of simultaneous connections that can be opened by a worker process.
+    workerConnections: 16384
+    # -- Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process.
+    workerRlimitNofile: 1047552
     # -- Enable logging of 2xx and 3xx HTTP requests
     verboseLogging: false
     # -- NGINX log format
@@ -110,13 +116,6 @@ nginx:
 
     # -- Allows to set a custom resolver
     resolver: null
-
-    # -- Defines the number of worker processes.
-    workerProcesses: 8
-    # -- Sets the maximum number of simultaneous connections that can be opened by a worker process.
-    workerConnections: 16384
-    # -- Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process.
-    workerRlimitNofile: 1047552
 
     # -- Config file contents for Nginx. Passed through the `tpl` function to allow templating.
     # !! Moved into separate template at `templates/nginx/configmap.yaml`
