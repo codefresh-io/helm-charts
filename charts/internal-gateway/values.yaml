@@ -48,6 +48,10 @@ codefresh:
   argo-platform-ui-svc: argo-platform-ui
   argo-platform-ui-port: 4200
 
+  argo-hub-namespace: argo-hub
+  argo-hub-svc: argo-hub-platform
+  argo-hub-port: 80
+
   nomios-svc: nomios
   nomios-port: 80
 

@@ -361,6 +361,21 @@ data:
           proxy_pass http://$jira_addon_svc:$jira_addon_port;
         }
 
+        location /argo/hub/ {
+          set $argo_hub_svc {{ index .Values "codefresh" "argo-hub-svc" }};
+          set $argo_hub_port {{ index .Values "codefresh" "argo-hub-port" }};
+
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection $connection_upgrade;
+
+          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
+          {{ printf "%s %s;" $key $val }}
+          {{- end }}
+
+          proxy_pass http://$argo_hub_svc:$argo_hub_port;
+        }
+
         location / {
           set $cfui_svc {{ index .Values "codefresh" "cfui-svc" }};
           set $cfui_port {{ index .Values "codefresh" "cfui-port" }};
