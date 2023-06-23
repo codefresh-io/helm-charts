@@ -383,10 +383,6 @@ data:
           set $cfui_svc {{ index .Values "codefresh" "cfui-svc" }};
           set $cfui_port {{ index .Values "codefresh" "cfui-port" }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection $connection_upgrade;
-
           {{- range $key, $val := .Values.nginx.config.locationDirectives }}
           {{ printf "%s %s;" $key $val }}
           {{- end }}
