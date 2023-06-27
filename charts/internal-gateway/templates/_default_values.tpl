@@ -50,6 +50,6 @@ codefresh:
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "nomios-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "nomios-port" }}
     jira-addon:
-      svc: '{{ .Release.Name }}-{{ index .Values.codefresh "jira-addon-svc" }},{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh "jira-addon-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "jira-addon-port" }}
 {{- end }}
