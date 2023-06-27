@@ -78,11 +78,11 @@ data:
           set $location_host {{ $val.proxy.host }};
           set $location_port {{ $val.proxy.port }};
 
+          proxy_pass http://$location_host:$location_port;
+
           {{- if hasKey $val.proxy "proxyPassSnippet" }}
           {{- print $val.proxy.proxyPassSnippet | nindent 10 }}
           {{- end }}
-
-          proxy_pass http://$location_host:$location_port;
 
           {{- $locationSnippet := "" }}
           {{- if hasKey $val "locationSnippet" }}
