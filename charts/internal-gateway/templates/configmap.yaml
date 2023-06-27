@@ -57,7 +57,7 @@ codefresh:
 {{- if not .Values.libraryMode }}
 {{- $vals := include "default-values" . | fromYaml }}
 {{- $context := deepCopy . }}
-{{- $mergedValues := mergeOverwrite .Values $vals }}
+{{- $mergedValues := mergeOverwrite $vals .Values  }}
 {{- $_ := set $context "Values" $mergedValues }}
 {{- include "internal-gateway.configmap" $context }}
 {{- end }}
