@@ -291,6 +291,16 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
+      /argo/hub/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "argo-hub" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "argo-hub" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
       /nomios/:
         enabled: true
         proxy:
