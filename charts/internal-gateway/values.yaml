@@ -1,6 +1,6 @@
-# Defines if library mode is used for tunnel client. No templates are generated when using this mode.
+# Defines if library mode is used for the chart. No templates are generated when using this mode.
 # Added to support usage in Codefresh On-Premise Helm chart
-libraryMode: false
+libraryMode: true
 
 # -- Codefresh platform settings
 # @default -- See below
