@@ -130,26 +130,3 @@ nginx:
   {{- end }}
 {{ $mergedConfig | toYaml }}
 {{- end }}
-
-
-{{/*
-{{- define "internal-gateway.location-map-defaults" }}
-{{- $endpoints := include "internal-gateway.platform-endpoints" . | fromYaml }}
-{{- $presets := include "internal-gateway.location-presets" . | fromYaml }}
-locations:
-  /api/auth/authenticate:
-    proxy:
-      host: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "svc" }}
-      port: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "port" }}
-      proxyPassSnippet: |
-        proxy_pass_request_body off;
-    locationSnippet: |
-      proxy_set_header Content-Length "";
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Original-URI $request_uri;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
-    locationDirectives:
-      {{- $presets.locationDirectives | toYaml | nindent 6 }}
-{{- end }}
-*/}}
