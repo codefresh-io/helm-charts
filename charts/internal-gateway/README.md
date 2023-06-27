@@ -32,7 +32,6 @@ A Helm chart for Codefresh Internal Gateway
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | hpa | object | See below | HPA parameters |
 | ingress | object | See below | Ingress parameters |
-| libraryMode | bool | `false` |  |
 | nginx.config.accessLogEnabled | bool | `true` | Enables NGINX access logs |
 | nginx.config.errorLogLevel | string | `"error"` | Sets the log level of the NGINX error log. One of `debug`, `info`, `notice`, `warn`, `error`, `crit`, `alert`, or `emerg` |
 | nginx.config.file | string | See below | Config file contents for Nginx. Passed through the `tpl` function to allow templating. !! Moved into separate template at `templates/nginx/configmap.yaml` |
