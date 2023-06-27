@@ -248,7 +248,7 @@ nginx:
           port: {{ index $endpoints.serviceEndpoints "argo-platform-api-graphql" "port" }}
           proxyPassSnippet:
             {{- $presets.authHeaderSet | toYaml | nindent 12 }}
-        locationSnippet:
+        locationSnippet: |
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
@@ -265,7 +265,7 @@ nginx:
           port: {{ index $endpoints.serviceEndpoints "argo-platform-api-events" "port" }}
           proxyPassSnippet:
             {{- $presets.authHeaderSet | toYaml | nindent 12 }}
-        locationSnippet:
+        locationSnippet: |
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
@@ -280,7 +280,7 @@ nginx:
         proxy:
           host: {{ index $endpoints.serviceEndpoints "argo-platform-ui" "svc" }}
           port: {{ index $endpoints.serviceEndpoints "argo-platform-ui" "port" }}
-        locationSnippet:
+        locationSnippet: |
           proxy_http_version 1.1;
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
