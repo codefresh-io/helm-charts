@@ -68,8 +68,10 @@ data:
           # Authenticate through Classic CF platform
           set $cfapi_svc {{ index .Values.codefresh "cfapi-endpoints-svc" }};
           set $cfapi_port {{ index .Values.codefresh "cfapi-endpoints-port" }};
+          
           proxy_pass http://$cfapi_svc:$cfapi_port;
           proxy_pass_request_body off; # no need to send the POST body
+
           proxy_set_header Content-Length "";
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Original-URI $request_uri;
@@ -387,7 +389,6 @@ data:
         {{- with .Values.nginx.config.serverSnippet }}
         {{ . | nindent 8 }}
         {{- end }}
-
       }
     }
 {{- end }}
