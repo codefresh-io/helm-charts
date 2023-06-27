@@ -113,6 +113,9 @@ nginx:
           proxyPassSnippet: |
             proxy_pass_request_body off;
         locationSnippet: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "";
           proxy_set_header Content-Length "";
           proxy_set_header X-Real-IP $remote_addr;
           proxy_set_header X-Original-URI $request_uri;
