@@ -177,8 +177,8 @@ nginx:
       /api/testReporting:
         enabled: true
         proxy:
-          host: {{ index $endpoints.serviceEndpoints "cfapi-gitops-resource-receiver" "svc" }}
-          port: {{ index $endpoints.serviceEndpoints "cfapi-gitops-resource-receiver" "port" }}
+          host: {{ index $endpoints.serviceEndpoints "cfapi-test-reporting" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-test-reporting" "port" }}
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
