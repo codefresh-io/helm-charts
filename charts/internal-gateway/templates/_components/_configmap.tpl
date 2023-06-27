@@ -1,4 +1,4 @@
-{{- define "internal-gateway.configmap-new" -}}
+{{- define "internal-gateway.configmap" -}}
 {{/*{{- $locationMap := include "internal-gateway.location-map-defaults" .  | fromYaml }}*/}}
 {{- $nginxConfig := index (include "internal-gateway.nginx-config" . | fromYaml) "nginx" "config" }}
 kind: ConfigMap
