@@ -225,8 +225,8 @@ nginx:
       /ws/:
         enabled: true
         proxy:
-          host: {{ index $endpoints.serviceEndpoints "cfapi-teams" "svc" }}
-          port: {{ index $endpoints.serviceEndpoints "cfapi-teams" "port" }}
+          host: {{ index $endpoints.serviceEndpoints "cfapi-ws" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-ws" "port" }}
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
