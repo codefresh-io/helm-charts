@@ -256,7 +256,6 @@ nginx:
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
           proxy_set_header Host $host;
-          proxy_set_header X-CF-Auth-Entity $auth_entity;
           proxy_cache_bypass $http_upgrade;
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
@@ -273,7 +272,6 @@ nginx:
           proxy_set_header Upgrade $http_upgrade;
           proxy_set_header Connection "upgrade";
           proxy_set_header Host $host;
-          proxy_set_header X-CF-Auth-Entity $auth_entity;
           proxy_cache_bypass $http_upgrade;
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
