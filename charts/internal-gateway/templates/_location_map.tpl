@@ -65,7 +65,7 @@ serviceEndpoints:
   argo-platform-api-events:
     svc: argo-platform-api-events
     port: 80
-  argo-platform-ui: 
+  argo-platform-ui:
     svc: argo-platform-ui
     port: 4200
   argo-hub:
@@ -105,6 +105,7 @@ nginx:
     httpSnippet: ""
     httpDirectives: {}
     locations:
+
       /api/auth/authenticate:
         enabled: true
         proxy:
@@ -118,6 +119,180 @@ nginx:
           proxy_set_header X-Original-URI $request_uri;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/environments-v2/argo/events:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-environments" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-environments" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/public/progress/download:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-downloadlogmanager" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-downloadlogmanager" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/gitops/resources:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-gitops-resource-receiver" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-gitops-resource-receiver" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/gitops/rollout:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-gitops-resource-receiver" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-gitops-resource-receiver" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/testReporting:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-gitops-resource-receiver" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-gitops-resource-receiver" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/k8s-monitor/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-kubernetesresourcemonitor" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-kubernetesresourcemonitor" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/kubernetes:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-kubernetes-endpoints" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-kubernetes-endpoints" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/admin/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-admin" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-admin" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/team/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-teams" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-teams" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /ws/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-teams" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-teams" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfui" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfui" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /2.0/api/graphql:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "argo-platform-api-graphql" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "argo-platform-api-graphql" "port" }}
+          proxyPassSnippet:
+            {{- $presets.authHeaderSet | toYaml | nindent 12 }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /2.0/api/events:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "argo-platform-api-events" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "argo-platform-api-events" "port" }}
+          proxyPassSnippet:
+            {{- $presets.authHeaderSet | toYaml | nindent 12 }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /2.0:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "argo-platform-ui" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "argo-platform-ui" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /nomios/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "nomios" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "nomios" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /atlassian/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "jira-addon" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "jira-addon" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 {{- end }}

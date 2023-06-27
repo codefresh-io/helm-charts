@@ -1,3 +1,63 @@
+{{- define "default-values" }}
+codefresh:
+  serviceEndpoints:
+    cfapi-endpoints:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-endpoints" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-endpoints" "port" }}
+    cfapi-environments:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-environments" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-environments" "port" }}
+    cfapi-downloadlogmanager:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-downloadlogmanager" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-downloadlogmanager" "port" }}
+    cfapi-gitops-resource-receiver:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-gitops-resource-receiver" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-gitops-resource-receiver" "port" }}
+    cfapi-test-reporting:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-test-reporting" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-test-reporting" "port" }}
+    cfapi-kubernetesresourcemonitor:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-kubernetesresourcemonitor" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-kubernetesresourcemonitor" "port" }}
+    cfapi-kubernetes-endpoints:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-kubernetes-endpoints" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-kubernetes-endpoints" "port" }}
+    cfapi-admin:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-admin" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-admin" "port" }}
+    cfapi-teams:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-teams" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-teams" "port" }}
+    cfapi-ws:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfapi-ws" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfapi-ws" "port" }}
+    cfui:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "cfui" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "cfui" "port" }}
+    argo-platform-api-graphql:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "argo-platform-api-graphql" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "argo-platform-api-graphql" "port" }}
+    argo-platform-api-events:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "argo-platform-api-events" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "argo-platform-api-events" "port" }}
+    argo-platform-ui:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "argo-platform-ui" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "argo-platform-ui" "port" }}
+    argo-hub:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "argo-hub" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "argo-hub" "port" }}
+    nomios:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "nomios" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "nomios" "port" }}
+    jira-addon:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh.serviceEndpoints "jira-addon" "svc" }}'
+      port: {{ index .Values.codefresh.serviceEndpoints "jira-addon" "port" }}
+{{- end }}
+
 {{- if not .Values.libraryMode }}
-{{- include "internal-gateway.configmap" . }}
+{{- $vals := include "default-values" . | fromYaml }}
+{{- $context := deepCopy . }}
+{{- $mergedValues := mergeOverwrite .Values $vals }}
+{{- $_ := set $context "Values" $mergedValues }}
+{{- include "internal-gateway.configmap-new" $context }}
 {{- end }}

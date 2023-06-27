@@ -1,4 +1,6 @@
-{{- define "internal-gateway.configmap" -}}
+{{- define "internal-gateway.configmap-new" -}}
+{{/*{{- $locationMap := include "internal-gateway.location-map-defaults" .  | fromYaml }}*/}}
+{{- $nginxConfig := index (include "internal-gateway.nginx-config" . | fromYaml) "nginx" "config" }}
 kind: ConfigMap
 apiVersion: v1
 metadata:
@@ -7,13 +9,13 @@ metadata:
     {{- include "internal-gateway.labels" . | nindent 4 }}
 data:
   nginx.conf: |
-    worker_processes {{ .Values.nginx.config.workerProcesses }};
-    error_log  /dev/stderr {{ .Values.nginx.config.errorLogLevel }};
+    worker_processes {{ $nginxConfig.workerProcesses }};
+    error_log  /dev/stderr {{ $nginxConfig.errorLogLevel }};
     pid        /tmp/nginx.pid;
-    worker_rlimit_nofile {{ .Values.nginx.config.workerRlimitNofile }};
+    worker_rlimit_nofile {{ $nginxConfig.workerRlimitNofile }};
 
     events {
-      worker_connections  {{ .Values.nginx.config.workerConnections }};
+      worker_connections  {{ $nginxConfig.workerConnections }};
     }
 
     http {
@@ -27,9 +29,9 @@ data:
       variables_hash_bucket_size 64;
 
       default_type application/octet-stream;
-      log_format   {{ .Values.nginx.config.logFormat }}
+      log_format   {{ $nginxConfig.logFormat }}
 
-      {{- if .Values.nginx.config.verboseLogging }}
+      {{- if $nginxConfig.verboseLogging }}
       access_log   /dev/stderr  main;
       {{- else }}
 
@@ -37,7 +39,7 @@ data:
         ~^[23]  0;
         default 1;
       }
-      access_log   {{ .Values.nginx.config.accessLogEnabled | ternary "/dev/stderr  main  if=$loggable;" "off;" }}
+      access_log   {{ $nginxConfig.accessLogEnabled | ternary "/dev/stderr  main  if=$loggable;" "off;" }}
       {{- end }}
       sendfile     on;
       tcp_nopush   on;
@@ -47,347 +49,58 @@ data:
           ''      close;
       }
 
-      {{- if .Values.nginx.config.resolver }}
-      resolver {{ .Values.nginx.config.resolver }};
+      {{- if $nginxConfig.resolver }}
+      resolver {{ $nginxConfig.resolver }};
       {{- else }}
       resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
       {{- end }}
 
-      {{- with .Values.nginx.config.httpSnippet }}
+      {{- with $nginxConfig.httpSnippet }}
       {{ . | nindent 6 }}
       {{- end }}
 
-      {{- range $key, $val := .Values.nginx.config.httpDirectives }}
+      {{- range $key, $val := $nginxConfig.httpDirectives }}
       {{ printf "%s %s;" $key $val }}
       {{- end }}
 
       server {
         listen 8080;
 
-        location /api/auth/authenticate {
-          # Authenticate through Classic CF platform
-          set $cfapi_svc {{ index .Values.codefresh "cfapi-endpoints-svc" }};
-          set $cfapi_port {{ index .Values.codefresh "cfapi-endpoints-port" }};
-          
-          proxy_pass http://$cfapi_svc:$cfapi_port;
-          proxy_pass_request_body off; # no need to send the POST body
+        {{- range $key, $val := $nginxConfig.locations }}
+          {{- if $val.enabled }}
+        location {{ $key }} {
 
-          proxy_set_header Content-Length "";
-          proxy_set_header X-Real-IP $remote_addr;
-          proxy_set_header X-Original-URI $request_uri;
-          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-          proxy_set_header X-Forwarded-Proto $scheme;
+          set $location_host {{ $val.proxy.host }};
+          set $location_port {{ $val.proxy.port }};
 
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "";
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-        }
-
-        location /2.0/api/events {
-          # Any request to this server will first be sent to this URL
-          auth_request /api/auth/authenticate;
-          # Sets the HTTP header 'x-cf-auth-entity' that old platform sends, into $auth_entity variable
-          auth_request_set $auth_entity $upstream_http_x_cf_auth_entity;
-          set $argo_platform_api_events_svc {{ index .Values.codefresh "argo-platform-api-events-svc" }};
-          set $argo_platform_api_events_port {{ index .Values.codefresh "argo-platform-api-events-port" }};
-          proxy_pass  http://$argo_platform_api_events_svc:$argo_platform_api_events_port;
-
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-          proxy_set_header Host $host;
-          proxy_set_header X-CF-Auth-Entity $auth_entity;
-          proxy_cache_bypass $http_upgrade;
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-        }
-
-        location /2.0/api/graphql {
-          # Any request to this server will first be sent to this URL
-          auth_request /api/auth/authenticate;
-          # Sets the HTTP header 'x-cf-auth-entity' that old platform sends, into $auth_entity variable
-          auth_request_set $auth_entity $upstream_http_x_cf_auth_entity;
-          set $argo_platform_api_graphql_svc {{ index .Values.codefresh "argo-platform-api-graphql-svc" }};
-          set $argo_platform_api_graphql_port {{ index .Values.codefresh "argo-platform-api-graphql-port" }};
-          proxy_pass  http://$argo_platform_api_graphql_svc:$argo_platform_api_graphql_port;
-
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-          proxy_set_header Host $host;
-          proxy_set_header X-CF-Auth-Entity $auth_entity;
-          proxy_cache_bypass $http_upgrade;
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-        }
-
-        location /2.0 {
-          set $argo_platform_ui_svc {{ index .Values.codefresh "argo-platform-ui-svc" }};
-          set $argo_platform_ui_port {{ index .Values.codefresh "argo-platform-ui-port" }};
-          proxy_pass  http://$argo_platform_ui_svc:$argo_platform_ui_port;
-
-          proxy_http_version 1.1;
-          proxy_set_header Upgrade $http_upgrade;
-          proxy_set_header Connection "upgrade";
-          proxy_set_header Host $host;
-          proxy_set_header X-CF-Auth-Entity $auth_entity;
-          proxy_cache_bypass $http_upgrade;
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-        }
-
-        location /api/environments-v2/argo/events {
-          set $cfapi_environments_svc {{ index .Values "codefresh" "cfapi-environments-svc" }};
-          set $cfapi_environments_port {{ index .Values "codefresh" "cfapi-environments-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
+          {{- $locationSnippet := "" }}
+          {{- if hasKey $val "locationSnippet" }}
+            {{- $locationSnippet = $val.locationSnippet }}
+          {{- else if hasKey $nginxConfig "locationSnippet"}}
+            {{- $locationSnippet = $nginxConfig.locationSnippet }}
           {{- end }}
 
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
+          {{- if $locationSnippet }}
+          {{ print $val.locationSnippet | nindent 10 }}
+          {{- end }}
+
+          {{- $locationDirectives := dict }}
+          {{- if hasKey $val "locationDirectives" }}
+            {{- $locationDirectives = $val.locationDirectives }}
+          {{- else if hasKey $nginxConfig "locationDirectives"}}
+            {{- $locationDirectives = $nginxConfig.locationDirectives }}
+          {{- end }}
+
+          {{- range $key, $val := $locationDirectives }}
           {{ printf "%s %s;" $key $val }}
           {{- end }}
 
-          proxy_pass http://$cfapi_environments_svc:$cfapi_environments_port;
+          proxy_pass http://$location_host:$location_port;
+          {{- if hasKey $val.proxy "proxyPassSnippet" }}
+          {{- print $val.proxy.proxyPassSnippet | nindent 10 }}
+          {{- end }}
         }
-
-        location /api/public/progress/download {
-          set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }};
-          set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
           {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_downloadlogmanager_svc:$cfapi_downloadlogmanager_port;
-        }
-
-        location /api/progress/download {
-          set $cfapi_downloadlogmanager_svc {{ index .Values "codefresh" "cfapi-downloadlogmanager-svc" }};
-          set $cfapi_downloadlogmanager_port {{ index .Values "codefresh" "cfapi-downloadlogmanager-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_downloadlogmanager_svc:$cfapi_downloadlogmanager_port;
-        }
-
-        location /api/gitops/resources {
-          set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }};
-          set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_gitops_resource_receiver_svc:$cfapi_gitops_resource_receiver_port;
-        }
-
-        location /api/gitops/rollout {
-          set $cfapi_gitops_resource_receiver_svc {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-svc" }};
-          set $cfapi_gitops_resource_receiver_port {{ index .Values "codefresh" "cfapi-gitops-resource-receiver-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_gitops_resource_receiver_svc:$cfapi_gitops_resource_receiver_port;
-        }
-
-        location /api/testReporting {
-          set $cfapi_test_reporting_svc {{ index .Values "codefresh" "cfapi-test-reporting-svc" }};
-          set $cfapi_test_reporting_port {{ index .Values "codefresh" "cfapi-test-reporting-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_test_reporting_svc:$cfapi_test_reporting_port;
-        }
-
-        location /api/k8s-monitor/ {
-          set $cfapi_kubernetesresourcemonitor_svc {{ index .Values "codefresh" "cfapi-kubernetesresourcemonitor-svc" }};
-          set $cfapi_kubernetesresourcemonitor_port {{ index .Values "codefresh" "cfapi-kubernetesresourcemonitor-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_kubernetesresourcemonitor_svc:$cfapi_kubernetesresourcemonitor_port;
-        }
-
-        location /api/kubernetes {
-          set $cfapi_kubernetes_endpoints_svc {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-svc" }};
-          set $cfapi_kubernetes_endpoints_port {{ index .Values "codefresh" "cfapi-kubernetes-endpoints-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_kubernetes_endpoints_svc:$cfapi_kubernetes_endpoints_port;
-        }
-
-        location /api/admin/ {
-          set $cfapi_admin_svc {{ index .Values "codefresh" "cfapi-admin-svc" }};
-          set $cfapi_admin_port {{ index .Values "codefresh" "cfapi-admin-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_admin_svc:$cfapi_admin_port;
-        }
-
-        location /api/team {
-          set $cfapi_teams_svc {{ index .Values "codefresh" "cfapi-teams-svc" }};
-          set $cfapi_teams_port {{ index .Values "codefresh" "cfapi-teams-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_teams_svc:$cfapi_teams_port;
-        }
-
-        location /api/ {
-          set $cfapi_endpoints_svc {{ index .Values "codefresh" "cfapi-endpoints-svc" }};
-          set $cfapi_endpoints_port {{ index .Values "codefresh" "cfapi-endpoints-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_endpoints_svc:$cfapi_endpoints_port;
-        }
-
-        location /ws/ {
-          set $cfapi_ws_svc {{ index .Values "codefresh" "cfapi-ws-svc" }};
-          set $cfapi_ws_port {{ index .Values "codefresh" "cfapi-ws-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfapi_ws_svc:$cfapi_ws_port;
-        }
-
-        location /nomios/ {
-          set $nomios_svc {{ index .Values "codefresh" "nomios-svc" }};
-          set $nomios_port {{ index .Values "codefresh" "nomios-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$nomios_svc:$nomios_port;
-        }
-
-        location /atlassian/ {
-          set $jira_addon_svc {{ index .Values "codefresh" "jira-addon-svc" }};
-          set $jira_addon_port {{ index .Values "codefresh" "jira-addon-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$jira_addon_svc:$jira_addon_port;
-        }
-
-        location /argo/hub/ {
-          set $argo_hub_svc {{ index .Values "codefresh" "argo-hub-svc" }};
-          set $argo_hub_port {{ index .Values "codefresh" "argo-hub-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$argo_hub_svc:$argo_hub_port;
-        }
-
-        location / {
-          set $cfui_svc {{ index .Values "codefresh" "cfui-svc" }};
-          set $cfui_port {{ index .Values "codefresh" "cfui-port" }};
-
-          {{- with .Values.nginx.config.locationSnippet }}
-          {{ . | nindent 10 }}
-          {{- end }}
-
-          {{- range $key, $val := .Values.nginx.config.locationDirectives }}
-          {{ printf "%s %s;" $key $val }}
-          {{- end }}
-
-          proxy_pass http://$cfui_svc:$cfui_port;
-        }
-
-        {{- with .Values.nginx.config.serverSnippet }}
-        {{ . | nindent 8 }}
         {{- end }}
       }
     }
