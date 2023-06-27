@@ -100,10 +100,12 @@ data:
           {{ printf "%s %s;" $key $val }}
           {{- end }}
 
-          proxy_pass http://$location_host:$location_port;
           {{- if hasKey $val.proxy "proxyPassSnippet" }}
           {{- print $val.proxy.proxyPassSnippet | nindent 10 }}
           {{- end }}
+
+          proxy_pass http://$location_host:$location_port;
+
         }
           {{- end }}
         {{- end }}
