@@ -1,6 +1,11 @@
 {{- define "internal-gateway.configmap" -}}
-{{/*{{- $locationMap := include "internal-gateway.location-map-defaults" .  | fromYaml }}*/}}
+
+{{- $vals := include "internal-gateway.default-values" . | fromYaml }}
+{{- $mergedValues := mergeOverwrite $vals .Values }}
+{{- $_ := set . "Values" $mergedValues }}
+
 {{- $nginxConfig := index (include "internal-gateway.nginx-config" . | fromYaml) "nginx" "config" }}
+---
 kind: ConfigMap
 apiVersion: v1
 metadata:
