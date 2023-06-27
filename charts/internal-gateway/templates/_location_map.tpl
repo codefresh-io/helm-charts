@@ -249,7 +249,12 @@ nginx:
           proxyPassSnippet:
             {{- $presets.authHeaderSet | toYaml | nindent 12 }}
         locationSnippet:
-          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Host $host;
+          proxy_set_header X-CF-Auth-Entity $auth_entity;
+          proxy_cache_bypass $http_upgrade;
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
@@ -261,7 +266,12 @@ nginx:
           proxyPassSnippet:
             {{- $presets.authHeaderSet | toYaml | nindent 12 }}
         locationSnippet:
-          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Host $host;
+          proxy_set_header X-CF-Auth-Entity $auth_entity;
+          proxy_cache_bypass $http_upgrade;
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
@@ -271,7 +281,12 @@ nginx:
           host: {{ index $endpoints.serviceEndpoints "argo-platform-ui" "svc" }}
           port: {{ index $endpoints.serviceEndpoints "argo-platform-ui" "port" }}
         locationSnippet:
-          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "upgrade";
+          proxy_set_header Host $host;
+          proxy_set_header X-CF-Auth-Entity $auth_entity;
+          proxy_cache_bypass $http_upgrade;
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
