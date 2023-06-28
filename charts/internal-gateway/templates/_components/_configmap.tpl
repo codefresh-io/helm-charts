@@ -75,8 +75,8 @@ data:
           {{- if $val.enabled }}
         location {{ $key }} {
 
-          {{- $location_host := printf "location_host%s" (trimSuffix "/" $key | replace "/" "_" | replace "." "_" | snakecase ) }}
-          {{- $location_port := printf "location_port%s" (trimSuffix "/" $key | replace "/" "_" | replace "." "_" | snakecase ) }}
+          {{- $location_host := printf "location_host%s" (trimSuffix "/" $key | replace "/" "_" | replace "." "_" | replace "-" "_" ) }}
+          {{- $location_port := printf "location_port%s" (trimSuffix "/" $key | replace "/" "_" | replace "." "_" | replace "-" "_" ) }}
           set ${{ $location_host }} {{ $val.proxy.host }};
           set ${{ $location_port }} {{ $val.proxy.port }};
 
