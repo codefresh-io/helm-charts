@@ -22,7 +22,7 @@ A Helm chart for Codefresh Internal Gateway
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
-| codefresh | object | See below | Codefresh platform settings |
+| codefresh | object | See below | Codefresh platform settings List of services endpoints and port |
 | container | object | See below | Main container parameters |
 | containerSecurityContext | object | See below | Container security context parameters |
 | controller | object | See below | Controller parameters |

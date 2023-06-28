@@ -3,6 +3,7 @@
 libraryMode: true
 
 # -- Codefresh platform settings
+# List of services endpoints and port
 # @default -- See below
 codefresh:
   cfapi-endpoints-svc: cfapi-endpoints
