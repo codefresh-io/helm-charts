@@ -101,6 +101,7 @@ nginx:
     errorLogLevel: error
     accessLogEnabled: true
     serverSnippet: ""
+    serverDirectives: {}
     httpSnippet: ""
     httpDirectives: {}
     locations:
