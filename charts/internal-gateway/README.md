@@ -40,6 +40,7 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.httpSnippet | string | `""` | Allows appending custom configuration to the http block (string) |
 | nginx.config.locationDirectives | object | `{}` | Allows appending custom directives to the location blocks (map) |
 | nginx.config.locationSnippet | string | `""` | Allows appending custom configuration to the location blocks (string) |
+| nginx.config.locations | object | `{}` | Allow add custom locations |
 | nginx.config.logFormat | string | `"main escape=json '{ \"time\": \"$time_iso8601\", \"remote_addr\": \"$proxy_protocol_addr\", \"x-forward-for\": \"$proxy_add_x_forwarded_for\", \"remote_user\": \"$remote_user\", \"bytes_sent\": $bytes_sent, \"request_time\": $request_time, \"status\": $status, \"vhost\": \"$host\", \"request_proto\": \"$server_protocol\", \"path\": \"$uri\", \"request_query\": \"$args\", \"request_length\": $request_length, \"duration\": $request_time, \"method\": \"$request_method\", \"http_referrer\": \"$http_referer\", \"http_user_agent\": \"$http_user_agent\", \"http_x_github_delivery\": \"$http_x_github_delivery\", \"http_x_hook_uuid\": \"$http_x_hook_uuid\", \"metadata\": { \"correlationId\": \"$request_id\", \"service\": \"ingress\", \"time\": \"$time_iso8601\" } }';"` | NGINX log format |
 | nginx.config.resolver | string | `nil` | Allows to set a custom resolver |
 | nginx.config.serverDirectives | object | `{}` | Allows appending custom directives to the server block (map) |
