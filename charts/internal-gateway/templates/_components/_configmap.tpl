@@ -75,8 +75,8 @@ data:
           {{- if $val.enabled }}
         location {{ $key }} {
 
-          set $location_host {{ $val.proxy.host }};
-          set $location_port {{ $val.proxy.port }};
+          set $location_host{{ trimSuffix "/" $key | replace "/" "_" | replace "." "_" }} {{ $val.proxy.host }};
+          set $location_port{{ trimSuffix "/" $key | replace "/" "_" | replace "." "_" }} {{ $val.proxy.port }};
 
           proxy_pass http://$location_host:$location_port;
 
