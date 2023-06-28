@@ -75,10 +75,12 @@ data:
           {{- if $val.enabled }}
         location {{ $key }} {
 
-          set $location_host{{ trimSuffix "/" $key | replace "/" "_" | replace "." "_" }} {{ $val.proxy.host }};
-          set $location_port{{ trimSuffix "/" $key | replace "/" "_" | replace "." "_" }} {{ $val.proxy.port }};
+          {{- $location_host := printf "location_host%s" (trimSuffix "/" $key | replace "/" "_" | replace "." "_") }}
+          {{- $location_port := printf "location_port%s" (trimSuffix "/" $key | replace "/" "_" | replace "." "_") }}
+          set ${{ $location_host }} {{ $val.proxy.host }};
+          set ${{ $location_port }} {{ $val.proxy.port }};
 
-          proxy_pass http://$location_host:$location_port;
+          proxy_pass http://{{ $location_host }}:{{ $location_port }};
 
           {{- if hasKey $val.proxy "proxyPassSnippet" }}
           {{- print $val.proxy.proxyPassSnippet | nindent 10 }}
