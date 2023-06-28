@@ -107,26 +107,9 @@ nginx:
     # -- Allows appending custom directives to the http block (map)
     httpDirectives: {}
     # -- Allows appending custom configuration to the location blocks (string)
-    locationSnippet: |
-      proxy_http_version 1.1;
-      proxy_set_header Connection $connection_upgrade;
-      proxy_set_header Host $host;
-      proxy_set_header Upgrade $http_upgrade;
-      proxy_set_header Connection $connection_upgrade;
-      proxy_set_header X-Request-ID $request_id;
-      proxy_set_header X-Real-IP $remote_addr;
-      proxy_set_header X-Original-URI $request_uri;
-      proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
-      proxy_set_header X-Forwarded-Proto $scheme;
+    locationSnippet: ""
     # -- Allows appending custom directives to the location blocks (map)
-    locationDirectives:
-      proxy_buffer_size: "64k"
-      proxy_buffers: "4 64k"
-      client_max_body_size: "5M"
-      client_body_buffer_size: "16k"
-      proxy_connect_timeout: "5s"
-      proxy_send_timeout: "60s"
-      proxy_read_timeout: "60s"
+    locationDirectives: {}
 
     # -- Allows to set a custom resolver
     resolver: null
