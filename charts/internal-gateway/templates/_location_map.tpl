@@ -216,7 +216,7 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
-      /api/team/:
+      /api/team:
         enabled: true
         proxy:
           host: {{ index $endpoints.serviceEndpoints "cfapi-teams" "svc" }}
