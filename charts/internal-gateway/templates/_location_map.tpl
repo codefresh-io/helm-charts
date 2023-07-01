@@ -90,6 +90,7 @@ serviceEndpoints:
 {{- define "internal-gateway.nginx-config-defaults"}}
   {{- $endpoints := include "internal-gateway.platform-endpoints" . | fromYaml }}
   {{- $presets := include "internal-gateway.location-presets" . | fromYaml }}
+  {{- $_  := set $presets "locationDirectives" (mergeOverwrite $presets.locationDirectives .Values.nginx.config.locationDirectives) }}
 nginx:
   config:
     workerProcesses: "8"
