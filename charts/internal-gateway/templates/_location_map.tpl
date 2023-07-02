@@ -13,6 +13,7 @@ locationSnippet: |
   proxy_set_header X-Original-URI $request_uri;
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   proxy_set_header X-Forwarded-Proto $scheme;
+  proxy_redirect off;
 locationDirectives:
   proxy_buffer_size: "64k"
   proxy_buffers: "4 64k"
