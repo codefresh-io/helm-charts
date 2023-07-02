@@ -126,7 +126,7 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
-      ~* ^/api/?:
+      ~* ^/api/:
         enabled: true
         proxy:
           host: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "svc" }}
