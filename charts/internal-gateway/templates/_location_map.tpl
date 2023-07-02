@@ -137,16 +137,6 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
-      ~* "^/api/":
-        enabled: true
-        proxy:
-          host: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "svc" }}
-          port: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "port" }}
-        locationSnippet:
-          {{- $presets.locationSnippet | toYaml | nindent 10 }}
-        locationDirectives:
-          {{- $presets.locationDirectives | toYaml | nindent 10 }}
-
       /api/environments-v2/argo/events:
         enabled: true
         proxy:
