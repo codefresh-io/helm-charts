@@ -2,9 +2,9 @@
 Return the name of the primary ingress object.
 Called from ingress template.
 Usage:
-{{ include "cf-common-0.9.3.ingress.primary" (dict "values" .Values.ingress ) }}
+{{ include "cf-common-0.10.0.ingress.primary" (dict "values" .Values.ingress ) }}
 */}}
-{{- define "cf-common-0.9.3.ingress.primary" -}}
+{{- define "cf-common-0.10.0.ingress.primary" -}}
   {{- $result := "" -}}
   {{- range $name, $ingress := .values -}}
     {{- if and (hasKey $ingress "primary") $ingress.primary $ingress.enabled -}}
