@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.10.0](https://img.shields.io/badge/Version-0.10.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.10.0
+  version: 0.10.1
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -165,6 +165,8 @@ dependencies:
 | serviceAccount.annotations | object | `{}` | Set annotations for Service Account |
 | serviceAccount.enabled | bool | `false` | Enable and create Service Account |
 | serviceAccount.nameOverride | string | `""` | Override Service Account name (by default, name is generated with `fullname` template) |
+| serviceAccount.secret | object | `{"enabled":false}` | Secret for Service Account |
+| serviceAccount.secret.enabled | bool | `false` | Create secret for Service Account |
 | serviceMonitor | object | See below | Configure ServiceMonitors for the chart. Additional ServiceMonitors can be added by adding a dictionary key similar to the 'main' service monitor. |
 | serviceMonitor.main | object | `{"annotations":{},"enabled":false,"endpoints":[{"interval":"1m","path":"/metrics","port":"http","scheme":"http","scrapeTimeout":"10s"}],"fullNameOverride":"","labels":{},"nameOverride":"","namespaceSelector":{},"selector":{}}` | Service monitor name |
 | serviceMonitor.main.annotations | object | `{}` | Add additional annotations for the service monitor |

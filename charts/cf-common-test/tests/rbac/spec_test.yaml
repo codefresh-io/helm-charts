@@ -128,3 +128,25 @@ tests:
           path: spec.template.spec.serviceAccountName
           value: default
         template: templates/controller.yaml
+
+  - it: Test SA secret is created
+    template: templates/rbac.yaml
+    values:
+      - values.yaml
+    set:
+      serviceAccount:
+        secret:
+          enabled: true
+    asserts:
+      - isKind:
+          of: Secret
+        documentIndex: 3
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test-sa-token
+        documentIndex: 3
+      - equal:
+          path: metadata.annotations
+          value:
+            kubernetes.io/service-account.name: RELEASE-NAME-cf-common-test
+        documentIndex: 3

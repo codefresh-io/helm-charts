@@ -558,6 +558,10 @@ serviceAccount:
   nameOverride: ""
   # -- Set annotations for Service Account
   annotations: {}
+  # -- Secret for Service Account
+  secret:
+    # -- Create secret for Service Account
+    enabled: false
 
 # -- Configure RBAC parameters
 # @default -- See below
