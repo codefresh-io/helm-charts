@@ -12,6 +12,18 @@ global:
   # -- Global Env vars. NO precedence over `.Values.container.env`
   env: {}
 
+# -- Provide a name in place of chart name
+nameOverride: ""
+# -- String to fully override app name
+fullNameOverride: ""
+# -- Override the Kubernetes version
+kubeVersionOverride: ""
+# -- Override APIVersions
+apiVersionOverrides:
+  # -- String to override apiVersion of autoscaling
+  # ONLY `autoscaling/v2` or `autoscaling/v2beta2`
+  autoscaling: ""
+
 # -- Controller parameters
 # @default -- See below
 controller:
@@ -523,6 +535,8 @@ hpa:
   maxReplicas:
   # -- Set target CPU utilization percentage
   targetCPUUtilizationPercentage:
+  # -- Set target memory utilization percentage
+  targetMemoryUtilizationPercentage:
   # -- Set custom metrics
   metrics: []
   # E.g.

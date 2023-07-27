@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.10.1](https://img.shields.io/badge/Version-0.10.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.10.1
+  version: 0.11.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -30,6 +30,8 @@ dependencies:
 |-----|------|---------|-------------|
 | additionalContainers | list | `[]` | Array of extra (sidecar) containers to add |
 | affinity | object | `{}` | Set affinity constrains |
+| apiVersionOverrides | object | `{"autoscaling":""}` | Override APIVersions |
+| apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling ONLY `autoscaling/v2` or `autoscaling/v2beta2` |
 | automountServiceAccountToken | bool | `true` | Specifies whether a service account token should be automatically mounted. |
 | configMaps | object | See below | Create configMap with the values you provide. Additional configMaps can be added by adding a dictionary key similar to the 'config' object. |
 | configMaps.config | object | `{"annotations":{},"data":{},"enabled":false,"labels":{}}` | ConfigMap name. Make sure to use the same name in `volumes` and `container.volumeMounts` |
@@ -99,6 +101,7 @@ dependencies:
 | controller.strategy | string | `nil` | Set controller upgrade strategy For Deployment: `RollingUpdate`(default) / `Recreate` For StatefulSet: `RollingUpdate`(default) / `OnDelete` For Rollout: `Canary(default) / `BlueGreen` |
 | controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`/`cronjob`) |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
+| fullNameOverride | string | `""` | String to fully override app name |
 | global | object | `{"controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
 | global.env | object | `{}` | Global Env vars. NO precedence over `.Values.container.env` |
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
@@ -109,6 +112,7 @@ dependencies:
 | hpa.metrics | list | `[]` | Set custom metrics |
 | hpa.minReplicas | string | `nil` | Set minimum autoscaling replicas |
 | hpa.targetCPUUtilizationPercentage | string | `nil` | Set target CPU utilization percentage |
+| hpa.targetMemoryUtilizationPercentage | string | `nil` | Set target memory utilization percentage |
 | imagePullSecrets | list | `[]` | Set image pull secrets as array |
 | ingress | object | See below | Configure the Ingresses for the chart. Additional Ingresses can be added by adding a dictionary key similar to the 'main' ingress. |
 | ingress.main.annotations | object | `{}` | Add additional annotations for ingress. |
@@ -122,6 +126,8 @@ dependencies:
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
 | initContainers | object | `{}` | Map of init containers to add Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name. |
+| kubeVersionOverride | string | `""` | Override the Kubernetes version |
+| nameOverride | string | `""` | Provide a name in place of chart name |
 | nodeSelector | object | `{}` | Set node selection constrains |
 | pdb | object | See below | Configure Pod Disruption Budget |
 | pdb.enabled | bool | `false` | Enable PDB |

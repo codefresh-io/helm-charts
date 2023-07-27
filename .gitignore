@@ -15,3 +15,6 @@ reference_manifests
 
 # lock files
 *.lock
+
+# wip
+**/charts/internal-gateway-test/*

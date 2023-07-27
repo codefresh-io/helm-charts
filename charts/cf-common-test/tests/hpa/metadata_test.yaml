@@ -25,3 +25,19 @@ tests:
       - equal:
           path: metadata.name
           value: RELEASE-NAME-cf-common-test
+
+  - it: Test HPA apiVersion override
+    set:
+      apiVersionOverrides:
+        autoscaling: autoscaling/v2beta2
+      hpa:
+        enabled: true
+        minReplicas: 2
+        maxReplicas: 4
+        targetMemoryUtilizationPercentage: 70
+    asserts:
+      - hasDocuments:
+          count: 1
+      - containsDocument:
+          kind: HorizontalPodAutoscaler
+          apiVersion: autoscaling/v2beta2
