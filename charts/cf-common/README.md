@@ -31,7 +31,7 @@ dependencies:
 | additionalContainers | list | `[]` | Array of extra (sidecar) containers to add |
 | affinity | object | `{}` | Set affinity constrains |
 | apiVersionOverrides | object | `{"autoscaling":""}` | Override APIVersions |
-| apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling |
+| apiVersionOverrides.autoscaling | string | `""` | String to override apiVersion of autoscaling ONLY `autoscaling/v2` or `autoscaling/v2beta2` |
 | automountServiceAccountToken | bool | `true` | Specifies whether a service account token should be automatically mounted. |
 | configMaps | object | See below | Create configMap with the values you provide. Additional configMaps can be added by adding a dictionary key similar to the 'config' object. |
 | configMaps.config | object | `{"annotations":{},"data":{},"enabled":false,"labels":{}}` | ConfigMap name. Make sure to use the same name in `volumes` and `container.volumeMounts` |
