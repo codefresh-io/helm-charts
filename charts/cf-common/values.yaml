@@ -21,7 +21,8 @@ kubeVersionOverride: ""
 # -- Override APIVersions
 apiVersionOverrides:
   # -- String to override apiVersion of autoscaling
-  autoscaling: "" # autoscaling/v2
+  # ONLY `autoscaling/v2` or `autoscaling/v2beta2`
+  autoscaling: ""
 
 # -- Controller parameters
 # @default -- See below
