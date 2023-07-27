@@ -19,7 +19,7 @@ Usage:
 {{- $mergedControllerValues := mergeOverwrite $globalControllerValues $defaultControllerValues -}}
 {{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
 
-apiVersion: autoscaling/v2beta2
+apiVersion: {{ include "cf-common-0.10.1.apiVersion.autoscaling" . }}
 kind: HorizontalPodAutoscaler
 metadata:
   name: {{ include "cf-common-0.10.1.names.fullname" . }}
