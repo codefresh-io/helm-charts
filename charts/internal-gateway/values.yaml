@@ -58,7 +58,21 @@ codefresh:
   jira-addon-port: 9000
 
   # -- Override defaults here!
-  serviceEndpoints: {}
+  serviceEndpoints:
+    cfapi-endpoints: {}
+    cfapi-environments: {}
+    cfapi-downloadlogmanager: {}
+    cfapi-gitops-resource-receiver: {}
+    cfapi-test-reporting: {}
+    cfapi-kubernetesresourcemonitor: {}
+    cfapi-kubernetes-endpoints: {}
+    cfapi-admin: {}
+    cfapi-teams: {}
+    cfapi-ws: {}
+    cfui: {}
+    argo-platform-api-graphql: {}
+    argo-platform-api-events: {}
+    argo-platform-ui: {}
   # E.g.
   # serviceEndpoints:
   #   cfapi-endpoints:
