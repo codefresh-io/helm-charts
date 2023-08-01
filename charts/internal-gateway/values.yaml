@@ -57,6 +57,14 @@ codefresh:
   jira-addon-svc: cf-jira-addon
   jira-addon-port: 9000
 
+  # -- Override defaults here!
+  serviceEndpoints: {}
+  # E.g.
+  # serviceEndpoints:
+  #   cfapi-endpoints:
+  #     svc: full-svc-nameoverride.namespace.svc.cluster.local
+  #     port: 80
+
 ## See full values structure at https://github.com/codefresh-io/helm-charts/blob/master/charts/cf-common/values.yaml
 # -- Global parameters
 # @default -- See below
