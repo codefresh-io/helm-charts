@@ -2,10 +2,10 @@
 Renders HorizontalPodAutoscaler template.
 Must be called from chart root context.
 Usage:
-{{- include "cf-common-0.11.1.hpa" . -}}
+{{- include "cf-common-0.11.2.hpa" . -}}
 */}}
 
-{{- define "cf-common-0.11.1.hpa" -}}
+{{- define "cf-common-0.11.2.hpa" -}}
 
 {{- if .Values.hpa.enabled -}}
 
@@ -19,11 +19,11 @@ Usage:
 {{- $mergedControllerValues := mergeOverwrite $globalControllerValues $defaultControllerValues -}}
 {{- $_ := set .Values "controller" (deepCopy $mergedControllerValues) -}}
 
-apiVersion: {{ include "cf-common-0.11.1.apiVersion.autoscaling" . }}
+apiVersion: {{ include "cf-common-0.11.2.apiVersion.autoscaling" . }}
 kind: HorizontalPodAutoscaler
 metadata:
-  name: {{ include "cf-common-0.11.1.names.fullname" . }}
-  labels: {{ include "cf-common-0.11.1.labels.standard" . | nindent 4 }}
+  name: {{ include "cf-common-0.11.2.names.fullname" . }}
+  labels: {{ include "cf-common-0.11.2.labels.standard" . | nindent 4 }}
 spec:
   scaleTargetRef:
     {{- if eq .Values.controller.type "deployment" }}
@@ -33,7 +33,7 @@ spec:
     apiVersion: argoproj.io/v1alpha1
     kind: Rollout
     {{- end }}
-    name: {{ include "cf-common-0.11.1.names.fullname" . }}
+    name: {{ include "cf-common-0.11.2.names.fullname" . }}
   minReplicas: {{ required "hpa.minReplicas is required!" .Values.hpa.minReplicas | int }}
   maxReplicas: {{ required "hpa.maxReplicas is required!" .Values.hpa.maxReplicas | int }}
   metrics:
