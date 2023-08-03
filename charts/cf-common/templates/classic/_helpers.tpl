@@ -65,10 +65,10 @@ valueFrom:
 MONGO_URI env var value
 */}}
 {{- define "cf-common-0.12.0.classic.mongo-uri-env-var-value" }}
-  {{-/*Check for legacy global.mongoURI*/}}
+  {{- /*Check for legacy global.mongoURI*/ }}
   {{- if .Values.global.mongoURI }}
 {{- print (ternary (include (printf "cf-common-0.12.0.classic.calculateMongoUri" (index .Subcharts "cf-common").Chart.Version) (dict "dbName" .Values.global.mongodbDatabase "mongoURI" .Values.global.mongoURI )) .Values.global.mongoURI .Values.global.onprem ) }}
-  {{-/*New secret implementation*/}}
+  {{- /*New secret implementation*/ }}
   {{- else }}
 {{- print "$(MONGODB_PROTOCOL)://$(MONGODB_USER):$(MONGODB_PASSWORD)@$(MONGODB_HOST)?$(MONGODB_OPTIONS)" }}
   {{- end }}
