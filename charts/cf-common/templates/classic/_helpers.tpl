@@ -48,16 +48,11 @@ Calculate Consul host Uri (for On-Prem)
 {{- /*
 MONGODB_HOST env var value
 */}}
-{{- define "cf-common-0.12.0.classic.mongodb-host-env-var-value" }}
+{{- define "cf-common-0.12.0.classic.mongodb-host-env-var-secret-name" }}
   {{- if or .Values.global.mongodbHost .Values.mongodbHost }}
-valueFrom:
-  secretKeyRef:
-    name: {{ printf "%s-%s" (include "cf-common-0.12.0.names.fullname" .) "secret" }}
-    key: MONGODB_HOST
+{{- printf "%s-%s" (include "cf-common-0.12.0.names.fullname" .) "secret" }}
   {{- else if .Values.global.mongodbHostSecretKeyRef }}
-valueFrom:
-  secretKeyRef:
-    {{- .Values.global.mongodbHostSecretKeyRef | toYaml | nindent 4 }}
+{{- printf .Values.global.mongodbHostSecretKeyRef.name }}
   {{- end }}
 {{- end }}
 
