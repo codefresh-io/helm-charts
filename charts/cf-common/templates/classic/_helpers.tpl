@@ -45,7 +45,7 @@ Calculate Consul host Uri (for On-Prem)
 	{{- end }}
 {{- end }}
 
-{{-/*
+{{- /*
 MONGODB_HOST env var value
 */}}
 {{- define "cf-common-0.12.0.classic.mongodb-host-env-var-value" }}
@@ -61,7 +61,7 @@ valueFrom:
   {{- end }}
 {{- end }}
 
-{{-/*
+{{- /*
 MONGO_URI env var value
 */}}
 {{- define "cf-common-0.12.0.classic.mongo-uri-env-var-value" }}
