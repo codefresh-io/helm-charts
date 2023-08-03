@@ -69,7 +69,7 @@ MONGO_URI env var value
 Check for legacy global.mongoURI
 */}}
   {{- if .Values.global.mongoURI }}
-{{- print (ternary (include (printf "cf-common-0.12.0.classic.calculateMongoUri" (index .Subcharts "cf-common").Chart.Version) (dict "dbName" .Values.global.mongodbDatabase "mongoURI" .Values.global.mongoURI )) .Values.global.mongoURI .Values.global.onprem ) }}
+{{- ternary (include (printf "cf-common-0.12.0.classic.calculateMongoUri" (index .Subcharts "cf-common").Chart.Version) (dict "dbName" .Values.global.mongodbDatabase "mongoURI" .Values.global.mongoURI )) .Values.global.mongoURI .Values.global.onprem }}
 {{- /*
 New secret implementation
 */}}
