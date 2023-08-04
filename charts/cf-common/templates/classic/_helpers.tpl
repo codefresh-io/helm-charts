@@ -119,7 +119,7 @@ MONGO_URI env var value
 Check for legacy global.mongoURI
 */}}
   {{- if .Values.global.mongoURI }}
-{{- ternary (include "cf-common-0.12.0.classic.calculateMongoUri" (dict "dbName" .Values.global.mongodbDatabase "mongoURI" .Values.global.mongoURI )) .Values.global.mongoURI .Values.global.onprem }}
+{{- print "$(MONGO_URI)" }}
 {{- /*
 New secret implementation
 */}}
