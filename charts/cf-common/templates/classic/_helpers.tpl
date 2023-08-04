@@ -49,10 +49,10 @@ Calculate Consul host Uri (for On-Prem)
 MONGODB_HOST env var secret name
 */}}
 {{- define "cf-common-0.12.0.classic.mongodb-host-env-var-secret-name" }}
-  {{- if or .Values.global.mongodbHost .Values.mongodbHost }}
+  {{- if or .Values.mongodbHost .Values.global.mongodbHost }}
 {{- printf "%s-%s" (include "cf-common-0.12.0.names.fullname" .) "secret" }}
-  {{- else if .Values.global.mongodbHostSecretKeyRef }}
-{{- printf .Values.global.mongodbHostSecretKeyRef.name }}
+  {{- else if or .Values.mongodbHostSecretKeyRef .Values.global.mongodbHostSecretKeyRef }}
+{{- printf (coalesce .Values.mongodbHostSecretKeyRef.name .Values.global.mongodbHostSecretKeyRef.name) }}
   {{- end }}
 {{- end }}
 
@@ -60,10 +60,10 @@ MONGODB_HOST env var secret name
 MONGODB_HOST env var secret key
 */}}
 {{- define "cf-common-0.12.0.classic.mongodb-host-env-var-secret-key" }}
-  {{- if or .Values.global.mongodbHost .Values.mongodbHost }}
+  {{- if or .Values.mongodbHost .Values.global.mongodbHost }}
 {{- printf "%s" "MONGODB_HOST" }}
-  {{- else if .Values.global.mongodbHostSecretKeyRef }}
-{{- printf .Values.global.mongodbHostSecretKeyRef.key }}
+  {{- else if or .Values.mongodbHostSecretKeyRef .Values.global.mongodbHostSecretKeyRef }}
+{{- printf (coalesce .Values.mongodbHostSecretKeyRef.key .Values.global.mongodbHostSecretKeyRef.key) }}
   {{- end }}
 {{- end }}
 
@@ -71,10 +71,10 @@ MONGODB_HOST env var secret key
 MONGODB_USER env var secret name
 */}}
 {{- define "cf-common-0.12.0.classic.mongodb-user-env-var-secret-name" }}
-  {{- if or .Values.global.mongodbUser .Values.mongodbUser }}
+  {{- if or .Values.mongodbUser .Values.global.mongodbUser }}
 {{- printf "%s-%s" (include "cf-common-0.12.0.names.fullname" .) "secret" }}
-  {{- else if .Values.global.mongodbUserSecretKeyRef }}
-{{- printf .Values.global.mongodbUserSecretKeyRef.name }}
+  {{- else if or .Values.mongodbUserSecretKeyRef .Values.global.mongodbUserSecretKeyRef }}
+{{- printf (coalesce .Values.mongodbUserSecretKeyRef.name .Values.global.mongodbUserSecretKeyRef.name) }}
   {{- end }}
 {{- end }}
 
@@ -82,10 +82,10 @@ MONGODB_USER env var secret name
 MONGODB_USER env var secret key
 */}}
 {{- define "cf-common-0.12.0.classic.mongodb-user-env-var-secret-key" }}
-  {{- if or .Values.global.mongodbUser .Values.mongodbUser }}
+  {{- if or .Values.mongodbUser .Values.global.mongodbUser }}
 {{- printf "%s" "MONGODB_USER" }}
-  {{- else if .Values.global.mongodbUserSecretKeyRef }}
-{{- printf .Values.global.mongodbUserSecretKeyRef.key }}
+  {{- else if or .Values.mongodbUserSecretKeyRef .Values.global.mongodbUserSecretKeyRef }}
+{{- printf (coalesce .Values.mongodbUserSecretKeyRef.key .Values.global.mongodbUserSecretKeyRef.key) }}
   {{- end }}
 {{- end }}
 
@@ -93,10 +93,10 @@ MONGODB_USER env var secret key
 MONGODB_PASSWORD env var secret name
 */}}
 {{- define "cf-common-0.12.0.classic.mongodb-password-env-var-secret-name" }}
-  {{- if or .Values.global.mongodbPassword .Values.mongodbPassword }}
+  {{- if or .Values.mongodbPassword .Values.global.mongodbPassword }}
 {{- printf "%s-%s" (include "cf-common-0.12.0.names.fullname" .) "secret" }}
-  {{- else if .Values.global.mongodbPasswordSecretKeyRef }}
-{{- printf .Values.global.mongodbPasswordSecretKeyRef.name }}
+  {{- else if or .Values.mongodbPasswordSecretKeyRef .Values.global.mongodbPasswordSecretKeyRef }}
+{{- printf (coalesce .Values.mongodbPasswordSecretKeyRef.name .Values.global.mongodbPasswordSecretKeyRef.name) }}
   {{- end }}
 {{- end }}
 
@@ -104,10 +104,10 @@ MONGODB_PASSWORD env var secret name
 MONGODB_PASSWORD env var secret key
 */}}
 {{- define "cf-common-0.12.0.classic.mongodb-password-env-var-secret-key" }}
-  {{- if or .Values.global.mongodbPassword .Values.mongodbPassword }}
+  {{- if or .Values.mongodbPassword .Values.global.mongodbPassword }}
 {{- printf "%s" "MONGODB_PASSWORD" }}
-  {{- else if .Values.global.mongodbPasswordSecretKeyRef }}
-{{- printf .Values.global.mongodbPasswordSecretKeyRef.key }}
+  {{- else if or .Values.mongodbPasswordSecretKeyRef .Values.global.mongodbPasswordSecretKeyRef }}
+{{- printf (coalesce .Values.mongodbPasswordSecretKeyRef.key .Values.global.mongodbPasswordSecretKeyRef.key) }}
   {{- end }}
 {{- end }}
 
