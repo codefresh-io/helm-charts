@@ -46,13 +46,68 @@ Calculate Consul host Uri (for On-Prem)
 {{- end }}
 
 {{- /*
-MONGODB_HOST env var value
+MONGODB_HOST env var secret name
 */}}
 {{- define "cf-common-0.12.0.classic.mongodb-host-env-var-secret-name" }}
   {{- if or .Values.global.mongodbHost .Values.mongodbHost }}
 {{- printf "%s-%s" (include "cf-common-0.12.0.names.fullname" .) "secret" }}
   {{- else if .Values.global.mongodbHostSecretKeyRef }}
 {{- printf .Values.global.mongodbHostSecretKeyRef.name }}
+  {{- end }}
+{{- end }}
+
+{{- /*
+MONGODB_HOST env var secret key
+*/}}
+{{- define "cf-common-0.12.0.classic.mongodb-host-env-var-secret-key" }}
+  {{- if or .Values.global.mongodbHost .Values.mongodbHost }}
+{{- printf "%s" "MONGODB_HOST" }}
+  {{- else if .Values.global.mongodbHostSecretKeyRef }}
+{{- printf .Values.global.mongodbHostSecretKeyRef.key }}
+  {{- end }}
+{{- end }}
+
+{{- /*
+MONGODB_USER env var secret name
+*/}}
+{{- define "cf-common-0.12.0.classic.mongodb-user-env-var-secret-name" }}
+  {{- if or .Values.global.mongodbUser .Values.mongodbUser }}
+{{- printf "%s-%s" (include "cf-common-0.12.0.names.fullname" .) "secret" }}
+  {{- else if .Values.global.mongodbUserSecretKeyRef }}
+{{- printf .Values.global.mongodbUserSecretKeyRef.name }}
+  {{- end }}
+{{- end }}
+
+{{- /*
+MONGODB_USER env var secret key
+*/}}
+{{- define "cf-common-0.12.0.classic.mongodb-user-env-var-secret-key" }}
+  {{- if or .Values.global.mongodbUser .Values.mongodbUser }}
+{{- printf "%s" "MONGODB_USER" }}
+  {{- else if .Values.global.mongodbUserSecretKeyRef }}
+{{- printf .Values.global.mongodbUserSecretKeyRef.key }}
+  {{- end }}
+{{- end }}
+
+{{- /*
+MONGODB_PASSWORD env var secret name
+*/}}
+{{- define "cf-common-0.12.0.classic.mongodb-password-env-var-secret-name" }}
+  {{- if or .Values.global.mongodbPassword .Values.mongodbPassword }}
+{{- printf "%s-%s" (include "cf-common-0.12.0.names.fullname" .) "secret" }}
+  {{- else if .Values.global.mongodbPasswordSecretKeyRef }}
+{{- printf .Values.global.mongodbPasswordSecretKeyRef.name }}
+  {{- end }}
+{{- end }}
+
+{{- /*
+MONGODB_PASSWORD env var secret key
+*/}}
+{{- define "cf-common-0.12.0.classic.mongodb-password-env-var-secret-key" }}
+  {{- if or .Values.global.mongodbPassword .Values.mongodbPassword }}
+{{- printf "%s" "MONGODB_PASSWORD" }}
+  {{- else if .Values.global.mongodbPasswordSecretKeyRef }}
+{{- printf .Values.global.mongodbPasswordSecretKeyRef.key }}
   {{- end }}
 {{- end }}
 
@@ -69,6 +124,6 @@ Check for legacy global.mongoURI
 New secret implementation
 */}}
   {{- else }}
-{{- print "$(MONGODB_PROTOCOL)://$(MONGODB_USER):$(MONGODB_PASSWORD)@$(MONGODB_HOST)?$(MONGODB_OPTIONS)" }}
+{{- print "$(MONGODB_PROTOCOL)://$(MONGODB_USER):$(MONGODB_PASSWORD)@$(MONGODB_HOST)/$(MONGODB_DATABASE)?$(MONGODB_OPTIONS)" }}
   {{- end }}
 {{- end }}
