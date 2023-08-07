@@ -264,7 +264,7 @@ RABBIT_URL env var value
 {{- /*
 Check for legacy global.mongoURI
 */}}
-  {{- if .Values.global.rabbitmqHostname }}
+  {{- if .Values.global.rabbitService }}
 {{- print "$(RABBIT_URL)" }}
 {{- /*
 New secret implementation
