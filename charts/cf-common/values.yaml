@@ -682,7 +682,7 @@ serviceMonitor:
       scrapeTimeout: 10s
 
 # -- Create External Secrets
-externalSecrets:  []
+externalSecrets: []
 # E.g.
 # externalSecrets:
 # - name: runtime-watcher-codefresh-token  # Name of resulting secret
