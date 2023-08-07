@@ -258,23 +258,6 @@ RABBITMQ_USERNAME env var secret key
 {{- end }}
 
 {{- /*
-RABBIT_URL env var value
-*/}}
-{{- define "cf-common-0.12.0.classic.rabbit-url-env-var-value" }}
-{{- /*
-Check for legacy global.mongoURI
-*/}}
-  {{- if .Values.global.rabbitService }}
-{{- print "$(RABBIT_URL)" }}
-{{- /*
-New secret implementation
-*/}}
-  {{- else }}
-{{- print "$(RABBITMQ_PROTOCOL)://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOSTNAME)" }}
-  {{- end }}
-{{- end }}
-
-{{- /*
 FIREBASE_SECRET env var secret name
 */}}
 {{- define "cf-common-0.12.0.classic.firebase-secret-env-var-secret-name" }}
