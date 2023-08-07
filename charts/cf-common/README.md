@@ -100,6 +100,7 @@ dependencies:
 | controller.rollout.strategy | string | `nil` | Rollout update strategy - can be Canary or BlueGreen. |
 | controller.strategy | string | `nil` | Set controller upgrade strategy For Deployment: `RollingUpdate`(default) / `Recreate` For StatefulSet: `RollingUpdate`(default) / `OnDelete` For Rollout: `Canary(default) / `BlueGreen` |
 | controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`/`cronjob`) |
+| externalSecrets | list | `[]` | Create External Secrets |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | fullNameOverride | string | `""` | String to fully override app name |
 | global | object | `{"controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
