@@ -1,0 +1,188 @@
+global:
+  onprem: false
+  mongoURI: ""
+
+mongoURI: ""
+mongodbHost: ""
+mongodbHostSecretKeyRef: {}
+mongodbOptions: ""
+mongodbPassword: ""
+mongodbPasswordSecretKeyRef: {}
+mongodbProtocol: ""
+mongodbUser: ""
+mongodbUserSecretKeyRef: {}
+
+postgresDatabase: ""
+postgresHostname: ""
+postgresHostnameSecretKeyRef: {}
+postgresPassword: ""
+postgresPasswordSecretKeyRef: {}
+postgresPort: ""
+postgresUser: ""
+postgresUserSecretKeyRef: {}
+
+redisPassword: ""
+redisPasswordSecretKeyRef: {}
+redisPort: ""
+redisUrl: ""
+redisUrlSecretKeyRef: {}
+
+rabbitmqHostname: ""
+rabbitmqHostnameSecretKeyRef: {}
+rabbitmqPassword: ""
+rabbitmqPasswordSecretKeyRef: {}
+rabbitmqProtocol: ""
+rabbitmqUsername: ""
+rabbitmqUsernameSecretKeyRef: {}
+
+firebaseSecret: ""
+firebaseSecretSecretKeyRef: {}
+firebaseUrl: ""
+firebaseUrlSecretKeyRef: {}
+
+
+controller:
+  enabled: true
+  type: deployment
+  labels: {}
+  annotations: {}
+  replicas: 2
+  deployment:
+    strategy: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: "50%"
+  revisionHistoryLimit: 5
+
+podSecurityContext: {}
+
+container:
+  image:
+    registry: 839151377425.dkr.ecr.us-east-1.amazonaws.com/codefresh-inc
+    repository: codefresh/cf-api
+    tag: master
+    pullPolicy: Always
+
+  env:
+    # mongo
+    MONGODB_DATABASE: codefresh
+    MONGODB_DATABASE_ARCHIVE: archive
+    MONGODB_PROTOCOL: '{{ coalesce .Values.mongodbProtocol .Values.global.mongodbProtocol "mongodb" }}'
+    MONGODB_OPTIONS: '{{ coalesce .Values.mongodbOptions .Values.global.mongodbOptions }}'
+    MONGODB_HOST:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.mongodb-host-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.mongodb-host-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    MONGODB_USER:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.mongodb-user-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.mongodb-user-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    MONGODB_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.mongodb-password-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.mongodb-password-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    MONGO_URI: '{{ include (printf "cf-common-%s.classic.mongo-uri-env-var-value" (index .Subcharts "cf-common").Chart.Version) . }}'
+    MONGO_URI_ANNOTATION: "$(MONGO_URI)"
+    MONGO_URI_ARCHIVE: "$(MONGODB_PROTOCOL)://$(MONGODB_USER):$(MONGODB_PASSWORD)@$(MONGODB_HOST)/$(MONGODB_DATABASE_ARCHIVE)?$(MONGODB_OPTIONS)"
+
+    # postgres
+    POSTGRES_DATABASE: '{{ coalesce .Values.postgresDatabase .Values.global.postgresDatabase }}'
+    POSTGRES_HOSTNAME:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.postgres-hostname-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.postgres-hostname-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    POSTGRES_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.postgres-password-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.postgres-password-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    POSTGRES_PORT: '{{ coalesce .Values.postgresPort .Values.global.postgresPort }}'
+    POSTGRES_USER:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.postgres-user-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.postgres-user-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+
+    # redis
+    REDIS_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.redis-password-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.redis-password-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    REDIS_PORT: '{{ coalesce .Values.redisPort .Values.global.redisPort }}'
+    REDIS_URL:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.redis-url-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.redis-url-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+
+    # rabbitmq
+    RABBITMQ_HOSTNAME:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.rabbitmq-hostname-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.rabbitmq-hostname-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    RABBITMQ_PASSWORD:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.rabbitmq-password-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.rabbitmq-password-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    RABBITMQ_PROTOCOL: '{{ coalesce .Values.rabbitmqProtocol .Values.global.rabbitmqProtocol "amqp" }}'
+    RABBITMQ_USERNAME:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.rabbitmq-username-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.rabbitmq-username-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    RABBIT_URL: $(RABBITMQ_PROTOCOL)://$(RABBITMQ_USERNAME):$(RABBITMQ_PASSWORD)@$(RABBITMQ_HOSTNAME)
+
+    # firebase
+    FIREBASE_SECRET:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.firebase-secret-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.firebase-secret-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+    FIREBASE_URL:
+      valueFrom:
+        secretKeyRef:
+          name: '{{ include (printf "cf-common-%s.classic.firebase-url-env-var-secret-name" (index .Subcharts "cf-common").Chart.Version) . }}'
+          key: '{{ include (printf "cf-common-%s.classic.firebase-url-env-var-secret-key" (index .Subcharts "cf-common").Chart.Version) . }}'
+          optional: true
+
+  volumeMounts: {}
+
+  resources: {}
+
+secrets:
+  secret:
+    enabled: true
+    type: Opaque
+    stringData:
+      MONGO_URI: '{{ ternary (include (printf "cf-common-%s.classic.calculateMongoUri" (index .Subcharts "cf-common").Chart.Version) (dict "dbName" .Values.global.mongodbDatabase "mongoURI" .Values.global.mongoURI )) .Values.global.mongoURI .Values.global.onprem }}'
+      POSTGRES_HOST: '{{ coalesce .Values.postgresHostname .Values.global.postgresHostname (printf "%s-%s" .Release.Name .Values.global.postgresService) }}'
+      POSTGRES_PASSWORD: "{{ coalesce .Values.postgresPassword .Values.global.postgresPassword }}"
+      POSTGRES_USER: "{{ coalesce .Values.postgresUser .Values.global.postgresUser }}"
+      FIREBASE_SECRET: '{{ coalesce .Values.firebaseSecret .Values.global.firebaseSecret }}'
+      FIREBASE_URL: '{{ coalesce .Values.firebaseUrl .Values.global.firebaseUrl }}'
+      REDIS_PASSWORD: "{{ coalesce .Values.redisPassword .Values.global.redisPassword }}"
+      REDIS_URL: '{{ coalesce .Values.redisUrl .Values.global.redisUrl (printf "%s-%s" .Release.Name .Values.global.redisService) }}'
+      RABBITMQ_HOSTNAME: '{{ coalesce .Values.rabbitmqHostname .Values.global.rabbitmqHostname (printf "%s-%s" .Release.Name (coalesce .Values.global.rabbitService .Values.global.rabbitmqService) ) }}'
+      RABBITMQ_PASSWORD: "{{ coalesce .Values.rabbitmqPassword .Values.global.rabbitmqPassword }}"
+      RABBITMQ_USERNAME: "{{ coalesce .Values.rabbitmqUsername .Values.global.rabbitmqUsername }}"
+
+volumes: {}

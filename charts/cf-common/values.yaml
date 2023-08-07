@@ -680,3 +680,20 @@ serviceMonitor:
       path: /metrics
       interval: 1m
       scrapeTimeout: 10s
+
+# -- Create External Secrets
+externalSecrets: []
+# E.g.
+# externalSecrets:
+# - name: runtime-watcher-codefresh-token  # Name of resulting secret
+#   secretStoreRef: # Optional - defaults to below values
+#     name: asm
+#     kind: ClusterSecretStore
+#   remoteSecretName: test # Name of remote secret. If not specified here needs to be specified in the key
+#   keys:
+#     # Mandatory - Name of key in resultig secret
+#   - name: test
+#     # Name of remote secret. This value overrides value set under externalSecrets.remoteSecretName. At least one of them need to be provided
+#     remoteSecretName: test
+#     # Name of the key in remote secret
+#     remoteKey: test

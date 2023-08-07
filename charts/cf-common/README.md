@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.11.2](https://img.shields.io/badge/Version-0.11.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.12.0](https://img.shields.io/badge/Version-0.12.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.11.2
+  version: 0.12.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -100,6 +100,7 @@ dependencies:
 | controller.rollout.strategy | string | `nil` | Rollout update strategy - can be Canary or BlueGreen. |
 | controller.strategy | string | `nil` | Set controller upgrade strategy For Deployment: `RollingUpdate`(default) / `Recreate` For StatefulSet: `RollingUpdate`(default) / `OnDelete` For Rollout: `Canary(default) / `BlueGreen` |
 | controller.type | string | `""` | Define the controller type (`deployment`/`rollout`/`job`/`cronjob`) |
+| externalSecrets | list | `[]` | Create External Secrets |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | fullNameOverride | string | `""` | String to fully override app name |
 | global | object | `{"controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
