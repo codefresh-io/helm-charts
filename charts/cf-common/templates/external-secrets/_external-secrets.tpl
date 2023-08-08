@@ -1,4 +1,4 @@
-{{- define "cf-common-0.12.2.external-secrets" }}
+{{- define "cf-common-0.12.3.external-secrets" }}
   {{- range $i, $secret := .Values.externalSecrets }}
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -28,6 +28,9 @@ spec:
       key: {{ $secret.remoteSecretName }}
         {{- end }}
       property: {{ $key.remoteKey }}
+      {{- with $key.decodingStrategy }}
+      decodingStrategy: {{ . }}
+      {{- end -}}
     {{- end }}
 ---
   {{- end }}
