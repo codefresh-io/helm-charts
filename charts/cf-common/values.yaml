@@ -697,3 +697,6 @@ externalSecrets: []
 #     remoteSecretName: test
 #     # Name of the key in remote secret
 #     remoteKey: test
+#     # Ref: https://external-secrets.io/v0.5.9/guides-decoding-strategy/
+#     # Auto/Base64
+#     decodingStrategy: Auto
