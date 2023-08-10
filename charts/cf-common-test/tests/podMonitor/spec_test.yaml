@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: pod monitor spec
+templates:
+  - templates/podMonitor.yaml
+values:
+  - values.yaml
+tests:
+  - it: Test main pod monitor selector
+    template: templates/podMonitor.yaml
+    asserts:
+      - isNotEmpty:
+          path: spec.selector.matchLabels
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/name: cf-common-test
+
+  - it: Test main pod monitor with selector override
+    template: templates/podMonitor.yaml
+    values:
+      - values.yaml
+    set:
+      podMonitor:
+        main:
+          selector:
+            matchLabels:
+              alice: bob
+    asserts:
+      - isNotEmpty:
+          path: spec.selector.matchLabels
+      - equal:
+          path: spec.selector.matchLabels
+          value:
+            alice: bob
+
+  - it: Test main pod monitor with namespace selector
+    template: templates/podMonitor.yaml
+    values:
+      - values.yaml
+    set:
+      podMonitor:
+        main:
+          namespaceSelector:
+            matchNames:
+              - foobar
+    asserts:
+      - contains:
+          path: spec.namespaceSelector.matchNames
+          content:
+            foobar
+
+  - it: Test main pod monitor endpoints
+    template: templates/podMonitor.yaml
+    values:
+      - values.yaml
+    asserts:
+      - contains:
+          path: spec.podMetricsEndpoints
+          content:
+            interval: 1m
+            path: /metrics
+            port: metrics
+            scheme: http
+            scrapeTimeout: 10s
+          count: 1
+
+  - it: Test main pod monitor disabled
+    template: templates/podMonitor.yaml
+    set:
+      podMonitor:
+        main:
+          enabled: false
+    values:
+      - values.yaml
+    asserts:
+      - hasDocuments:
+          count: 0

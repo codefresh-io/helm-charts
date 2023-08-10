@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.12.3](https://img.shields.io/badge/Version-0.12.3-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.13.0](https://img.shields.io/badge/Version-0.13.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.12.3
+  version: 0.13.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -144,6 +144,16 @@ dependencies:
 | persistence.data.storageClass | string | `nil` | Set Storage Class for PVC object If set to `-`, dynamic provisioning is disabled. If set to something else, the given storageClass is used. If undefined (the default) or set to null, no storageClassName spec is set, choosing the default provisioner. |
 | podAnnotations | object | `{}` | Set additional pod annotations |
 | podLabels | object | `{}` | Set additional pod labels |
+| podMonitor | object | See below | Configure PodMonitors for the chart. Additional podMonitors can be added by adding a dictionary key similar to the 'main' service monitor. |
+| podMonitor.main | object | `{"annotations":{},"enabled":false,"fullNameOverride":"","labels":{},"nameOverride":"","namespaceSelector":{},"podMetricsEndpoints":[{"path":"/metrics","targetPort":9100}],"selector":{}}` | pod monitor name |
+| podMonitor.main.annotations | object | `{}` | Add additional annotations for the pod monitor |
+| podMonitor.main.enabled | bool | `false` | Enable pod monitor |
+| podMonitor.main.fullNameOverride | string | `""` | Override pod monitor full name |
+| podMonitor.main.labels | object | `{}` | Add additional labels for the pod monitor |
+| podMonitor.main.nameOverride | string | `""` | Override pod monitor name suffix |
+| podMonitor.main.namespaceSelector | object | `{}` | Set namespace selector. If nil, release namespace is used. |
+| podMonitor.main.podMetricsEndpoints | list | `[{"path":"/metrics","targetPort":9100}]` | Set endpoints for pod monitor |
+| podMonitor.main.selector | object | `{}` | Override the default selector for the podMonitor. Takes precedence over default labels. Helm template can be used. |
 | podSecurityContext | object | `{}` | Set security context for the pod |
 | rbac | object | See below | Configure RBAC parameters |
 | rbac.enabled | bool | `false` | Enable RBAC resources |

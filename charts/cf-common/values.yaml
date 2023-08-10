@@ -681,6 +681,40 @@ serviceMonitor:
       interval: 1m
       scrapeTimeout: 10s
 
+# -- Configure PodMonitors for the chart.
+# Additional podMonitors can be added by adding a dictionary key similar to the 'main' service monitor.
+# @default -- See below
+podMonitor:
+  # -- pod monitor name
+  main:
+    # -- Enable pod monitor
+    enabled: false
+    # -- Override pod monitor name suffix
+    nameOverride: ""
+    # -- Override pod monitor full name
+    fullNameOverride: ""
+    # -- Add additional labels for the pod monitor
+    labels: {}
+    # -- Add additional annotations for the pod monitor
+    annotations: {}
+    # -- Override the default selector for the podMonitor.
+    # Takes precedence over default labels. Helm template can be used.
+    selector: {}
+    # E.g.
+    # selector:
+    #   matchLabels:
+    #     alice: bob
+    # -- Set namespace selector. If nil, release namespace is used.
+    namespaceSelector: {}
+    # E.g.
+    #   namespaceSelector:
+    #     matchNames:
+    #       - default
+    # -- Set endpoints for pod monitor
+    podMetricsEndpoints:
+    - path: /metrics
+      targetPort: 9100
+
 # -- Create External Secrets
 externalSecrets: []
 # E.g.
