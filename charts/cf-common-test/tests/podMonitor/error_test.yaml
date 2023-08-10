@@ -1,0 +1,15 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: pod monitor error handler
+templates:
+  - templates/podMonitor.yaml
+tests:
+  - it: Test main service monitor with no endpoints
+    values:
+      - values.yaml
+    set:
+      podMonitor:
+        main:
+          podMetricsEndpoints: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "podMetricsEndpoints are required for podMonitor RELEASE-NAME-cf-common-test"
