@@ -16,7 +16,7 @@ A Helm chart for Codefresh Internal Gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| https://chartmuseum.codefresh.io/cf-common | cf-common | 0.11.1 |
+| https://chartmuseum.codefresh.io/cf-common | cf-common | 0.13.0 |
 
 ## Values
 
