@@ -35,13 +35,13 @@ codefresh:
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "cfui-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "cfui-port" }}
     argo-platform-api-graphql:
-      svc: '{{ .Release.Name }}-{{ index .Values.codefresh "argo-platform-api-graphql-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
+      svc: '{{ index .Values.codefresh "argo-platform-api-graphql-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "argo-platform-api-graphql-port" }}
     argo-platform-api-events:
-      svc: '{{ .Release.Name }}-{{ index .Values.codefresh "argo-platform-api-events-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
+      svc: '{{ index .Values.codefresh "argo-platform-api-events-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "argo-platform-api-events-port" }}
     argo-platform-ui:
-      svc: '{{ .Release.Name }}-{{ index .Values.codefresh "argo-platform-ui-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
+      svc: '{{ index .Values.codefresh "argo-platform-ui-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "argo-platform-ui-port" }}
     argo-hub:
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "argo-hub-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'

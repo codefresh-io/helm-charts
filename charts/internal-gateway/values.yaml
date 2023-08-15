@@ -57,6 +57,28 @@ codefresh:
   jira-addon-svc: cf-jira-addon
   jira-addon-port: 9000
 
+  # -- Override defaults here!
+  serviceEndpoints:
+    cfapi-endpoints: {}
+    cfapi-environments: {}
+    cfapi-downloadlogmanager: {}
+    cfapi-gitops-resource-receiver: {}
+    cfapi-test-reporting: {}
+    cfapi-kubernetesresourcemonitor: {}
+    cfapi-kubernetes-endpoints: {}
+    cfapi-admin: {}
+    cfapi-teams: {}
+    cfapi-ws: {}
+    cfui: {}
+    argo-platform-api-graphql: {}
+    argo-platform-api-events: {}
+    argo-platform-ui: {}
+  # E.g.
+  # serviceEndpoints:
+  #   cfapi-endpoints:
+  #     svc: full-svc-nameoverride.namespace.svc.cluster.local
+  #     port: 80
+
 ## See full values structure at https://github.com/codefresh-io/helm-charts/blob/master/charts/cf-common/values.yaml
 # -- Global parameters
 # @default -- See below
