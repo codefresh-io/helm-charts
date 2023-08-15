@@ -13,4 +13,4 @@ maintainers:
 dependencies:
   - name: cf-common
     repository: https://chartmuseum.codefresh.io/cf-common
-    version: "0.11.1"
+    version: "0.13.0"
