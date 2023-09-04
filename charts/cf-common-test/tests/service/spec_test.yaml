@@ -44,7 +44,6 @@ tests:
           value:
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/name: cf-common-test
-            app: cf-common-test
 
   - it: Test main service with extra selector label
     template: templates/service.yaml
@@ -63,7 +62,6 @@ tests:
           value:
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/name: cf-common-test
-            app: cf-common-test
             extra: label
 
   - it: Test main service without target port specified
