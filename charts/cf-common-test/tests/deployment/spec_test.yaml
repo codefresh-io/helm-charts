@@ -14,7 +14,6 @@ tests:
           value:
             app.kubernetes.io/instance: RELEASE-NAME
             app.kubernetes.io/name: cf-common-test
-            app: cf-common-test
 
   - it: Test deployment strategy
     asserts:
