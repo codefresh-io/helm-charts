@@ -175,14 +175,14 @@ jobs:
         echo "SHA1 checksum of branch name: ${{ steps.git-branch-name.outputs.hash }}"
         echo "Short SHA1 checksum of branch name: ${{ steps.git-branch-name.outputs.short_hash }}"
 
-    - name: Push Helm Chart to Dev ChartMuseum
+    - name: Push Helm Chart to Dev OCI quay.io
       run: |
         set -o xtrace
         CHART_NAME=$(yq read ${{ matrix.chart }}/Chart.yaml name)
         CHART_VERSION=$(yq read ${{ matrix.chart }}/Chart.yaml version)
 
-        helm plugin install https://github.com/chartmuseum/helm-push.git
-        helm repo add chartmuseum ${{ secrets.CHARTMUSEUM_DEV_URL }}/$CHART_NAME --username ${{ secrets.CHARTMUSEUM_DEV_USERNAME }} --password ${{ secrets.CHARTMUSEUM_DEV_PASSWORD }}
+        helm registry login quay.io -u ${{ secrets.QUAY_USERNAME }} -p ${{ secrets.QUAY_PASSWORD }}
         helm dependency update ${{ matrix.chart }}
+        helm package ${{ matrix.chart }} --version $CHART_VERSION
 
-        helm cm-push ${{ matrix.chart }} chartmuseum --version $CHART_VERSION
+        helm push $CHART_NAME-$CHART_VERSION.tgz oci://quay.io/codefresh/charts/dev
