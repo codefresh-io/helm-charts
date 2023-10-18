@@ -45,9 +45,10 @@ jobs:
       - name: Upload to ChartMuseum
         run: |
           set -o xtrace
+          helm registry login quay.io -u ${{ secrets.QUAY_USERNAME }} -p ${{ secrets.QUAY_PASSWORD }}
           if [ -d .cr-release-packages ]; then
             for CHART in $(find .cr-release-packages -type f -printf '%f\n'); do
               CHART_NAME=$(echo $CHART | rev | cut -d '-' -f2- | rev )
-              curl --data-binary "@.cr-release-packages/$CHART" --user "${{ secrets.CHARTMUSEUM_PROD_USERNAME }}:${{ secrets.CHARTMUSEUM_PROD_PASSWORD }}" ${{ secrets.CHARTMUSEUM_PROD_URL }}/api/$CHART_NAME/charts
+              helm push .cr-release-packages/$CHART oci://quay.io/codefresh/charts
             done
           fi
