@@ -49,6 +49,6 @@ jobs:
           if [ -d .cr-release-packages ]; then
             for CHART in $(find .cr-release-packages -type f -printf '%f\n'); do
               CHART_NAME=$(echo $CHART | rev | cut -d '-' -f2- | rev )
-              helm push .cr-release-packages/$CHART.tgz oci://quay.io/codefresh/charts
+              helm push .cr-release-packages/$CHART oci://quay.io/codefresh/charts
             done
           fi
