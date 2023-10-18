@@ -42,7 +42,7 @@ jobs:
         env:
           CR_TOKEN: "${{ secrets.GITHUB_TOKEN }}"
 
-      - name: Upload to ChartMuseum
+      - name: Upload charts to quay.io
         run: |
           set -o xtrace
           helm registry login quay.io -u ${{ secrets.QUAY_USERNAME }} -p ${{ secrets.QUAY_PASSWORD }}
