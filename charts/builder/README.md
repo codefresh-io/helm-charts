@@ -86,7 +86,7 @@ Helm Chart for Builder
 | varLibDockerVolume.storageSize | string | `nil` |  |
 | volumeClaimTemplates.varlibdocker.accessMode | string | `"ReadWriteOnce"` |  |
 | volumeClaimTemplates.varlibdocker.mountPath | string | `"/var/lib/docker"` |  |
-| volumeClaimTemplates.varlibdocker.size | string | `"100Gi"` |  |
+| volumeClaimTemplates.varlibdocker.size | string | `"10Gi"` |  |
 | volumeClaimTemplates.varlibdocker.storageClass | string | `nil` |  |
 | volumes.cf-certs.enabled | bool | `true` |  |
 | volumes.cf-certs.nameOverride | string | `"{{ .Release.Name }}-{{ .Values.global.codefresh }}-certs-client"` |  |

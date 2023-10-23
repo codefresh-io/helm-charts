@@ -118,7 +118,7 @@ volumeClaimTemplates:
   varlibdocker:
     mountPath: /var/lib/docker
     accessMode: "ReadWriteOnce"
-    size: 100Gi
+    size: 10Gi
     storageClass:
 
 configMaps:
