@@ -109,4 +109,4 @@ tests:
     asserts:
       - equal:
           path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
-          value: 32i
+          value: 32Gi
