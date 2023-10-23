@@ -7,6 +7,10 @@ library:
 internal-gateway:
 - charts/internal-gateway/**/*
 
+builder:
+- charts/builder/**/*
+- charts/runner/**/*
+
 docs:
 - README.md
 - CHANGELOG.md

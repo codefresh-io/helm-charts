@@ -98,7 +98,7 @@ jobs:
       - name: Run chart-testing (install)
         run: |
           changed=$(ct list-changed --config "ct.yaml")
-          if [[ "$changed" == "charts/cf-common" || "$changed" == "charts/builder" || "$changed" == "charts/runner" ]]; then
+          if [[ "$changed" == "charts/cf-common" || "$changed" =~ "charts/builder" || "$changed" =~ "charts/runner" ]]; then
             # Do not run `ct install` for cf-common (library chart) or builder/runner
             exit 0
           fi
