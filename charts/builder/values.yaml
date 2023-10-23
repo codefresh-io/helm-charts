@@ -209,7 +209,7 @@ volumes:
 
 initContainers:
   register:
-    enabled: true
+    enabled: false
     image:
       registry: quay.io
       repository: codefresh/curl
