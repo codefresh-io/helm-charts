@@ -9,4 +9,3 @@ validate-yaml: true
 check-version-increment: true
 excluded-charts:
   - cf-common-test
-  - builder
