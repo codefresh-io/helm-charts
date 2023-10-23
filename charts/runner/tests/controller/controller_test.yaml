@@ -1,0 +1,112 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: builder test
+templates:
+  - templates/controller.yaml
+tests:
+  - it: If .Values.existingPvc is set
+    set:
+      existingPvc: my-pvc-name
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: varlibdocker
+            persistentVolumeClaim:
+              claimName: my-pvc-name
+      - isNull:
+          path: spec.volumeClaimTemplates
+
+  - it: If .Values.existingClaim is set
+    set:
+      existingClaim: my-pvc-name
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: varlibdocker
+            persistentVolumeClaim:
+              claimName: my-pvc-name
+      - isNull:
+          path: spec.volumeClaimTemplates
+
+  - it: If .Values.pvcName is set
+    set:
+      pvcName: my-pvc-name
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: varlibdocker
+            persistentVolumeClaim:
+              claimName: my-pvc-name
+      - isNull:
+          path: spec.volumeClaimTemplates
+
+  - it: If .Values.pvcName is set
+    set:
+      varLibDockerVolume.existingPvc: my-pvc-name
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: varlibdocker
+            persistentVolumeClaim:
+              claimName: my-pvc-name
+      - isNull:
+          path: spec.volumeClaimTemplates
+
+  - it: If .Values.storageClass is set
+    set:
+      storageClass: my-sc-name
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          value: my-sc-name
+
+  - it: If .Values.StorageClass is set
+    set:
+      StorageClass: my-sc-name
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          value: my-sc-name
+
+  - it: If .Values.StorageClass is set
+    set:
+      varLibDockerVolume.storageClass: my-sc-name
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          value: my-sc-name
+
+  - it: If .Values.StorageClass is set
+    set:
+      global.storageClass: my-sc-name
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.storageClassName
+          value: my-sc-name
+
+  - it: If .Values.storageSize is set
+    set:
+      storageSize: 32Gi
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
+          value: 32Gi
+
+  - it: If .Values.varLibDockerVolume.storageSize is set
+    set:
+      varLibDockerVolume.storageSize: 32Gi
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
+          value: 32Gi
+
+  - it: If .Values.varLibDockerVolume.size is set
+    set:
+      varLibDockerVolume.size: 32Gi
+    asserts:
+      - equal:
+          path: spec.volumeClaimTemplates[0].spec.resources.requests.storage
+          value: 32Gi

@@ -4,6 +4,7 @@ global:
 
   # Backward compatibility with values/templates in cf-helm
   # These values are defined in cf-helm `values.yaml/secrets.yaml`. But listing them here for verbosity.
+  appUrl: "g.codefresh.io"
   consulHost: ""
   consulService: consul-headless
   consulHttpPort: 8500
@@ -40,6 +41,10 @@ podSecurityContext: {}
 
 podAnnotations:
   checksum/config: '{{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}'
+
+hostNetwork: true
+
+dnsPolicy: ClusterFirstWithHostNet
 
 nodeSelector: {}
 
@@ -149,11 +154,11 @@ configMaps:
         #!/bin/sh
         set -e
         NODE_NAME="$1"
-        SUBDOMAIN="$2"
         NODE_ADDRESS="$1.$2"
+        PUBLIC_IP="$3"
         CONSUL={{ include (printf "cf-common-%s.classic.calculateConsulUri" (index .Subcharts "cf-common").Chart.Version  ) . }}
         ACCOUNT=codefresh
-        ROLE=builder
+        ROLE=runner
         PROVIDER='
         {
           "name": "kube-nodes",
@@ -170,7 +175,7 @@ configMaps:
               "dind",
               "noagent",
               "account_codefresh",
-              "type_builder"
+              "type_runner"
             ],
             "Address": "'${NODE_ADDRESS}'",
             "Port": {{ .Values.service.main.ports.dind.port }}
@@ -179,15 +184,15 @@ configMaps:
             "Node": "",
             "CheckID": "service:docker-node",
             "Name": "Remote Node Check",
-            "Notes": "Check builder is up and running",
-            "Output": "Builder alive and reachable",
+            "Notes": "Check runner is up and running",
+            "Output": "Runner alive and reachable",
             "Status": "passing",
             "ServiceID": "docker-node"
           }
         }'
         echo "Registering dind node ($NODE_NAME) in consul. Configuration: ${NODE_SERVICE}"
         curl -X PUT -d "${NODE_SERVICE}" ${CONSUL}/v1/catalog/register
-        curl -X PUT -d "${NODE_ADDRESS}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/publicAddress
+        curl -X PUT -d "${PUBLIC_IP}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/publicAddress
         curl -X PUT -d "${ACCOUNT}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/account
         curl -X PUT -d "${ROLE}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/role
         curl -X PUT -d "${PROVIDER}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/systemData
@@ -227,7 +232,7 @@ initContainers:
       - |
         cp -L /opt/dind/register /usr/local/bin/
         chmod +x /usr/local/bin/register
-        /usr/local/bin/register ${POD_NAME} {{ template "builder.fullname" . }}.{{ .Release.Namespace}}.svc
+        /usr/local/bin/register ${POD_NAME} {{ template "runner.fullname" . }}.{{ .Release.Namespace}}.svc {{ .Values.global.appUrl }}
     volumeMounts:
       config:
         path:
