@@ -1,0 +1,17 @@
+{{/* Backward compatibility for onprem */}}
+{{- if (coalesce .Values.existingPvc .Values.existingClaim .Values.pvcName .Values.varLibDockerVolume.existingPvc "") }}
+{{- $_ := set .Values.volumeClaimTemplates.varlibdocker "enabled" false }}
+{{- $_ := set .Values.volumes.varlibdocker "enabled" true }}
+{{- $_ := set .Values.volumes.varlibdocker "nameOverride" (coalesce .Values.existingPvc .Values.existingClaim .Values.pvcName .Values.varLibDockerVolume.existingPvc) }}
+{{- end }}
+
+{{- if (coalesce .Values.storageClass .Values.StorageClass .Values.varLibDockerVolume.storageClass .Values.global.storageClass "") }}
+{{- $_ := set .Values.volumeClaimTemplates.varlibdocker "storageClass" (coalesce .Values.storageClass .Values.StorageClass .Values.varLibDockerVolume.storageClass .Values.global.storageClass) }}
+{{- end }}
+
+{{- if (coalesce .Values.storageSize .Values.varLibDockerVolume.storageSize .Values.varLibDockerVolume.size "") }}
+{{- $_ := set .Values.volumeClaimTemplates.varlibdocker "size" (coalesce .Values.storageSize .Values.varLibDockerVolume.storageSize .Values.varLibDockerVolume.size) }}
+{{- end }}
+
+{{- $templateName := printf "cf-common-%s.controller" (index .Subcharts "cf-common").Chart.Version -}}
+{{- include $templateName . -}}

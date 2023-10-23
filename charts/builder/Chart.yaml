@@ -1,0 +1,17 @@
+apiVersion: v2
+description: Helm Chart for Builder
+name: builder
+version: 1.2.0
+keywords:
+- codefresh
+- dind
+- builder
+home: https://codefresh.io/
+icon: https://avatars1.githubusercontent.com/u/11412079?v=3
+maintainers:
+  - name: codefresh
+    url: https://codefresh-io.github.io/
+dependencies:
+  - name: cf-common
+    repository: oci://quay.io/codefresh/charts
+    version: "0.16.0"
