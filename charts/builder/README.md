@@ -59,7 +59,7 @@ Helm Chart for Builder
 | initContainers.register.command[0] | string | `"/bin/sh"` |  |
 | initContainers.register.command[1] | string | `"-c"` |  |
 | initContainers.register.command[2] | string | `"cp -L /opt/dind/register /usr/local/bin/\nchmod +x /usr/local/bin/register\n/usr/local/bin/register ${POD_NAME} {{ template \"builder.fullname\" . }}.{{ .Release.Namespace}}.svc\n"` |  |
-| initContainers.register.enabled | bool | `true` |  |
+| initContainers.register.enabled | bool | `false` |  |
 | initContainers.register.env.POD_NAME.valueFrom.fieldRef.apiVersion | string | `"v1"` |  |
 | initContainers.register.env.POD_NAME.valueFrom.fieldRef.fieldPath | string | `"metadata.name"` |  |
 | initContainers.register.image.pullPolicy | string | `"IfNotPresent"` |  |
