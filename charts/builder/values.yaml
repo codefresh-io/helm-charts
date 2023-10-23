@@ -1,0 +1,235 @@
+## See full values structure at https://github.com/codefresh-io/helm-charts/blob/master/charts/cf-common/values.yaml
+global:
+  imageRegistry: ""
+
+  # Backward compatibility with values/templates in cf-helm
+  # These values are defined in cf-helm `values.yaml/secrets.yaml`. But listing them here for verbosity.
+  consulHost: ""
+  consulService: consul-headless
+  consulHttpPort: 8500
+
+# -----------------------------------------------------------------------------------------------------------------------
+# LEGACY VALUES
+# -----------------------------------------------------------------------------------------------------------------------
+
+# Backward compatibility with values/templates in cf-helm
+insecureRegistries: []
+cleaner:
+  image:
+    registry: quay.io
+    repository: codefresh/docker-cleaner
+    tag: "24.0"
+    pullPolicy: IfNotPresent
+varLibDockerVolume:
+  accessMode:
+  storageSize:
+
+# -----------------------------------------------------------------------------------------------------------------------
+# NEW VALUES
+# -----------------------------------------------------------------------------------------------------------------------
+
+controller:
+  enabled: true
+  type: statefulset
+  replicas: 1
+
+imagePullSecrets:
+  - "{{ .Release.Name }}-{{ .Values.global.codefresh }}-registry"
+
+podSecurityContext: {}
+
+podAnnotations:
+  checksum/config: '{{ include (print .Template.BasePath "/configmap.yaml") . | sha256sum }}'
+
+nodeSelector: {}
+
+tolerations: []
+
+affinity: {}
+
+topologySpreadConstraints: []
+
+hpa: {}
+
+pdb: {}
+
+serviceAccount:
+  enabled: false
+
+rbac:
+  enabled: false
+
+container:
+  image:
+    registry: docker.io
+    repository: docker
+    tag: 24.0-dind
+    pullPolicy: IfNotPresent
+
+  command:
+    - "/bin/sh"
+    - "-c"
+    - |
+      rm -fv /var/run/docker.pid
+      mkdir -p /var/run/codefresh
+      # Adding cleaner
+      cp -L /opt/dind/docker-cleaner.sh /usr/local/bin/ && chmod +x /usr/local/bin/docker-cleaner.sh
+      if [[ -n "${DOCKER_CLEANER_CRON}" ]]; then
+        echo "Set /etc/crontabs/root - ${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh"
+        echo "${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh " >> /etc/crontabs/root
+        crond
+      fi
+      dockerd
+
+  containerSecurityContext:
+    privileged: true
+
+  env:
+    DOCKER_CLEANER_CRON: "0 0 * * *"
+
+  volumeMounts:
+    config:
+      path:
+      - mountPath: /etc/docker/daemon.json
+        readOnly: true
+        subPath: daemon.json
+      - mountPath: /opt/dind/docker-cleaner.sh
+        subPath: docker-cleaner
+    cf-certs:
+      path:
+      - mountPath: /etc/ssl/cf
+        readOnly: true
+
+  resources:
+    limits: {}
+    requests: {}
+
+service:
+  main:
+    enabled: true
+    type: ClusterIP
+    clusterIP: None
+    ports:
+      dind:
+        port: 1300
+        protocol: TCP
+
+volumeClaimTemplates:
+  varlibdocker:
+    mountPath: /var/lib/docker
+    accessMode: "ReadWriteOnce"
+    size: 100Gi
+    storageClass:
+
+configMaps:
+  config:
+    enabled: true
+    data:
+      daemon.json: |
+        {
+          "hosts": [ "unix:///var/run/docker.sock",
+                    "tcp://0.0.0.0:{{ .Values.service.main.ports.dind.port }}"],
+          "storage-driver": "overlay2",
+          "tlsverify": true,
+          "tls": true,
+          "tlscacert": "/etc/ssl/cf/ca.pem",
+          "tlscert": "/etc/ssl/cf/cert.pem",
+          "tlskey": "/etc/ssl/cf/key.pem",
+          "insecure-registries" : [ {{- range $i, $e := .Values.insecureRegistries }} {{- if $i }},{{ end }} {{ $e | quote }} {{- end }} ]
+        }
+
+      docker-cleaner: |
+        #!/bin/sh
+        echo "$0 - $(date)" | tee -a /var/log/cleaner.log
+        CLEANER_IMAGE={{ include (printf "cf-common-%s.image.name" (index .Subcharts "cf-common").Chart.Version ) (dict "image" .Values.cleaner.image "context" .)  }}
+        docker pull $CLEANER_IMAGE
+        docker run --rm --name rt-cleaner -v /var/run/docker.sock:/var/run/docker.sock:rw --label io.codefresh.owner=codefresh -e GRACE_PERIOD_SECONDS=86400 --cpu-shares=10 $CLEANER_IMAGE ./docker-gc >> /var/log/cleaner.log 2>&1
+
+      register: |
+        #!/bin/sh
+        set -e
+        NODE_NAME="$1"
+        SUBDOMAIN="$2"
+        NODE_ADDRESS="$1.$2"
+        CONSUL={{ include (printf "cf-common-%s.classic.calculateConsulUri" (index .Subcharts "cf-common").Chart.Version  ) . }}
+        ACCOUNT=codefresh
+        ROLE=builder
+        PROVIDER='
+        {
+          "name": "kube-nodes",
+          "type": "internal"
+        }'
+        SYSTEM_DATA='{"os_name": "dind"}'
+        NODE_SERVICE='
+        {
+          "Node": "'${NODE_NAME}'",
+          "Address": "'${NODE_ADDRESS}'",
+          "Service": {
+            "Service": "docker-node",
+            "Tags": [
+              "dind",
+              "noagent",
+              "account_codefresh",
+              "type_builder"
+            ],
+            "Address": "'${NODE_ADDRESS}'",
+            "Port": {{ .Values.service.main.ports.dind.port }}
+          },
+          "Check": {
+            "Node": "",
+            "CheckID": "service:docker-node",
+            "Name": "Remote Node Check",
+            "Notes": "Check builder is up and running",
+            "Output": "Builder alive and reachable",
+            "Status": "passing",
+            "ServiceID": "docker-node"
+          }
+        }'
+        echo "Registering dind node ($NODE_NAME) in consul. Configuration: ${NODE_SERVICE}"
+        curl -X PUT -d "${NODE_SERVICE}" ${CONSUL}/v1/catalog/register
+        curl -X PUT -d "${NODE_ADDRESS}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/publicAddress
+        curl -X PUT -d "${ACCOUNT}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/account
+        curl -X PUT -d "${ROLE}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/role
+        curl -X PUT -d "${PROVIDER}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/systemData
+        curl -X PUT -d "${SYSTEM_DATA}" ${CONSUL}/v1/kv/services/docker-node/${NODE_NAME}/provider
+
+volumes:
+  config:
+    enabled: true
+    type: configMap
+  cf-certs:
+    enabled: true
+    type: secret
+    nameOverride: '{{ .Release.Name }}-{{ .Values.global.codefresh }}-certs-client'
+  # Backward compatibility for onprem
+  varlibdocker:
+    enabled: false
+    type: pvc
+    nameOverride:
+
+initContainers:
+  register:
+    enabled: true
+    image:
+      registry: quay.io
+      repository: codefresh/curl
+      tag: 8.4.0
+      pullPolicy: IfNotPresent
+    env:
+      POD_NAME:
+        valueFrom:
+          fieldRef:
+            apiVersion: v1
+            fieldPath: metadata.name
+    command:
+      - "/bin/sh"
+      - "-c"
+      - |
+        cp -L /opt/dind/register /usr/local/bin/
+        chmod +x /usr/local/bin/register
+        /usr/local/bin/register ${POD_NAME} {{ template "builder.fullname" . }}.{{ .Release.Namespace}}.svc
+    volumeMounts:
+      config:
+        path:
+        - mountPath: /opt/dind/register
+          subPath: register
