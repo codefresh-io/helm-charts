@@ -408,6 +408,7 @@ volumes:
     enabled: false
     type: emptyDir
     sizeLimit: 500Mi
+    medium: Memory
   # Configure existing volumes (from other/parent chart) for the contoller.
   # Make sure to specify `existingName` or `nameOverride` property. Helm template supported.
   # E.g.
