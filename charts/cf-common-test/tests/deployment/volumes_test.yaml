@@ -9,7 +9,7 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.template.spec.volumes
-          count: 3
+          count: 4
   - it: Test volumes array in deployment spec
     asserts:
       - contains:
@@ -122,3 +122,42 @@ tests:
             mountPath: /etc/ssl/default/ca.pem
             subPath: ca.pem
             readOnly: true
+
+  - it: Test emptyDir volume
+    values:
+      - values.yaml
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: empty-dir-volume
+            emptyDir: {}
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: empty-dir-volume
+            mountPath: /some/path/empty-dir
+
+  - it: Test emptyDir volume
+    values:
+      - values.yaml
+    set:
+      volumes:
+        empty-dir-volume:
+          enabled: true
+          type: emptyDir
+          sizeLimit: 100Mi
+          medium: Memory
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: empty-dir-volume
+            emptyDir:
+              sizeLimit: 100Mi
+              medium: Memory
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: empty-dir-volume
+            mountPath: /some/path/empty-dir

@@ -396,7 +396,7 @@ volumes:
   config:
     # -- Enable the volume
     enabled: false
-    # -- Volume type (configMap/secret)
+    # -- Volume type (configMap/secret/pvc/emptyDir)
     type: configMap
   secret:
     enabled: false
@@ -404,6 +404,11 @@ volumes:
   data:
     enabled: false
     type: pvc
+  emptyDir:
+    enabled: false
+    type: emptyDir
+    sizeLimit: 500Mi
+    medium: Memory
   # Configure existing volumes (from other/parent chart) for the contoller.
   # Make sure to specify `existingName` or `nameOverride` property. Helm template supported.
   # E.g.
