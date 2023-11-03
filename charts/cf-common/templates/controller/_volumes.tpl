@@ -2,10 +2,10 @@
 Renders volumes in controller template.
 Called from pod template.
 Usage:
-volumes: {{ include "cf-common-0.16.0.volumes" (dict "Values" .Values.volumes "context" $) | nindent }}
+volumes: {{ include "cf-common-0.17.0.volumes" (dict "Values" .Values.volumes "context" $) | nindent }}
 */}}
 
-{{- define "cf-common-0.16.0.volumes" -}}
+{{- define "cf-common-0.17.0.volumes" -}}
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
@@ -26,10 +26,10 @@ volumes: {{ include "cf-common-0.16.0.volumes" (dict "Values" .Values.volumes "c
 
   {{- if $volumeItem.enabled }}
 - name: {{ $volumeIndex }}
-  {{- $volumeName := printf "%s-%s" (include "cf-common-0.16.0.names.fullname" $) $volumeIndex -}}
+  {{- $volumeName := printf "%s-%s" (include "cf-common-0.17.0.names.fullname" $) $volumeIndex -}}
 
   {{- if and (or (hasKey $volumeItem "existingName") (hasKey $volumeItem "nameOverride")) (or $volumeItem.existingName $volumeItem.nameOverride) }}
-  {{- $volumeName = include "cf-common-0.16.0.tplrender" (dict "Values" (coalesce $volumeItem.nameOverride $volumeItem.existingName) "context" $) -}}
+  {{- $volumeName = include "cf-common-0.17.0.tplrender" (dict "Values" (coalesce $volumeItem.nameOverride $volumeItem.existingName) "context" $) -}}
   {{- end }}
 
   {{- if eq $volumeItem.type "configMap" }}
@@ -55,6 +55,14 @@ volumes: {{ include "cf-common-0.16.0.volumes" (dict "Values" .Values.volumes "c
   {{- else if eq $volumeItem.type "pvc" }}
   persistentVolumeClaim:
     claimName: {{ $volumeName }}
+
+  {{- else if eq $volumeItem.type "emptyDir" }}
+    {{- if and ($volumeItem.sizeLimit) }}
+  emptyDir:
+    sizeLimit: {{ $volumeItem.sizeLimit }}
+    {{- else }}
+  emptyDir: {}
+    {{- end }}
 
   {{- else }}
     {{ fail (printf "ERROR: %s is invalid volume type for volume %s!" $volumeItem.type $volumeIndex) }}

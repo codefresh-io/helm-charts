@@ -2,27 +2,27 @@
 Renders main container in pod template.
 Called from pod template.
 Usage:
-{{ include "cf-common-0.16.0.container" (dict "Values" .Values.container "context" $) }}
+{{ include "cf-common-0.17.0.container" (dict "Values" .Values.container "context" $) }}
 */}}
-{{-  define "cf-common-0.16.0.container" -}}
+{{-  define "cf-common-0.17.0.container" -}}
 
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
-{{- $containerName := include "cf-common-0.16.0.names.fullname" $ -}}
+{{- $containerName := include "cf-common-0.17.0.names.fullname" $ -}}
 {{- if and (hasKey .Values "nameOverride") .Values.nameOverride }}
-{{- $containerName = include "cf-common-0.16.0.tplrender" (dict "Values" .Values.nameOverride "context" $) -}}
+{{- $containerName = include "cf-common-0.17.0.tplrender" (dict "Values" .Values.nameOverride "context" $) -}}
 {{- end }}
 
 - name: {{ $containerName }}
-  image: {{ include "cf-common-0.16.0.image.name" (dict "image" .Values.image "context" $) }}
+  image: {{ include "cf-common-0.17.0.image.name" (dict "image" .Values.image "context" $) }}
   imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
 
   {{- with .Values.command }}
     {{- if not (kindIs "slice" .) }}
       {{- fail "ERROR: container.command block must be a list!" }}
     {{- end }}
-  command: {{- include "cf-common-0.16.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
+  command: {{- include "cf-common-0.17.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
   {{- end }}
 
   {{- with .Values.args }}
@@ -52,12 +52,12 @@ Usage:
       {{- if not (kindIs "slice" .) }}
         {{ fail "ERROR: container.envFrom block must be a list!"}}
       {{- end }}
-      {{- include "cf-common-0.16.0.tplrender" (dict "Values" . "context" $) | trim | nindent 4 }}
+      {{- include "cf-common-0.17.0.tplrender" (dict "Values" . "context" $) | trim | nindent 4 }}
     {{- end }}
     {{- range $secretName, $secretItem := $.Values.secrets }}
       {{- if $secretItem.enabled }}
     - secretRef:
-        name: {{ printf "%s-%s" (include "cf-common-0.16.0.names.fullname" $) $secretName }}
+        name: {{ printf "%s-%s" (include "cf-common-0.17.0.names.fullname" $) $secretName }}
       {{- end }}
     {{- end }}
   {{- end }}
@@ -74,10 +74,10 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
   {{- $mergedEnv = mergeOverwrite $.Values.global.env $mergedEnv }}
     {{- end }}
   env:
-  {{- include "cf-common-0.16.0.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}
+  {{- include "cf-common-0.17.0.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}
   {{- end }}
 
-  {{- include "cf-common-0.16.0.ports" $ | trim | nindent 2 }}
+  {{- include "cf-common-0.17.0.ports" $ | trim | nindent 2 }}
 
 {{- /*
 For backward compatibility (.Values.volumeMounts takes precedence over .Values.container.volumeMounts)
@@ -86,10 +86,10 @@ For backward compatibility (.Values.volumeMounts takes precedence over .Values.c
     {{- if $.Values.volumeMounts }}
   {{- $mergedVolumeMounts = mergeOverwrite $mergedVolumeMounts $.Values.volumeMounts }}
     {{- end }}
-  volumeMounts: {{ include "cf-common-0.16.0.volumeMounts" (dict "Values" $mergedVolumeMounts "context" $) | trim | nindent 2 }}
+  volumeMounts: {{ include "cf-common-0.17.0.volumeMounts" (dict "Values" $mergedVolumeMounts "context" $) | trim | nindent 2 }}
 
   {{- with .Values.probes }}
-  {{- include "cf-common-0.16.0.probes" . | trim | nindent 2 }}
+  {{- include "cf-common-0.17.0.probes" . | trim | nindent 2 }}
   {{- end }}
 
   {{- with .Values.resources }}
