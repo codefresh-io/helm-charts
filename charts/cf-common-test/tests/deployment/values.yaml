@@ -56,7 +56,7 @@ container:
       - mountPath: /some/path/secret.key
         subPath: secret.key
         readOnly: true
-    emptyDir:
+    empty-dir-volume:
       path:
       - mountPath: /some/path/empty-dir
 
@@ -118,6 +118,6 @@ volumes:
     enabled: true
     type: secret
     existingName: "{{ .Values.global.volumeName }}"
-  emptyDir:
+  empty-dir-volume:
     enabled: true
     type: emptyDir

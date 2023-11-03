@@ -190,7 +190,7 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.template.spec.containers[0].volumeMounts
-          count: 2
+          count: 3
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
@@ -204,6 +204,11 @@ tests:
             name: config
             mountPath: /some/path/config.json
             subPath: config.json
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: empty-dir-volume
+            mountPath: /some/path/empty-dir
 
   - it: Test main container probes
     asserts:

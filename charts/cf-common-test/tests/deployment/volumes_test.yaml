@@ -9,7 +9,7 @@ tests:
     asserts:
       - lengthEqual:
           path: spec.template.spec.volumes
-          count: 3
+          count: 4
   - it: Test volumes array in deployment spec
     asserts:
       - contains:
@@ -126,26 +126,38 @@ tests:
   - it: Test emptyDir volume
     values:
       - values.yaml
-    set:
-      volumes:
-        my-volume:
-          enabled: true
-          type: emptyDir
-          medium: Memory
-          sizeLimit: 1Gi
-          fsGroup: 1000
-          readOnly: true
     asserts:
       - contains:
           path: spec.template.spec.volumes
           content:
-            name: my-volume
-            emptyDir:
-              medium: Memory
-              sizeLimit: 1Gi
+            name: empty-dir-volume
+            emptyDir: {}
       - contains:
           path: spec.template.spec.containers[0].volumeMounts
           content:
-            name: my-volume
-            readOnly: true
-            mountPath: /some/path
+            name: empty-dir-volume
+            mountPath: /some/path/empty-dir
+
+  - it: Test emptyDir volume
+    values:
+      - values.yaml
+    set:
+      volumes:
+        empty-dir-volume:
+          enabled: true
+          type: emptyDir
+          sizeLimit: 100Mi
+          medium: Memory
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: empty-dir-volume
+            emptyDir:
+              sizeLimit: 100Mi
+              medium: Memory
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: empty-dir-volume
+            mountPath: /some/path/empty-dir
