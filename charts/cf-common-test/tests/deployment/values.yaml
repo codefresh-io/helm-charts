@@ -56,6 +56,9 @@ container:
       - mountPath: /some/path/secret.key
         subPath: secret.key
         readOnly: true
+    emptyDir:
+      path:
+      - mountPath: /some/path/empty-dir
 
   probes:
     liveness:
@@ -115,3 +118,6 @@ volumes:
     enabled: true
     type: secret
     existingName: "{{ .Values.global.volumeName }}"
+  emptyDir:
+    enabled: true
+    type: emptyDir

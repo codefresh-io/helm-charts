@@ -122,3 +122,30 @@ tests:
             mountPath: /etc/ssl/default/ca.pem
             subPath: ca.pem
             readOnly: true
+
+  - it: Test emptyDir volume
+    values:
+      - values.yaml
+    set:
+      volumes:
+        my-volume:
+          enabled: true
+          type: emptyDir
+          medium: Memory
+          sizeLimit: 1Gi
+          fsGroup: 1000
+          readOnly: true
+    asserts:
+      - contains:
+          path: spec.template.spec.volumes
+          content:
+            name: my-volume
+            emptyDir:
+              medium: Memory
+              sizeLimit: 1Gi
+      - contains:
+          path: spec.template.spec.containers[0].volumeMounts
+          content:
+            name: my-volume
+            readOnly: true
+            mountPath: /some/path

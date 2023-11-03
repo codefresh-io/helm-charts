@@ -57,9 +57,14 @@ volumes: {{ include "cf-common-0.17.0.volumes" (dict "Values" .Values.volumes "c
     claimName: {{ $volumeName }}
 
   {{- else if eq $volumeItem.type "emptyDir" }}
-    {{- if and ($volumeItem.sizeLimit) }}
+    {{- if or ($volumeItem.sizeLimit) ($volumeItem.medium) }}
   emptyDir:
-    sizeLimit: {{ $volumeItem.sizeLimit }}
+    {{- with $volumeItem.sizeLimit }}
+    sizeLimit: {{ . }}
+    {{- end -}}
+    {{- with $volumeItem.medium }}
+    medium: {{ . }}
+    {{- end -}}
     {{- else }}
   emptyDir: {}
     {{- end }}
