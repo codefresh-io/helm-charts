@@ -272,18 +272,6 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
-      /2.0/api/broadcaster:
-        enabled: true
-        proxy:
-          host: {{ index $endpoints.serviceEndpoints "argo-platform-broadcaster" "svc" }}
-          port: {{ index $endpoints.serviceEndpoints "argo-platform-broadcaster" "port" }}
-          proxyPassSnippet:
-            {{- $presets.authHeaderSet | toYaml | nindent 12 }}
-        locationSnippet:
-          {{- $presets.locationSnippet | toYaml | nindent 10 }}
-        locationDirectives:
-          {{- $presets.locationDirectives | toYaml | nindent 10 }}
-
       /2.0/api/graphql:
         enabled: true
         proxy:
