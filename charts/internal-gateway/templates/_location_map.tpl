@@ -65,6 +65,9 @@ serviceEndpoints:
   argo-platform-api-events:
     svc: argo-platform-api-events
     port: 80
+  argo-platform-broadcaster:
+    svc: argo-platform-broadcaster
+    port: 80
   argo-platform-ui:
     svc: argo-platform-ui
     port: 4200
@@ -257,7 +260,7 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
-      /2.0/api/graphql:
+      /2.0/api/broadcaster/graphql:
         enabled: true
         proxy:
           host: {{ index $endpoints.serviceEndpoints "argo-platform-api-graphql" "svc" }}
@@ -269,7 +272,19 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
-      /2.0/api/broadcaster/graphql:
+      /2.0/api/broadcaster:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "argo-platform-broadcaster" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "argo-platform-broadcaster" "port" }}
+          proxyPassSnippet:
+            {{- $presets.authHeaderSet | toYaml | nindent 12 }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /2.0/api/graphql:
         enabled: true
         proxy:
           host: {{ index $endpoints.serviceEndpoints "argo-platform-api-graphql" "svc" }}
@@ -286,18 +301,6 @@ nginx:
         proxy:
           host: {{ index $endpoints.serviceEndpoints "argo-platform-api-events" "svc" }}
           port: {{ index $endpoints.serviceEndpoints "argo-platform-api-events" "port" }}
-          proxyPassSnippet:
-            {{- $presets.authHeaderSet | toYaml | nindent 12 }}
-        locationSnippet:
-          {{- $presets.locationSnippet | toYaml | nindent 10 }}
-        locationDirectives:
-          {{- $presets.locationDirectives | toYaml | nindent 10 }}
-
-      /2.0/api/broadcaster:
-        enabled: true
-        proxy:
-          host: {{ index $endpoints.serviceEndpoints "argo-platform-broadcaster" "svc" }}
-          port: {{ index $endpoints.serviceEndpoints "argo-platform-broadcaster" "port" }}
           proxyPassSnippet:
             {{- $presets.authHeaderSet | toYaml | nindent 12 }}
         locationSnippet:
