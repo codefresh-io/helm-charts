@@ -263,8 +263,8 @@ nginx:
       /2.0/api/broadcaster/graphql:
         enabled: true
         proxy:
-          host: {{ index $endpoints.serviceEndpoints "argo-platform-api-graphql" "svc" }}
-          port: {{ index $endpoints.serviceEndpoints "argo-platform-api-graphql" "port" }}
+          host: {{ index $endpoints.serviceEndpoints "argo-platform-broadcaster" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "argo-platform-broadcaster" "port" }}
           proxyPassSnippet:
             {{- $presets.authHeaderSet | toYaml | nindent 12 }}
         locationSnippet:
