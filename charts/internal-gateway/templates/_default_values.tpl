@@ -43,6 +43,9 @@ codefresh:
     argo-platform-ui:
       svc: '{{ index .Values.codefresh "argo-platform-ui-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "argo-platform-ui-port" }}
+    argo-platform-broadcaster:
+      svc: '{{ index .Values.codefresh "argo-platform-broadcaster-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
+      port: {{ index .Values.codefresh "argo-platform-broadcaster-port" }}
     argo-hub:
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "argo-hub-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "argo-hub-port" }}
