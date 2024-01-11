@@ -327,3 +327,79 @@ tests:
       - equal:
           path: spec.template.spec.containers[0].image
           value: myregistry.io/codefresh/cf-api:latest
+
+  - it: Test main container TPL env without overrides
+    values:
+      - values.yaml
+      - tpl-values.yaml
+    set:
+      global:
+        tpl: value
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].env[1].name
+          value: TPL_VAR_ONE
+      - equal:
+          path: spec.template.spec.containers[0].env[1].value
+          value: value
+
+  - it: Test main container TPL env with overrides
+    values:
+      - values.yaml
+      - tpl-values.yaml
+    set:
+      global:
+        tpl: value
+      container:
+        env:
+          TPL_VAR_ONE:
+            valueFrom:
+              secretKeyRef:
+                name: some-secret-one
+                key: some-key-one
+      env:
+        TPL_VAR_TWO:
+          valueFrom:
+            secretKeyRef:
+              name: some-secret-two
+              key: some-key-two
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TPL_VAR_ONE
+            valueFrom:
+              secretKeyRef:
+                name: some-secret-one
+                key: some-key-one
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TPL_VAR_TWO
+            valueFrom:
+              secretKeyRef:
+                name: some-secret-two
+                key: some-key-two
+
+  - it: Test main container TPL env with overrides (backward compatibility)
+    values:
+      - values.yaml
+      - tpl-values.yaml
+    set:
+      global:
+        tpl: value
+      env:
+        TPL_VAR_ONE:
+          valueFrom:
+            secretKeyRef:
+              name: some-secret-one
+              key: some-key-one
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: TPL_VAR_ONE
+            valueFrom:
+              secretKeyRef:
+                name: some-secret-one
+                key: some-key-one
