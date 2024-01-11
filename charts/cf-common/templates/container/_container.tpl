@@ -71,7 +71,7 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
   {{- $mergedEnv = merge $.Values.env $mergedEnv }}
     {{- end }}
     {{- if $.Values.global.env }}
-  {{- $mergedEnv = mergeOverwrite $.Values.global.env $mergedEnv }}
+  {{- $mergedEnv = merge $mergedEnv $.Values.global.env }}
     {{- end }}
   env:
   {{- include "cf-common-0.17.1.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}
