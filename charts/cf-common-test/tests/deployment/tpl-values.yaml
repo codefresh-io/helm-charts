@@ -1,0 +1,6 @@
+container:
+  env:
+    TPL_VAR_ONE: '{{ .Values.global.tpl }}'
+
+env:
+  TPL_VAR_TWO: '{{ .Values.global.tpl }}'

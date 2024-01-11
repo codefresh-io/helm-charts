@@ -331,7 +331,7 @@ tests:
   - it: Test main container TPL env without overrides
     values:
       - values.yaml
-      - values-tpl.yaml
+      - tpl-values.yaml
     set:
       global:
         tpl: value
@@ -346,7 +346,7 @@ tests:
   - it: Test main container TPL env with overrides
     values:
       - values.yaml
-      - values-tpl.yaml
+      - tpl-values.yaml
     set:
       global:
         tpl: value
@@ -384,7 +384,7 @@ tests:
   - it: Test main container TPL env with overrides (backward compatibility)
     values:
       - values.yaml
-      - values-tpl.yaml
+      - tpl-values.yaml
     set:
       global:
         tpl: value
