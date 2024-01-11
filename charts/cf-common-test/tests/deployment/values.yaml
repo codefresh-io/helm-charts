@@ -3,6 +3,8 @@ global:
   imagePullSecrets:
     - global-pull-secret
   volumeName: some-existing-volume
+  tplkey: "somekey"
+
 imagePullSecrets:
   - my-pull-secret
 
@@ -40,6 +42,7 @@ container:
 
   env:
     ALICE: BOB
+    TPL_VAR: "{{ .Values.global.tplkey }}"
   envFrom:
     - secretRef:
         name: my-secret
