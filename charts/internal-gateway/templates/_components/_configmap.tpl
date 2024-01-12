@@ -70,6 +70,7 @@ data:
 
       server {
         listen 8080;
+        listen [::]:8080;
 
         {{- range $key, $val := $nginxConfig.locations }}
           {{- if $val.enabled }}
