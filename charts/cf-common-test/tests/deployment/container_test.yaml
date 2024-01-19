@@ -43,6 +43,18 @@ tests:
           path: spec.template.spec.containers[0].image
           value: 839151377425.dkr.ecr.us-east-1.amazonaws.com/codefresh-inc/codefresh/cf-api:master
 
+  - it: Test main container image with empty registry set
+    set:
+      container:
+        image:
+          registry: ""
+          repository: example.com/codefresh-inc/codefresh/cf-api
+          tag: master
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: example.com/codefresh-inc/codefresh/cf-api:master
+
   - it: Test main container imagePullPolicy
     asserts:
       - equal:
