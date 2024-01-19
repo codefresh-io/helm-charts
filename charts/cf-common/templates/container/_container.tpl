@@ -15,7 +15,7 @@ Usage:
 {{- end }}
 
 - name: {{ $containerName }}
-  image: {{ include "cf-common-0.18.0.image.name" (dict "image" .Values.image "context" $) }}
+  image: {{ (include "cf-common-0.18.0.tplrender" (dict "Values" (include "cf-common-0.18.0.image.name" (dict "image" .Values.image "context" $)) "context" $)) }}
   imagePullPolicy: {{ .Values.image.pullPolicy | default "Always" }}
 
   {{- with .Values.command }}

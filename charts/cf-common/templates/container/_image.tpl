@@ -9,13 +9,13 @@ Usage:
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
-{{- $registryName := (include "cf-common-0.18.0.tplrender" (dict "Values" .image.registry "context" $)) -}}
-{{- $repositoryName := (include "cf-common-0.18.0.tplrender" (dict "Values" .image.repository "context" $)) -}}
-{{- $imageTag :=  (include "cf-common-0.18.0.tplrender" (dict "Values" .image.tag "context" $)) | toString -}}
+{{- $registryName := .image.registry -}}
+{{- $repositoryName := .image.repository -}}
+{{- $imageTag := .image.tag | toString -}}
 
 {{- if $.Values.global -}}
   {{- if $.Values.global.imageRegistry -}}
-    {{ $registryName = (include "cf-common-0.18.0.tplrender" (dict "Values" $.Values.global.imageRegistry "context" $)) }}
+    {{ $registryName = $.Values.global.imageRegistry }}
   {{- end -}}
 {{- end -}}
 
@@ -29,13 +29,13 @@ cf-api:
   imageTag: latest
 */}}
 {{- if $.Values.dockerRegistry -}}
-{{- $registryName = (include "cf-common-0.18.0.tplrender" (dict "Values" $.Values.dockerRegistry "context" $)) | trimSuffix "/" -}}
+{{- $registryName = $.Values.dockerRegistry | trimSuffix "/" -}}
 {{- end -}}
 {{- if and $.Values.image (kindIs "string" $.Values.image ) -}}
-{{- $repositoryName = (include "cf-common-0.18.0.tplrender" (dict "Values" $.Values.image "context" $)) -}}
+{{- $repositoryName = $.Values.image -}}
 {{- end -}}
 {{- if $.Values.imageTag -}}
-{{- $imageTag = (include "cf-common-0.18.0.tplrender" (dict "Values" $.Values.imageTag "context" $)) | toString -}}
+{{- $imageTag = $.Values.imageTag | toString -}}
 {{- end -}}
 
 {{- /*
@@ -43,7 +43,7 @@ For backward compatibility (onprem with private docker registry)
 */}}
 {{- if $.Values.global -}}
   {{- if and $.Values.global.privateRegistry $.Values.global.dockerRegistry -}}
-    {{ $registryName = (include "cf-common-0.18.0.tplrender" (dict "Values" $.Values.global.dockerRegistry "context" $)) | trimSuffix "/" }}
+    {{ $registryName = $.Values.global.dockerRegistry | trimSuffix "/" }}
   {{- end -}}
 {{- end -}}
 
