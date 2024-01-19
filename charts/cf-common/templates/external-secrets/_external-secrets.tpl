@@ -1,4 +1,4 @@
-{{- define "cf-common-0.18.0.external-secrets" }}
+{{- define "cf-common-0.18.1.external-secrets" }}
   {{- range $i, $secret := .Values.externalSecrets }}
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
