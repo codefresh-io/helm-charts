@@ -15,10 +15,10 @@ locationSnippet: |
   proxy_set_header X-Forwarded-Proto $scheme;
   proxy_redirect off;
 locationDirectives:
-  proxy_buffer_size: "64k"
-  proxy_buffers: "4 64k"
-  client_max_body_size: "5M"
-  client_body_buffer_size: "16k"
+  proxy_buffer_size: "128k"
+  proxy_buffers: "4 128k"
+  client_max_body_size: "10M"
+  client_body_buffer_size: "32k"
   proxy_connect_timeout: "5s"
   proxy_send_timeout: "60s"
   proxy_read_timeout: "60s"
