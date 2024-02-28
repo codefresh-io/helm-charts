@@ -72,6 +72,10 @@ data:
         listen 8080;
         listen [::]:8080;
 
+        {{- range $key, $val := $nginxConfig.serverDirectives }}
+        {{ printf "%s %s;" $key $val }}
+        {{- end }}
+
         {{- range $key, $val := $nginxConfig.locations }}
           {{- if $val.enabled }}
         location {{ $key }} {
