@@ -180,7 +180,7 @@ container:
     tag: 1.25-alpine
 
   env:
-    SIGNADOT_SANDBOX_ROUTING_KEY: ""
+    SIGNADOT_SANDBOX_ROUTING_KEY: "12345"
   envFrom: []
 
   volumeMounts:
