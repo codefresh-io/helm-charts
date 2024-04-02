@@ -179,7 +179,8 @@ container:
     repository: nginxinc/nginx-unprivileged
     tag: 1.25-alpine
 
-  env: {}
+  env:
+    SIGNADOT_SANDBOX_ROUTING_KEY: ""
   envFrom: []
 
   volumeMounts:
