@@ -13,6 +13,7 @@ locationSnippet: |
   proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
   proxy_set_header X-Forwarded-Proto $scheme;
   proxy_set_header Baggage sd-routing-key=${SIGNADOT_SANDBOX_ROUTING_KEY};
+  proxy_set_header Baggage sd-sandbox=${SIGNADOT_SANDBOX_ROUTING_KEY};
   proxy_redirect off;
 locationDirectives:
   proxy_buffer_size: "128k"
