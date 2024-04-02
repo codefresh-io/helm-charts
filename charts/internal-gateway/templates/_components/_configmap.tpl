@@ -120,8 +120,14 @@ data:
     }
 
   default.conf.template: | 
-    location / {
-        proxy_set_header Baggage sd-routing-key=${SIGNADOT_SANDBOX_ROUTING_KEY};
-        proxy_set_header Baggage sd-sandbox=${SIGNADOT_SANDBOX_ROUTING_KEY};
+    server {
+      location / {
+          proxy_set_header Baggage sd-routing-key=${SIGNADOT_SANDBOX_ROUTING_KEY};
+          proxy_set_header Baggage sd-sandbox=${SIGNADOT_SANDBOX_ROUTING_KEY};
+      }
+      location /2.0 {
+          proxy_set_header Baggage sd-routing-key=${SIGNADOT_SANDBOX_ROUTING_KEY};
+          proxy_set_header Baggage sd-sandbox=${SIGNADOT_SANDBOX_ROUTING_KEY};
+      }
     }
 {{- end }}
