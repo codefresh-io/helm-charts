@@ -182,7 +182,7 @@ container:
   env:
     SIGNADOT_SANDBOX_ROUTING_KEY: "12345"
     NGINX_ENVSUBST_TEMPLATE_DIR: /etc/nginx
-    NGINX_ENVSUBST_OUTPUT_DIR: /etc/nginx
+    NGINX_ENVSUBST_OUTPUT_DIR: /tmp
   envFrom: []
 
   volumeMounts:
