@@ -82,6 +82,24 @@ New secret implementation
 {{- end }}
 
 {{- /*
+MONGO_URI env var value
+*/}}
+{{- define "cf-common-0.18.2.classic.mongo-uri-archive-env-var-value" }}
+{{- /*
+Check for legacy global.mongoURI
+*/}}
+  {{- if if or .Values.global.mongoURIArchive .Values.global.mongoURI }}
+{{- print "$(MONGO_URI_ARCHIVE)" }}
+{{- /*
+New secret implementation
+*/}}
+  {{- else }}
+{{- print "$(MONGODB_PROTOCOL)://$(MONGODB_USER):$(MONGODB_PASSWORD)@$(MONGODB_HOST)/$(MONGODB_DATABASE_ARCHIVE)?$(MONGODB_OPTIONS)" }}
+  {{- end }}
+{{- end }}
+
+
+{{- /*
 REDIS_URL env var secret name
 */}}
 {{- define "cf-common-0.18.2.classic.redis-url-env-var-secret-name" }}
