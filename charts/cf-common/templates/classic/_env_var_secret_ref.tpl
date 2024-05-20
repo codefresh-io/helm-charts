@@ -88,7 +88,7 @@ MONGO_URI env var value
 {{- /*
 Check for legacy global.mongoURI
 */}}
-  {{- if if or .Values.global.mongoURIArchive .Values.global.mongoURI }}
+  {{- if or .Values.global.mongoURIArchive .Values.global.mongoURI }}
 {{- print "$(MONGO_URI_ARCHIVE)" }}
 {{- /*
 New secret implementation
