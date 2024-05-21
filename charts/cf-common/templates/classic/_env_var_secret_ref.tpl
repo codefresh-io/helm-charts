@@ -82,11 +82,11 @@ New secret implementation
 {{- end }}
 
 {{- /*
-MONGO_URI env var value
+MONGO_URI_ARCHIVE env var value
 */}}
 {{- define "cf-common-0.18.2.classic.mongo-uri-archive-env-var-value" }}
 {{- /*
-Check for legacy global.mongoURI
+Check for legacy global.mongoURIArchive or global.mongoURI
 */}}
   {{- if or .Values.global.mongoURIArchive .Values.global.mongoURI }}
 {{- print "$(MONGO_URI_ARCHIVE)" }}
