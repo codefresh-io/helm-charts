@@ -43,6 +43,7 @@ spec:
     {{- range $i, $key := $secret.keysFrom }}
   - extract:
       key: {{ $key.remoteSecretName | default $secret.remoteSecretName }}
+      decodingStrategy: {{ $key.decodingStrategy | default "Auto" }}
     {{- end }}
 ---
   {{- end }}
