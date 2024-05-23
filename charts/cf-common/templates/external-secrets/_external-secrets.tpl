@@ -1,11 +1,17 @@
-{{- define "cf-common-0.18.1.external-secrets" }}
+{{- define "cf-common-0.18.2.external-secrets" }}
   {{- range $i, $secret := .Values.externalSecrets }}
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
 metadata:
   name: {{ $secret.name }}
+  {{- with $secret.labels }}
+  labels: {{ toYaml . | nindent 4 }}
+  {{- end }}
+  {{- with $secret.annotations }}
+  annotations: {{ toYaml . | nindent 4 }}
+  {{- end }}
 spec:
-  refreshInterval: 1m
+  refreshInterval: {{ $secret.refreshInterval | default "1m" }}
     {{- if hasKey . "secretStoreRef" }}
   secretStoreRef:
     name: {{ .secretStoreRef.name }}
@@ -17,7 +23,8 @@ spec:
     {{- end }}
   target:
     name: {{ .name }}
-    creationPolicy: Owner
+    creationPolicy: {{ .creationPolicy | default "Owner" }}
+    deletionPolicy: {{ .deletionPolicy | default "Retain" }}
   data:
     {{- range $i, $key := $secret.keys }}
   - secretKey: {{ $key.name }}
@@ -31,6 +38,14 @@ spec:
       {{- with $key.decodingStrategy }}
       decodingStrategy: {{ . }}
       {{- end -}}
+    {{- end }}
+  dataFrom:
+    {{- range $i, $key := $secret.keysFrom }}
+  - extract:
+      key: {{ $key.remoteSecretName | default $secret.remoteSecretName }}
+      {{- with $key.decodingStrategy }}
+      decodingStrategy: {{ . }}
+      {{- end }}
     {{- end }}
 ---
   {{- end }}

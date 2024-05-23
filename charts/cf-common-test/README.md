@@ -27,6 +27,7 @@ Codefresh library chart - test chart - not for deployment!
 | configMaps | object | `{}` |  |
 | container | object | `{}` |  |
 | controller | object | `{}` |  |
+| externalSecrets | list | `[]` |  |
 | extraResources | list | `[]` |  |
 | global | object | `{}` |  |
 | hpa | object | `{}` |  |

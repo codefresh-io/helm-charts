@@ -36,3 +36,5 @@ initContainers: {}
 additionalContainers: []
 
 extraResources: []
+
+externalSecrets: []
