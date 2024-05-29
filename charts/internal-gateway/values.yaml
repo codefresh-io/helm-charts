@@ -6,6 +6,9 @@ libraryMode: true
 # List of services endpoints and port
 # @default -- See below
 codefresh:
+  cfapi-auth-svc: cfapi-auth
+  cfapi-auth-port: 80
+
   cfapi-endpoints-svc: cfapi-endpoints
   cfapi-endpoints-port: 80
 
