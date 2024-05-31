@@ -128,11 +128,11 @@ dependencies:
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
 | initContainers | object | `{}` | Map of init containers to add Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name. |
-| keda | object | `{"auth":{"enabled":false,"secretTargetRef":[]},"enabled":false,"spec":{"advanced":{},"annotations":{},"cooldownPeriod":null,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}}` | Configure KEDA Autoscaling |
+| keda | object | `{"auth":{"enabled":false,"secretTargetRef":[]},"enabled":false,"spec":{"advanced":{},"annotations":{},"cooldownPeriod":null,"envSourceContainerName":null,"fallback":{},"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}}` | Configure KEDA Autoscaling |
 | keda.auth | object | `{"enabled":false,"secretTargetRef":[]}` | TriggerAuthentication parameters Ref: https://keda.sh/docs/2.14/concepts/authentication/ |
 | keda.auth.secretTargetRef | list | `[]` | Set secret target reference |
 | keda.enabled | bool | `false` | Enable ScaledObject |
-| keda.spec | object | `{"advanced":{},"annotations":{},"cooldownPeriod":null,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}` | ScaledObject parameters Ref: https://keda.sh/docs/2.14/concepts/scaling-deployments/ |
+| keda.spec | object | `{"advanced":{},"annotations":{},"cooldownPeriod":null,"envSourceContainerName":null,"fallback":{},"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}` | ScaledObject parameters Ref: https://keda.sh/docs/2.14/concepts/scaling-deployments/ |
 | keda.spec.envSourceContainerName | string | `nil` | Override envSourceContainerName |
 | keda.spec.scaleTargetRef | object | `{}` | Override scaleTargetRef |
 | keda.spec.triggers | list | `[]` | Configure Scalers Ref: https://keda.sh/docs/2.14/scalers/ |
