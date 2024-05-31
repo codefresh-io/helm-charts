@@ -42,10 +42,8 @@ spec:
   {{- end }}
   pollingInterval: {{ .Values.keda.spec.pollingInterval | default 30 }}
   cooldownPeriod: {{ .Values.keda.spec.cooldownPeriod | default 300 }}
-  {{- if (eq 0 (int .Values.keda.spec.idleReplicaCount)) }}
+  {{- with .Values.keda.spec.idleReplicaCount }}
   idleReplicaCount: 0
-  {{- else }}
-  {{- fail "ERROR: Only 0 is allowed for idleReplicaCount" }}
   {{- end }}
   minReplicaCount: {{ .Values.keda.spec.minReplicaCount | default 1 }}
   maxReplicaCount: {{ .Values.keda.spec.maxReplicaCount | default 100 }}

@@ -574,7 +574,7 @@ keda:
     envSourceContainerName: null
     pollingInterval: null # default to 30
     cooldownPeriod: null # default to 300
-    # idleReplicaCount: null # Only 0 is allowed!
+    idleReplicaCount: null # Only 0 is allowed!
     minReplicaCount: null # default to 1
     maxReplicaCount: null # default to 100
     fallback: {}

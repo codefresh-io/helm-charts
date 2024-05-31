@@ -27,7 +27,6 @@ tests:
         spec:
           minReplicaCount: 2
           maxReplicaCount: 10
-          idleReplicaCount: 0
     asserts:
       - equal:
           path: spec.minReplicaCount
@@ -35,9 +34,8 @@ tests:
       - equal:
           path: spec.maxReplicaCount
           value: 10
-      - equal:
+      - isNull:
           path: spec.idleReplicaCount
-          value: 0
 
   - it: Test ScaledObject pollingInterval/cooldownPeriod
     values:

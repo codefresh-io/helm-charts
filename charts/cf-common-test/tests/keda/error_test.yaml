@@ -3,7 +3,7 @@ suite: KEDA ScaledObject error handlers
 templates:
   - templates/scaled-object.yaml
 tests:
-  - it: Test ScaledObject non-zero idleReplicaCount
+  - it: Test ScaledObject zero idleReplicaCount
     values:
       - values.yaml
     set:
@@ -11,8 +11,9 @@ tests:
         spec:
           idleReplicaCount: 1
     asserts:
-      - failedTemplate:
-          errorMessage: "Only 0 is allowed for idleReplicaCount"
+      - equal:
+          path: spec.idleReplicaCount
+          value: 0
 
   - it: Test ScaledObject fallback
     values:
