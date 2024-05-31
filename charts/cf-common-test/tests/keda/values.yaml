@@ -1,0 +1,39 @@
+# mock deployment for KEDA
+controller:
+  enabled: true
+  type: deployment
+  replicas: 2
+  deployment:
+    strategy: Recreate
+  revisionHistoryLimit: 5
+
+container:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: master
+    pullPolicy: Always
+
+keda:
+  scaled-object:
+    enabled: true
+    annotations:
+      autoscaling.keda.sh/paused: "true"
+    triggers:
+      - type: rabbitmq
+        metadata:
+          protocol: http
+          mode: QueueLength
+          value: "20"
+          useRegex: "true"
+          queueName: event-handler.*
+      - type: cpu
+        metadata:
+          type: Utilization
+          value: "70"
+  trigger-authentication:
+    enabled: false
+    secretTargetRef:
+      - parameter: host
+        name: trigger-auth-rabbitmq-conn
+        key: host

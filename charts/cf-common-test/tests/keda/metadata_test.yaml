@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: KEDA ScaledObject metadata
+templates:
+  - templates/scaled-object.yaml
+tests:
+  - it: Test default KEDA ScaledObject metadata
+    values:
+      - values.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: ScaledObject
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test KEDA ScaledObject annotations
+    values:
+      - values.yaml
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: metadata.annotations
+          value:
+            autoscaling.keda.sh/paused: "true"
+
+

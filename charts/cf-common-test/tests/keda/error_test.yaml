@@ -1,0 +1,41 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: KEDA ScaledObject error handlers
+templates:
+  - templates/scaled-object.yaml
+tests:
+  - it: Test ScaledObject non-zero idleReplicaCount
+    values:
+      - values.yaml
+    set:
+      keda:
+        scaled-object:
+          idleReplicaCount: 1
+    asserts:
+      - failedTemplate:
+          errorMessage: "Only 0 is allowed for idleReplicaCount"
+
+  - it: Test ScaledObject fallback
+    values:
+      - values.yaml
+    set:
+      keda:
+        scaled-object:
+          fallback:
+            failureThreshold: null
+            replicas: 6
+    asserts:
+      - failedTemplate:
+          errorMessage: "Values.keda.scaled-object.fallback.failureThreshold is required!"
+
+  - it: Test ScaledObject fallback
+    values:
+      - values.yaml
+    set:
+      keda:
+        scaled-object:
+          fallback:
+            failureThreshold: 3
+            replicas: null
+    asserts:
+      - failedTemplate:
+          errorMessage: "Values.keda.scaled-object.fallback.replicas is required!"

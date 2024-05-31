@@ -1,0 +1,46 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: KEDA TriggerAuthentication spec
+templates:
+  - templates/trigger-authentication.yaml
+tests:
+  - it: Test TriggerAuthentication metadata
+    values:
+      - values.yaml
+    set:
+      keda:
+        trigger-authentication:
+          enabled: true
+    asserts:
+      - hasDocuments:
+          count: 1
+      - isKind:
+          of: TriggerAuthentication
+      - equal:
+          path: metadata.labels
+          value:
+            app.kubernetes.io/instance: RELEASE-NAME
+            app.kubernetes.io/managed-by: Helm
+            app.kubernetes.io/name: cf-common-test
+            helm.sh/chart: cf-common-test-0.0.0
+      - equal:
+          path: metadata.name
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test TriggerAuthentication spec
+    set:
+      keda:
+        trigger-authentication:
+          enabled: true
+    values:
+      - values.yaml
+    asserts:
+      - isNotEmpty:
+          path: spec.secretTargetRef
+      - contains:
+          path: spec.secretTargetRef
+          content:
+            parameter: host
+            name: trigger-auth-rabbitmq-conn
+            key: host
+
+
