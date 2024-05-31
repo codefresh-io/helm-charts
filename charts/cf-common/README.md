@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.18.2](https://img.shields.io/badge/Version-0.18.2-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.19.0](https://img.shields.io/badge/Version-0.19.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.18.2
+  version: 0.19.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -51,6 +51,7 @@ dependencies:
 | container.image.repository | string | `nil` | Set image repository |
 | container.image.tag | string | `nil` | Set image tag |
 | container.lifecycle | object | `{}` | Set the lifecycle hooks for container |
+| container.nameOverride | string | `""` | Set the container name |
 | container.probes.liveness.enabled | bool | `false` | Enable liveness probe |
 | container.probes.liveness.exec.command | list | `[]` | Set exec probe commands |
 | container.probes.liveness.httpGet.path | string | `nil` | Set httpGet probe path |
@@ -127,6 +128,15 @@ dependencies:
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
 | initContainers | object | `{}` | Map of init containers to add Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name. |
+| keda | object | `{"scaled-object":{"advanced":{},"annotations":{},"cooldownPeriod":null,"enabled":false,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]},"trigger-authentication":{"enabled":false,"secretTargetRef":[]}}` | Configure KEDA Autoscaling |
+| keda.scaled-object | object | `{"advanced":{},"annotations":{},"cooldownPeriod":null,"enabled":false,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}` | ScaledObject parameters Ref: https://keda.sh/docs/2.14/concepts/scaling-deployments/ |
+| keda.scaled-object.annotations | object | `{}` | ScaledObject spec |
+| keda.scaled-object.enabled | bool | `false` | Enable ScaledObject |
+| keda.scaled-object.envSourceContainerName | string | `nil` | Override envSourceContainerName |
+| keda.scaled-object.scaleTargetRef | object | `{}` | Override scaleTargetRef |
+| keda.scaled-object.triggers | list | `[]` | Configure Scalers Ref: https://keda.sh/docs/2.14/scalers/ |
+| keda.trigger-authentication | object | `{"enabled":false,"secretTargetRef":[]}` | TriggerAuthentication parameters Ref: https://keda.sh/docs/2.14/concepts/authentication/ |
+| keda.trigger-authentication.secretTargetRef | list | `[]` | Set secret target reference |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version |
 | nameOverride | string | `""` | Provide a name in place of chart name |
 | nodeSelector | object | `{}` | Set node selection constrains |
