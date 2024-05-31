@@ -33,7 +33,7 @@ spec:
     {{- else }}
     {{- required "Controller type is required! Only rollout/deploymeny is allowed!" .Values.controller.type }}
     {{- end }}
-    name: {{  default $controllerName }}
+    name: {{ $controllerName }}
     envSourceContainerName: {{ index .Values "keda" "scaled-object" "envSourceContainerName" | default $containerName }}
   {{- end }}
   pollingInterval: {{ index .Values "keda" "scaled-object" "pollingInterval" | default 30 }}
