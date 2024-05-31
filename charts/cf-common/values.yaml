@@ -562,12 +562,11 @@ hpa:
 
 # -- Configure KEDA Autoscaling
 keda:
+  # -- Enable ScaledObject
+  enabled: false
   # -- ScaledObject parameters
   # Ref: https://keda.sh/docs/2.14/concepts/scaling-deployments/
-  scaled-object:
-    # -- Enable ScaledObject
-    enabled: false
-    # -- ScaledObject spec
+  spec:
     annotations: {}
     # -- Override scaleTargetRef
     scaleTargetRef: {}
@@ -593,7 +592,7 @@ keda:
     #       queueName: my_queue_name
   # -- TriggerAuthentication parameters
   # Ref: https://keda.sh/docs/2.14/concepts/authentication/
-  trigger-authentication:
+  auth:
     enabled: false
     # -- Set secret target reference
     secretTargetRef: []

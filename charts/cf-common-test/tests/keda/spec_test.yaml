@@ -24,7 +24,7 @@ tests:
       - values.yaml
     set:
       keda:
-        scaled-object:
+        spec:
           minReplicaCount: 2
           maxReplicaCount: 10
           idleReplicaCount: 0
@@ -44,7 +44,7 @@ tests:
       - values.yaml
     set:
       keda:
-        scaled-object:
+        spec:
           pollingInterval: 60
           cooldownPeriod: 600
     asserts:
@@ -72,7 +72,7 @@ tests:
       - values.yaml
     set:
       keda:
-        scaled-object:
+        spec:
           scaleTargetRef:
             apiVersion: argoproj.io/v1alpha1
             kind: Rollout

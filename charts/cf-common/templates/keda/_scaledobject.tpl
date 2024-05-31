@@ -1,7 +1,7 @@
 {{- define "cf-common-0.19.0.keda.scaled-object" }}
-{{- if and (index .Values "keda" "scaled-object" "enabled") }}
+{{- if .Values.keda.enabled }}
 
-{{- if and (index .Values "hpa" "enabled") }}
+{{- if and .Values.hpa.enabled }}
 {{- fail "ERROR: Both KEDA ScaledObject and HPA are enable. Disable HPA or Keda ScaledObject!" }}
 {{- end }}
 
@@ -20,11 +20,11 @@ metadata:
   name: {{ include "cf-common-0.19.0.names.fullname" . }}
   labels: {{ include "cf-common-0.19.0.labels.standard" . | nindent 4 }}
   annotations:
-  {{- with (index .Values "keda" "scaled-object" "annotations" ) }}
+  {{- with .Values.keda.spec.annotations }}
     {{- toYaml . | nindent 4 }}
   {{- end }}
 spec:
-  {{- with index .Values "keda" "scaled-object" "scaleTargetRef" }}
+  {{- with .Values.keda.spec.scaleTargetRef }}
   scaleTargetRef: {{ toYaml . | nindent 4 }}
   {{- else }}
   scaleTargetRef:
@@ -38,23 +38,23 @@ spec:
     {{- required "Controller type is required! Only rollout/deployment is allowed!" .Values.controller.type }}
     {{- end }}
     name: {{ $controllerName }}
-    envSourceContainerName: {{ index .Values "keda" "scaled-object" "envSourceContainerName" | default $containerName }}
+    envSourceContainerName: {{ .Values.keda.spec.envSourceContainerName | default $containerName }}
   {{- end }}
-  pollingInterval: {{ index .Values "keda" "scaled-object" "pollingInterval" | default 30 }}
-  cooldownPeriod: {{ index .Values "keda" "scaled-object" "cooldownPeriod" | default 300 }}
-  {{- if (eq 0 (int (index .Values "keda" "scaled-object" "idleReplicaCount"))) }}
+  pollingInterval: {{ .Values.keda.spec.pollingInterval | default 30 }}
+  cooldownPeriod: {{ .Values.keda.spec.cooldownPeriod | default 300 }}
+  {{- if (eq 0 (int .Values.keda.spec.idleReplicaCount)) }}
   idleReplicaCount: 0
   {{- else }}
   {{- fail "ERROR: Only 0 is allowed for idleReplicaCount" }}
   {{- end }}
-  minReplicaCount: {{ index .Values "keda" "scaled-object" "minReplicaCount" | default 1 }}
-  maxReplicaCount: {{ index .Values "keda" "scaled-object" "maxReplicaCount" | default 100 }}
-  {{- with (index .Values "keda" "scaled-object" "fallback" ) }}
+  minReplicaCount: {{ .Values.keda.spec.minReplicaCount | default 1 }}
+  maxReplicaCount: {{ .Values.keda.spec.maxReplicaCount | default 100 }}
+  {{- with .Values.keda.spec.fallback }}
   fallback:
-    failureThreshold: {{- required "Values.keda.scaled-object.fallback.failureThreshold is required!" .failureThreshold }}
-    replicas: {{- required "Values.keda.scaled-object.fallback.replicas is required!" .replicas }}
+    failureThreshold: {{- required "Values.keda.spec.fallback.failureThreshold is required!" .failureThreshold }}
+    replicas: {{- required "Values.keda.spec.fallback.replicas is required!" .replicas }}
   {{- end }}
-  {{- with (index .Values "keda" "scaled-object" "advanced" ) }}
+  {{- with .Values.keda.spec.advanced }}
   advanced:
     restoreToOriginalReplicaCount: {{ .restoreToOriginalReplicaCount | default false }}
     horizontalPodAutoscalerConfig:
@@ -64,13 +64,13 @@ spec:
       {{- end -}}
   {{- end }}
   triggers:
-  {{- range $triggerIndex, $triggerItem := (index .Values "keda" "scaled-object" "triggers" ) }}
+  {{- range $triggerIndex, $triggerItem := .Values.keda.spec.triggers }}
   - type: {{ $triggerItem.type }}
     metadata: {{ $triggerItem.metadata | toYaml | nindent 6 }}
     {{- with $triggerItem.metricType }}
     metricType: {{ . }}
     {{- end }}
-    {{- if and (index $.Values "keda" "trigger-authentication" "enabled") }}
+    {{- if and $.Values.keda.auth.enabled }}
     authenticationRef:
       name: {{ include "cf-common-0.19.0.names.fullname" $ }}
     {{- end }}

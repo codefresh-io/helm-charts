@@ -18,8 +18,8 @@ hpa:
   enabled: false
 
 keda:
-  scaled-object:
-    enabled: true
+  enabled: true
+  spec:
     annotations:
       autoscaling.keda.sh/paused: "true"
     triggers:
@@ -27,7 +27,7 @@ keda:
         metadata:
           type: Utilization
           value: "70"
-  trigger-authentication:
+  auth:
     enabled: false
     secretTargetRef:
       - parameter: parameter

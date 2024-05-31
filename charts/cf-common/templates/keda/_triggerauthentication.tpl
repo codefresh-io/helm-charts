@@ -1,11 +1,11 @@
 {{- define "cf-common-0.19.0.keda.trigger-authentication" }}
-  {{- if and (index .Values "keda" "trigger-authentication" "enabled") (index .Values "keda" "scaled-object" "enabled") }}
+  {{- if and .Values.keda.auth.enabled .Values.keda.enabled }}
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:
   name: {{ include "cf-common-0.19.0.names.fullname" . }}
   labels: {{ include "cf-common-0.19.0.labels.standard" . | nindent 4 }}
 spec:
-  secretTargetRef: {{ toYaml (index .Values "keda" "trigger-authentication" "secretTargetRef" ) | nindent 4 }}
+  secretTargetRef: {{ toYaml .Values.keda.auth.secretTargetRef | nindent 4 }}
   {{- end }}
 {{- end }}

@@ -8,7 +8,7 @@ tests:
       - values.yaml
     set:
       keda:
-        trigger-authentication:
+        auth:
           enabled: true
     asserts:
       - hasDocuments:
@@ -29,7 +29,7 @@ tests:
   - it: Test TriggerAuthentication spec
     set:
       keda:
-        trigger-authentication:
+        auth:
           enabled: true
     values:
       - values.yaml

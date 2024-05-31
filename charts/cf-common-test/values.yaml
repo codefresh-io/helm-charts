@@ -40,5 +40,5 @@ extraResources: []
 externalSecrets: []
 
 keda:
-  scaled-object: {}
-  trigger-authentication: {}
+  spec: {}
+  auth: {}

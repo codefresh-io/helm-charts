@@ -8,7 +8,7 @@ tests:
       - values.yaml
     set:
       keda:
-        scaled-object:
+        spec:
           idleReplicaCount: 1
     asserts:
       - failedTemplate:
@@ -19,26 +19,26 @@ tests:
       - values.yaml
     set:
       keda:
-        scaled-object:
+        spec:
           fallback:
             failureThreshold: null
             replicas: 6
     asserts:
       - failedTemplate:
-          errorMessage: "Values.keda.scaled-object.fallback.failureThreshold is required!"
+          errorMessage: "Values.keda.spec.fallback.failureThreshold is required!"
 
   - it: Test ScaledObject fallback
     values:
       - values.yaml
     set:
       keda:
-        scaled-object:
+        spec:
           fallback:
             failureThreshold: 3
             replicas: null
     asserts:
       - failedTemplate:
-          errorMessage: "Values.keda.scaled-object.fallback.replicas is required!"
+          errorMessage: "Values.keda.spec.fallback.replicas is required!"
 
   - it: Test both ScaledObject and HPA enabled
     values:
@@ -47,7 +47,7 @@ tests:
       hpa:
         enabled: true
       keda:
-        scaled-object:
+        spec:
           enabled: true
     asserts:
       - failedTemplate:
