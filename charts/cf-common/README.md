@@ -128,15 +128,14 @@ dependencies:
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
 | initContainers | object | `{}` | Map of init containers to add Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name. |
-| keda | object | `{"scaled-object":{"advanced":{},"annotations":{},"cooldownPeriod":null,"enabled":false,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]},"trigger-authentication":{"enabled":false,"secretTargetRef":[]}}` | Configure KEDA Autoscaling |
-| keda.scaled-object | object | `{"advanced":{},"annotations":{},"cooldownPeriod":null,"enabled":false,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}` | ScaledObject parameters Ref: https://keda.sh/docs/2.14/concepts/scaling-deployments/ |
-| keda.scaled-object.annotations | object | `{}` | ScaledObject spec |
-| keda.scaled-object.enabled | bool | `false` | Enable ScaledObject |
-| keda.scaled-object.envSourceContainerName | string | `nil` | Override envSourceContainerName |
-| keda.scaled-object.scaleTargetRef | object | `{}` | Override scaleTargetRef |
-| keda.scaled-object.triggers | list | `[]` | Configure Scalers Ref: https://keda.sh/docs/2.14/scalers/ |
-| keda.trigger-authentication | object | `{"enabled":false,"secretTargetRef":[]}` | TriggerAuthentication parameters Ref: https://keda.sh/docs/2.14/concepts/authentication/ |
-| keda.trigger-authentication.secretTargetRef | list | `[]` | Set secret target reference |
+| keda | object | `{"auth":{"enabled":false,"secretTargetRef":[]},"enabled":false,"spec":{"advanced":{},"annotations":{},"cooldownPeriod":null,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}}` | Configure KEDA Autoscaling |
+| keda.auth | object | `{"enabled":false,"secretTargetRef":[]}` | TriggerAuthentication parameters Ref: https://keda.sh/docs/2.14/concepts/authentication/ |
+| keda.auth.secretTargetRef | list | `[]` | Set secret target reference |
+| keda.enabled | bool | `false` | Enable ScaledObject |
+| keda.spec | object | `{"advanced":{},"annotations":{},"cooldownPeriod":null,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}` | ScaledObject parameters Ref: https://keda.sh/docs/2.14/concepts/scaling-deployments/ |
+| keda.spec.envSourceContainerName | string | `nil` | Override envSourceContainerName |
+| keda.spec.scaleTargetRef | object | `{}` | Override scaleTargetRef |
+| keda.spec.triggers | list | `[]` | Configure Scalers Ref: https://keda.sh/docs/2.14/scalers/ |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version |
 | nameOverride | string | `""` | Provide a name in place of chart name |
 | nodeSelector | object | `{}` | Set node selection constrains |
