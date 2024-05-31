@@ -2,7 +2,7 @@
 {{- if .Values.keda.enabled }}
 
 {{- if and .Values.hpa.enabled }}
-{{- fail "ERROR: Both KEDA ScaledObject and HPA are enable. Disable HPA or Keda ScaledObject!" }}
+{{- fail "ERROR: Both KEDA ScaledObject and HPA are enabled. Disable HPA or Keda ScaledObject!" }}
 {{- end }}
 
 {{- $controllerName := include "cf-common-0.19.0.names.fullname" . -}}

@@ -51,4 +51,4 @@ tests:
           enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "Both KEDA ScaledObject and HPA are enable. Disable HPA or Keda ScaledObject!"
+          errorMessage: "Both KEDA ScaledObject and HPA are enabled. Disable HPA or Keda ScaledObject!"
