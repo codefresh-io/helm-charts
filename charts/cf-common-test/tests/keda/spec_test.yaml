@@ -62,16 +62,6 @@ tests:
       - contains:
           path: spec.triggers
           content:
-            type: rabbitmq
-            metadata:
-              mode: QueueLength
-              protocol: http
-              queueName: event-handler.*
-              useRegex: "true"
-              value: "20"
-      - contains:
-          path: spec.triggers
-          content:
             type: cpu
             metadata:
               type: Utilization

@@ -39,8 +39,8 @@ tests:
       - contains:
           path: spec.secretTargetRef
           content:
-            parameter: host
-            name: trigger-auth-rabbitmq-conn
-            key: host
+            parameter: parameter
+            name: name
+            key: key
 
 

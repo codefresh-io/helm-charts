@@ -14,19 +14,15 @@ container:
     tag: master
     pullPolicy: Always
 
+hpa:
+  enabled: false
+
 keda:
   scaled-object:
     enabled: true
     annotations:
       autoscaling.keda.sh/paused: "true"
     triggers:
-      - type: rabbitmq
-        metadata:
-          protocol: http
-          mode: QueueLength
-          value: "20"
-          useRegex: "true"
-          queueName: event-handler.*
       - type: cpu
         metadata:
           type: Utilization
@@ -34,6 +30,6 @@ keda:
   trigger-authentication:
     enabled: false
     secretTargetRef:
-      - parameter: host
-        name: trigger-auth-rabbitmq-conn
-        key: host
+      - parameter: parameter
+        name: name
+        key: key

@@ -1,6 +1,10 @@
 {{- define "cf-common-0.19.0.keda.scaled-object" }}
 {{- if and (index .Values "keda" "scaled-object" "enabled") }}
 
+{{- if and (index .Values "hpa" "enabled") }}
+{{- fail "ERROR: Both KEDA ScaledObject and HPA are enable. Disable HPA or Keda ScaledObject!" }}
+{{- end }}
+
 {{- $controllerName := include "cf-common-0.19.0.names.fullname" . -}}
   {{- if and (hasKey .Values.controller "nameOverride") .Values.controller.nameOverride -}}
     {{- $controllerName = printf "%v-%v" $controllerName .Values.controller.nameOverride -}}
@@ -31,7 +35,7 @@ spec:
     apiVersion: apps/v1
     kind: Deployment
     {{- else }}
-    {{- required "Controller type is required! Only rollout/deploymeny is allowed!" .Values.controller.type }}
+    {{- required "Controller type is required! Only rollout/deployment is allowed!" .Values.controller.type }}
     {{- end }}
     name: {{ $controllerName }}
     envSourceContainerName: {{ index .Values "keda" "scaled-object" "envSourceContainerName" | default $containerName }}

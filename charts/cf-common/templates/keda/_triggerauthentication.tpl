@@ -1,5 +1,5 @@
 {{- define "cf-common-0.19.0.keda.trigger-authentication" }}
-  {{- if (index .Values "keda" "trigger-authentication" "enabled") }}
+  {{- if and (index .Values "keda" "trigger-authentication" "enabled") (index .Values "keda" "scaled-object" "enabled") }}
 apiVersion: keda.sh/v1alpha1
 kind: TriggerAuthentication
 metadata:

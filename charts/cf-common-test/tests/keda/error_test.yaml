@@ -39,3 +39,16 @@ tests:
     asserts:
       - failedTemplate:
           errorMessage: "Values.keda.scaled-object.fallback.replicas is required!"
+
+  - it: Test both ScaledObject and HPA enabled
+    values:
+      - values.yaml
+    set:
+      hpa:
+        enabled: true
+      keda:
+        scaled-object:
+          enabled: true
+    asserts:
+      - failedTemplate:
+          errorMessage: "Both KEDA ScaledObject and HPA are enable. Disable HPA or Keda ScaledObject!"
