@@ -33,6 +33,8 @@ Codefresh library chart - test chart - not for deployment!
 | hpa | object | `{}` |  |
 | ingress | object | `{}` |  |
 | initContainers | object | `{}` |  |
+| keda.auth | object | `{}` |  |
+| keda.spec | object | `{}` |  |
 | nodeSelector | object | `{}` |  |
 | pdb | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |

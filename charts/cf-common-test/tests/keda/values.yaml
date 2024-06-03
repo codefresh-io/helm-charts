@@ -1,0 +1,35 @@
+# mock deployment for KEDA
+controller:
+  enabled: true
+  type: deployment
+  replicas: 2
+  deployment:
+    strategy: Recreate
+  revisionHistoryLimit: 5
+
+container:
+  image:
+    registry: docker.io
+    repository: nginx
+    tag: master
+    pullPolicy: Always
+
+hpa:
+  enabled: false
+
+keda:
+  enabled: true
+  spec:
+    annotations:
+      autoscaling.keda.sh/paused: "true"
+    triggers:
+      - type: cpu
+        metadata:
+          type: Utilization
+          value: "70"
+  auth:
+    enabled: false
+    secretTargetRef:
+      - parameter: parameter
+        name: name
+        key: key

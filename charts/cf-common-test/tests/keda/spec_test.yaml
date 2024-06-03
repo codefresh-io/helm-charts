@@ -1,0 +1,88 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: KEDA ScaledObject spec
+templates:
+  - templates/scaled-object.yaml
+tests:
+  - it: Test ScaledObject default spec
+    values:
+      - values.yaml
+    asserts:
+      - isNotEmpty:
+          path: spec.scaleTargetRef
+      - equal:
+          path: spec.scaleTargetRef.kind
+          value: Deployment
+      - equal:
+          path: spec.scaleTargetRef.name
+          value: RELEASE-NAME-cf-common-test
+      - equal:
+          path: spec.scaleTargetRef.envSourceContainerName
+          value: RELEASE-NAME-cf-common-test
+
+  - it: Test ScaledObject min/max/idle replicas
+    values:
+      - values.yaml
+    set:
+      keda:
+        spec:
+          minReplicaCount: 2
+          maxReplicaCount: 10
+    asserts:
+      - equal:
+          path: spec.minReplicaCount
+          value: 2
+      - equal:
+          path: spec.maxReplicaCount
+          value: 10
+      - isNull:
+          path: spec.idleReplicaCount
+
+  - it: Test ScaledObject pollingInterval/cooldownPeriod
+    values:
+      - values.yaml
+    set:
+      keda:
+        spec:
+          pollingInterval: 60
+          cooldownPeriod: 600
+    asserts:
+      - equal:
+          path: spec.pollingInterval
+          value: 60
+      - equal:
+          path: spec.cooldownPeriod
+          value: 600
+
+  - it: Test ScaledObject triggers
+    values:
+      - values.yaml
+    asserts:
+      - contains:
+          path: spec.triggers
+          content:
+            type: cpu
+            metadata:
+              type: Utilization
+              value: "70"
+
+  - it: Test ScaledObject envSourceContainerName
+    values:
+      - values.yaml
+    set:
+      keda:
+        spec:
+          scaleTargetRef:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Rollout
+            name: my-rollout
+            envSourceContainerName: my-container
+    asserts:
+      - equal:
+          path: spec.scaleTargetRef
+          value:
+            apiVersion: argoproj.io/v1alpha1
+            kind: Rollout
+            name: my-rollout
+            envSourceContainerName: my-container
+
+

@@ -38,3 +38,7 @@ additionalContainers: []
 extraResources: []
 
 externalSecrets: []
+
+keda:
+  spec: {}
+  auth: {}
