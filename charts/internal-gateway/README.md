@@ -1,6 +1,6 @@
 # internal-gateway
 
-![Version: 0.6.0](https://img.shields.io/badge/Version-0.6.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 A Helm chart for Codefresh Internal Gateway
 
@@ -23,7 +23,7 @@ A Helm chart for Codefresh Internal Gateway
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
 | codefresh | object | See below | Codefresh platform settings List of services endpoints and port |
-| codefresh.serviceEndpoints | object | `{"argo-platform-api-events":{},"argo-platform-api-graphql":{},"argo-platform-ui":{},"cfapi-admin":{},"cfapi-downloadlogmanager":{},"cfapi-endpoints":{},"cfapi-environments":{},"cfapi-gitops-resource-receiver":{},"cfapi-kubernetes-endpoints":{},"cfapi-kubernetesresourcemonitor":{},"cfapi-teams":{},"cfapi-test-reporting":{},"cfapi-ws":{},"cfui":{}}` | Override defaults here! |
+| codefresh.serviceEndpoints | object | `{"argo-platform-api-events":{},"argo-platform-api-graphql":{},"argo-platform-ui":{},"cfapi-admin":{},"cfapi-auth":{},"cfapi-downloadlogmanager":{},"cfapi-endpoints":{},"cfapi-environments":{},"cfapi-gitops-resource-receiver":{},"cfapi-kubernetes-endpoints":{},"cfapi-kubernetesresourcemonitor":{},"cfapi-teams":{},"cfapi-test-reporting":{},"cfapi-ws":{},"cfui":{}}` | Override defaults here! |
 | container | object | See below | Main container parameters |
 | containerSecurityContext | object | See below | Container security context parameters |
 | controller | object | See below | Controller parameters |

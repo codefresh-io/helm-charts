@@ -1,6 +1,9 @@
 {{- define "internal-gateway.default-values" }}
 codefresh:
   serviceEndpoints:
+    cfapi-auth:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh "cfapi-auth-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
+      port: {{ index .Values.codefresh "cfapi-auth-port" }}
     cfapi-endpoints:
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "cfapi-endpoints-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "cfapi-endpoints-port" }}
