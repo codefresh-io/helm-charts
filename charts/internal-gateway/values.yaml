@@ -65,6 +65,7 @@ codefresh:
 
   # -- Override defaults here!
   serviceEndpoints:
+    cfapi-auth: {}
     cfapi-endpoints: {}
     cfapi-environments: {}
     cfapi-downloadlogmanager: {}

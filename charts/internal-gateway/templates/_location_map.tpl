@@ -26,6 +26,9 @@ locationDirectives:
 
 {{- define "internal-gateway.platform-endpoints-defaults" }}
 serviceEndpoints:
+  cfapi-auth:
+    svc: cfapi-auth
+    port: 80
   cfapi-endpoints:
     svc: cfapi-endpoints
     port: 80
