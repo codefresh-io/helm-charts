@@ -2,16 +2,16 @@
 Renders Extra objects defined at .Values.extraResources
 Must be called from chart root context.
 Usage:
-{{- include "cf-common-0.19.0.extraResources" . -}}
+{{- include "cf-common-0.19.1.extraResources" . -}}
 */}}
 
-{{- define "cf-common-0.19.0.extraResources" -}}
+{{- define "cf-common-0.19.1.extraResources" -}}
 
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
 
 {{- range .Values.extraResources }}
-{{ include "cf-common-0.19.0.tplrender" (dict "Values" . "context" $) }}
+{{ include "cf-common-0.19.1.tplrender" (dict "Values" . "context" $) }}
 {{- end }}
 
 {{- end -}}
