@@ -1,0 +1,2 @@
+{{ $templateName := printf "cf-common-%s.keda.trigger-authentication" (index .Subcharts "cf-common").Chart.Version }}
+{{- include $templateName . -}}
