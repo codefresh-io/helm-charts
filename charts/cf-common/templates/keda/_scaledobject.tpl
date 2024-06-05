@@ -49,8 +49,8 @@ spec:
   maxReplicaCount: {{ .Values.keda.spec.maxReplicaCount | default 100 }}
   {{- if .Values.keda.spec.fallback }}
   fallback:
-    failureThreshold: {{- required "Values.keda.spec.fallback.failureThreshold is required!" .Values.keda.spec.fallback.failureThreshold }}
-    replicas: {{- required "Values.keda.spec.fallback.replicas is required!" .Values.keda.spec.fallback.replicas }}
+    failureThreshold: {{ required "Values.keda.spec.fallback.failureThreshold is required!" .Values.keda.spec.fallback.failureThreshold }}
+    replicas: {{ required "Values.keda.spec.fallback.replicas is required!" .Values.keda.spec.fallback.replicas }}
   {{- end }}
   {{- with .Values.keda.spec.advanced }}
   advanced:
