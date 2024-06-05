@@ -2,9 +2,9 @@
 Prints full image name.
 Called from container template.
 Usage:
-{{ include "cf-common-0.19.1.image.name" (dict "image" .Values.container.image "context" $) }}
+{{ include "cf-common-0.19.2.image.name" (dict "image" .Values.container.image "context" $) }}
 */}}
-{{- define "cf-common-0.19.1.image.name" -}}
+{{- define "cf-common-0.19.2.image.name" -}}
 
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
@@ -59,9 +59,9 @@ For backward compatibility (onprem with private docker registry)
 Prints full image name.
 Must be called from chart root context.
 Usage:
-{{ include "cf-common-0.19.1.image.pullSecrets" . }}
+{{ include "cf-common-0.19.2.image.pullSecrets" . }}
 */}}
-{{- define "cf-common-0.19.1.image.pullSecrets" -}}
+{{- define "cf-common-0.19.2.image.pullSecrets" -}}
   {{- $pullSecrets := list }}
 
   {{- if .Values.global.imagePullSecrets }}
@@ -70,7 +70,7 @@ Usage:
     {{- end -}}
 
     {{- range .Values.global.imagePullSecrets -}}
-      {{- $pullSecrets = append $pullSecrets (include "cf-common-0.19.1.tplrender" (dict "Values" . "context" $)) -}}
+      {{- $pullSecrets = append $pullSecrets (include "cf-common-0.19.2.tplrender" (dict "Values" . "context" $)) -}}
     {{- end -}}
   {{- end -}}
 
@@ -80,7 +80,7 @@ Usage:
     {{- end -}}
 
     {{- range .Values.imagePullSecrets -}}
-      {{- $pullSecrets = append $pullSecrets (include "cf-common-0.19.1.tplrender" (dict "Values" . "context" $)) -}}
+      {{- $pullSecrets = append $pullSecrets (include "cf-common-0.19.2.tplrender" (dict "Values" . "context" $)) -}}
     {{- end -}}
   {{- end -}}
 
