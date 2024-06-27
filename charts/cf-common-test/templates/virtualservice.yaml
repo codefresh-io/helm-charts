@@ -1,7 +1,2 @@
-{{ $app := "api-graphql" }}
 {{ $templateName := printf "cf-common-%s.signadot.virtualservice" (index .Subcharts "cf-common").Chart.Version }}
-{{- $context := deepCopy . }}
-
-{{ $_ := set $context.Values "fullnameOverride" (printf "argo-platform-%s" $app) }}
-
-{{- include $templateName $context -}}
+{{- include $templateName . -}}
