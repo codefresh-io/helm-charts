@@ -11,6 +11,8 @@ global:
   controller: {}
   # -- Global Env vars. NO precedence over `.Values.container.env`
   env: {}
+  # -- Cluster domain
+  clusterDomain: ""
 
 # -- Provide a name in place of chart name
 nameOverride: ""
@@ -604,6 +606,10 @@ keda:
 
 # -- Configure Pod Disruption Budget
 # @default -- See below
+
+signadot:
+  enabled: false
+
 pdb:
   # -- Enable PDB
   enabled: false
