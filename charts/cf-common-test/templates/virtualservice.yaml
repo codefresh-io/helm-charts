@@ -1,0 +1,2 @@
+{{ $templateName := printf "cf-common-%s.signadot.virtualservice" (index .Subcharts "cf-common").Chart.Version }}
+{{- include $templateName . -}}

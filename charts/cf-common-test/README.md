@@ -42,6 +42,8 @@ Codefresh library chart - test chart - not for deployment!
 | secrets | object | `{}` |  |
 | service | object | `{}` |  |
 | serviceAccount | object | `{}` |  |
+| signadot.enabled | bool | `false` |  |
+| signadot.virtualservice | object | `{}` |  |
 | tolerations | list | `[]` |  |
 | volumes | object | `{}` |  |
 
