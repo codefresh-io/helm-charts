@@ -1103,6 +1103,26 @@ entries:
   internal-gateway:
   - apiVersion: v2
     appVersion: v0.0.0
+    created: "2024-07-02T15:48:08.564872501Z"
+    dependencies:
+    - name: cf-common
+      repository: oci://quay.io/codefresh/charts
+      version: 0.16.0
+    description: A Helm chart for Codefresh Internal Gateway
+    digest: cef790e1e92c72a62f0f811b04499ba9dc004cb30a1b53585bb7f87b30dc1375
+    home: https://github.com/codefresh-io/helm-charts
+    keywords:
+    - codefresh
+    - gateway
+    maintainers:
+    - name: codefresh
+      url: https://codefresh-io.github.io/
+    name: internal-gateway
+    urls:
+    - https://github.com/codefresh-io/helm-charts/releases/download/internal-gateway-0.8.0/internal-gateway-0.8.0.tgz
+    version: 0.8.0
+  - apiVersion: v2
+    appVersion: v0.0.0
     created: "2024-06-04T08:26:52.176441093Z"
     dependencies:
     - name: cf-common
@@ -1383,4 +1403,4 @@ entries:
     urls:
     - https://github.com/codefresh-io/helm-charts/releases/download/runner-1.3.0/runner-1.3.0.tgz
     version: 1.3.0
-generated: "2024-07-01T12:20:11.85075729Z"
+generated: "2024-07-02T15:48:08.565075661Z"
