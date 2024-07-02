@@ -2,7 +2,7 @@ apiVersion: v2
 appVersion: v0.0.0
 description: A Helm chart for Codefresh Internal Gateway
 name: internal-gateway
-version: 0.7.0
+version: 0.8.0
 home: https://github.com/codefresh-io/helm-charts
 keywords:
   - codefresh
