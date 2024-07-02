@@ -148,8 +148,9 @@ nginx:
     # !! Moved into separate template at `templates/nginx/configmap.yaml`
     # @default -- See below
     file: ""
-    # -- Misc signadot configuration
-    signadot: false
+
+# -- Misc signadot configuration
+signadot: false
 
 # -- Controller parameters
 # @default -- See below
