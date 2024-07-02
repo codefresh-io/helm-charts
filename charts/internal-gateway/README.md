@@ -1,6 +1,6 @@
 # internal-gateway
 
-![Version: 0.7.0](https://img.shields.io/badge/Version-0.7.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.8.0](https://img.shields.io/badge/Version-0.8.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 A Helm chart for Codefresh Internal Gateway
 
@@ -46,6 +46,7 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.resolver | string | `nil` | Allows to set a custom resolver |
 | nginx.config.serverDirectives | object | `{}` | Allows appending custom directives to the server block (map) |
 | nginx.config.serverSnippet | string | `""` | Allows appending custom configuration to the server block (string) |
+| nginx.config.signadot | bool | `false` | Misc signadot configuration |
 | nginx.config.verboseLogging | bool | `false` | Enable logging of 2xx and 3xx HTTP requests |
 | nginx.config.workerConnections | string | `"16384"` | Sets the maximum number of simultaneous connections that can be opened by a worker process. |
 | nginx.config.workerProcesses | string | `"8"` | Defines the number of worker processes. |
