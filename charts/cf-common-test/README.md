@@ -27,11 +27,14 @@ Codefresh library chart - test chart - not for deployment!
 | configMaps | object | `{}` |  |
 | container | object | `{}` |  |
 | controller | object | `{}` |  |
+| externalSecrets | list | `[]` |  |
 | extraResources | list | `[]` |  |
 | global | object | `{}` |  |
 | hpa | object | `{}` |  |
 | ingress | object | `{}` |  |
 | initContainers | object | `{}` |  |
+| keda.auth | object | `{}` |  |
+| keda.spec | object | `{}` |  |
 | nodeSelector | object | `{}` |  |
 | pdb | object | `{}` |  |
 | podSecurityContext | object | `{}` |  |
@@ -39,6 +42,8 @@ Codefresh library chart - test chart - not for deployment!
 | secrets | object | `{}` |  |
 | service | object | `{}` |  |
 | serviceAccount | object | `{}` |  |
+| signadot.enabled | bool | `false` |  |
+| signadot.virtualservice | object | `{}` |  |
 | tolerations | list | `[]` |  |
 | volumes | object | `{}` |  |
 

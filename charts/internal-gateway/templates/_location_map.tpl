@@ -25,6 +25,9 @@ locationDirectives:
 
 {{- define "internal-gateway.platform-endpoints-defaults" }}
 serviceEndpoints:
+  cfapi-auth:
+    svc: cfapi-auth
+    port: 80
   cfapi-endpoints:
     svc: cfapi-endpoints
     port: 80
@@ -113,8 +116,8 @@ nginx:
       /api/auth/authenticate:
         enabled: true
         proxy:
-          host: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "svc" }}
-          port: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "port" }}
+          host: {{ index $endpoints.serviceEndpoints "cfapi-auth" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-auth" "port" }}
           proxyPassSnippet: |
             proxy_pass_request_body off;
         locationSnippet: |
@@ -126,6 +129,16 @@ nginx:
           proxy_set_header X-Original-URI $request_uri;
           proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
           proxy_set_header X-Forwarded-Proto $scheme;
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/auth/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-auth" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-auth" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 

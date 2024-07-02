@@ -36,3 +36,13 @@ initContainers: {}
 additionalContainers: []
 
 extraResources: []
+
+externalSecrets: []
+
+keda:
+  spec: {}
+  auth: {}
+
+signadot:
+  enabled: false
+  virtualservice: {}

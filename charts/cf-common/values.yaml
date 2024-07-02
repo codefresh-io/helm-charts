@@ -11,6 +11,8 @@ global:
   controller: {}
   # -- Global Env vars. NO precedence over `.Values.container.env`
   env: {}
+  # -- Cluster domain
+  clusterDomain: ""
 
 # -- Provide a name in place of chart name
 nameOverride: ""
@@ -191,6 +193,8 @@ volumeClaimTemplates: {}
 # -- Main Container parameters
 # @default -- See below
 container:
+  # -- Set the container name
+  nameOverride: ""
   # -- Image parameters
   image:
     # -- Set image registry
@@ -558,8 +562,54 @@ hpa:
   #       type: Value
   #       value: 7
 
+# -- Configure KEDA Autoscaling
+keda:
+  # -- Enable ScaledObject
+  enabled: false
+  # -- ScaledObject parameters
+  # Ref: https://keda.sh/docs/2.14/concepts/scaling-deployments/
+  spec:
+    annotations: {}
+    # -- Override scaleTargetRef
+    scaleTargetRef: {}
+    # -- Override envSourceContainerName
+    envSourceContainerName: null
+    pollingInterval: null # default to 30
+    cooldownPeriod: null # default to 300
+    idleReplicaCount: null # Only 0 is allowed!
+    minReplicaCount: null # default to 1
+    maxReplicaCount: null # default to 100
+    fallback: {}
+    advanced: {}
+    # -- Configure Scalers
+    # Ref: https://keda.sh/docs/2.14/scalers/
+    triggers: []
+    # E.g.:
+    # triggers:
+    #   - type: rabbitmq
+    #     metadata:
+    #       protocol: http
+    #       mode: MessageRate
+    #       value: "20"
+    #       queueName: my_queue_name
+  # -- TriggerAuthentication parameters
+  # Ref: https://keda.sh/docs/2.14/concepts/authentication/
+  auth:
+    enabled: false
+    # -- Set secret target reference
+    secretTargetRef: []
+    # E.g.:
+    # secretTargetRef:
+    #   - parameter: host
+    #     name: keda-rabbitmq-secret
+    #     key: host
+
 # -- Configure Pod Disruption Budget
 # @default -- See below
+
+signadot:
+  enabled: false
+
 pdb:
   # -- Enable PDB
   enabled: false

@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.18.1](https://img.shields.io/badge/Version-0.18.1-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.20.0](https://img.shields.io/badge/Version-0.20.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.18.1
+  version: 0.20.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -51,6 +51,7 @@ dependencies:
 | container.image.repository | string | `nil` | Set image repository |
 | container.image.tag | string | `nil` | Set image tag |
 | container.lifecycle | object | `{}` | Set the lifecycle hooks for container |
+| container.nameOverride | string | `""` | Set the container name |
 | container.probes.liveness.enabled | bool | `false` | Enable liveness probe |
 | container.probes.liveness.exec.command | list | `[]` | Set exec probe commands |
 | container.probes.liveness.httpGet.path | string | `nil` | Set httpGet probe path |
@@ -103,7 +104,8 @@ dependencies:
 | externalSecrets | list | `[]` | Create External Secrets |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | fullNameOverride | string | `""` | String to fully override app name |
-| global | object | `{"controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
+| global | object | `{"clusterDomain":"","controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
+| global.clusterDomain | string | `""` | Cluster domain |
 | global.env | object | `{}` | Global Env vars. NO precedence over `.Values.container.env` |
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
 | global.imageRegistry | string | `""` | Global Docker image registry |
@@ -127,10 +129,17 @@ dependencies:
 | ingress.main.labels | object | `{}` | Add additional labels for ingress. |
 | ingress.main.tls | list | `[]` | Configure TLS for the ingress. Both secretName and hosts can process a Helm template. |
 | initContainers | object | `{}` | Map of init containers to add Follows the same values structure as in `.Values.containes` The map key (e.g. `sleep`) will be used for the container name. |
+| keda | object | `{"auth":{"enabled":false,"secretTargetRef":[]},"enabled":false,"spec":{"advanced":{},"annotations":{},"cooldownPeriod":null,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}}` | Configure KEDA Autoscaling |
+| keda.auth | object | `{"enabled":false,"secretTargetRef":[]}` | TriggerAuthentication parameters Ref: https://keda.sh/docs/2.14/concepts/authentication/ |
+| keda.auth.secretTargetRef | list | `[]` | Set secret target reference |
+| keda.enabled | bool | `false` | Enable ScaledObject |
+| keda.spec | object | `{"advanced":{},"annotations":{},"cooldownPeriod":null,"envSourceContainerName":null,"fallback":{},"idleReplicaCount":null,"maxReplicaCount":null,"minReplicaCount":null,"pollingInterval":null,"scaleTargetRef":{},"triggers":[]}` | ScaledObject parameters Ref: https://keda.sh/docs/2.14/concepts/scaling-deployments/ |
+| keda.spec.envSourceContainerName | string | `nil` | Override envSourceContainerName |
+| keda.spec.scaleTargetRef | object | `{}` | Override scaleTargetRef |
+| keda.spec.triggers | list | `[]` | Configure Scalers Ref: https://keda.sh/docs/2.14/scalers/ |
 | kubeVersionOverride | string | `""` | Override the Kubernetes version |
 | nameOverride | string | `""` | Provide a name in place of chart name |
 | nodeSelector | object | `{}` | Set node selection constrains |
-| pdb | object | See below | Configure Pod Disruption Budget |
 | pdb.enabled | bool | `false` | Enable PDB |
 | pdb.maxUnavailable | string | `""` | Set number of pods that are unavailable after eviction as number of percentage |
 | pdb.minAvailable | string | `""` | Set number of pods that are available after eviction as number of percentage |
@@ -194,6 +203,7 @@ dependencies:
 | serviceMonitor.main.nameOverride | string | `""` | Override service monitor name suffix |
 | serviceMonitor.main.namespaceSelector | object | `{}` | Set namespace selector. If nil, release namespace is used. |
 | serviceMonitor.main.selector | object | `{}` | Override the default selector for the serviceMonitor. Takes precedence over default labels. Helm template can be used. |
+| signadot | object | See below | Configure Pod Disruption Budget |
 | terminationGracePeriodSeconds | string | `nil` | Duration in seconds the pod needs to terminate gracefully |
 | tolerations | list | `[]` | Set tolerations constrains |
 | topologySpreadConstraints | list | `[]` | Set topologySpreadConstraints rules. Helm template supported. Passed through `tpl`, should be configured as string |
