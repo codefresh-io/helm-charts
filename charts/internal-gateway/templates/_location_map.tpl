@@ -255,6 +255,17 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
+      /api/hermes:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "port" }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          proxy_set_header: "Host $host"
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
       /ws/:
         enabled: true
         proxy:
