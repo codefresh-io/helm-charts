@@ -1,4 +1,4 @@
-{{- define "cf-common-0.20.0.external-secrets" }}
+{{- define "cf-common-0.20.1.external-secrets" }}
   {{- range $i, $secret := .Values.externalSecrets }}
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -25,6 +25,7 @@ spec:
     name: {{ .name }}
     creationPolicy: {{ .creationPolicy | default "Owner" }}
     deletionPolicy: {{ .deletionPolicy | default "Retain" }}
+  {{- if $secret.keys }}
   data:
     {{- range $i, $key := $secret.keys }}
   - secretKey: {{ $key.name }}
@@ -39,6 +40,10 @@ spec:
       decodingStrategy: {{ . }}
       {{- end -}}
     {{- end }}
+  {{- else }}
+  data: []
+  {{- end }}
+  {{- if $secret.keysFrom }}
   dataFrom:
     {{- range $i, $key := $secret.keysFrom }}
   - extract:
@@ -47,6 +52,9 @@ spec:
       decodingStrategy: {{ . }}
       {{- end }}
     {{- end }}
+  {{- else }}
+  dataFrom: []
+  {{- end }}
 ---
   {{- end }}
 {{- end }}
