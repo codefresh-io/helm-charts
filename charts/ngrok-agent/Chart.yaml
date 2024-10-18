@@ -3,6 +3,9 @@ name: ngrok-agent
 description: A Helm chart for Kubernetes
 type: application
 version: 0.1.0
+maintainers:
+  - name: codefresh
+    url: https://codefresh-io.github.io/
 dependencies:
   - name: cf-common
     repository: oci://quay.io/codefresh/charts
