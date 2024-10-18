@@ -1,0 +1,69 @@
+libraryMode: true
+
+global: {}
+
+codefresh:
+  internal-gateway-svc: internal-gateway
+  internal-gateway-port: 80
+
+  ngrok-domain: ""
+
+ngrok:
+  config: |
+    version: 3
+    tunnels:
+      ingresshost:
+        proto: http
+        addr: {{ printf "%s:%v" (index .Values.codefresh "internal-gateway-svc") (index .Values.codefresh "internal-gateway-port") }}
+        hostname: {{ index .Values.codefresh "ngrok-domain" }}
+
+controller:
+  enabled: true
+  type: deployment
+  replicas: 1
+  deployment:
+    strategy: Recreate
+
+container:
+  image:
+    registry: docker.io
+    repository: ngrok/ngrok
+    tag: 3-alpine
+    pullPolicy: IfNotPresent
+  command:
+    - "ngrok"
+  args:
+    - "start"
+    - "--all"
+    - "--config=/etc/ngrok.yml"
+    - "--log=stdout"
+    - "--log-format=json"
+    - "--log-level=debug"
+  env:
+    NGROK_AUTHTOKEN: ""
+  volumeMounts:
+    config:
+      path:
+      - mountPath: /etc/ngrok.yml
+        subPath: ngrok.yml
+
+configMaps:
+  config:
+    enabled: true
+    data:
+      ngrok.yml: |
+        {{ include (printf "cf-common-%s.tplrender" (index .Subcharts "cf-common").Chart.Version) ( dict "Values" .Values.ngrok.config "context" .) | nindent 2 }}
+
+volumes:
+  config:
+    enabled: true
+    type: configMap
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+hpa: {}
+keda:
+  spec: {}
+  auth: {}
+pdb: {}

@@ -1,0 +1,7 @@
+{{- define "ngrok-agent.resources" -}}
+
+{{ include "ngrok-agent.controller" . }}
+---
+{{ include "ngrok-agent.configmap" . }}
+
+{{- end -}}
