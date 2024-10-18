@@ -1,0 +1,3 @@
+{{- if not .Values.libraryMode }}
+{{- include "ngrok-agent.configmap" . }}
+{{- end }}
