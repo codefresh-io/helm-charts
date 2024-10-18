@@ -28,7 +28,7 @@ container:
   image:
     registry: docker.io
     repository: ngrok/ngrok
-    tag: latest
+    tag: 3-alpine
     pullPolicy: IfNotPresent
   command:
     - "ngrok"
