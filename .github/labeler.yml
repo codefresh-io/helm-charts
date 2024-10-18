@@ -17,3 +17,6 @@ docs:
 
 automation:
 - .github/**/*
+
+ngrok-agent:
+- charts/ngrok-agent/**/*
