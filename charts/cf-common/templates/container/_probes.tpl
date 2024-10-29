@@ -2,9 +2,9 @@
 Renders probes map in container.
 Called from container template.
 Usage:
-probes: {{ include "cf-common-0.20.1.probes" .Values.container.probes | nindent 2 }}
+probes: {{ include "cf-common-0.21.0.probes" .Values.container.probes | nindent 2 }}
 */}}
-{{- define "cf-common-0.20.1.probes" -}}
+{{- define "cf-common-0.21.0.probes" -}}
 
 {{- range $probeName, $probeItem := . }}
 

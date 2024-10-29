@@ -2,9 +2,9 @@
 Renders env vars in container template.
 Called from container template.
 Usage:
-env: {{ include "cf-common-0.20.1.env-vars" (dict "Values" .Values.container.env "context" $) | nindent }}
+env: {{ include "cf-common-0.21.0.env-vars" (dict "Values" .Values.container.env "context" $) | nindent }}
 */}}
-{{- define "cf-common-0.20.1.env-vars"}}
+{{- define "cf-common-0.21.0.env-vars"}}
 {{- $ := .context }}
   {{- if .Values }}
     {{- if not (kindIs "map" .Values) }}
@@ -12,7 +12,7 @@ env: {{ include "cf-common-0.20.1.env-vars" (dict "Values" .Values.container.env
     {{- end }}
   {{- end }}
   {{- $env := .Values }}
-  {{- $templatedEnv := include "cf-common-0.20.1.tplrender" (dict "Values" $env "context" $) | fromYaml }}
+  {{- $templatedEnv := include "cf-common-0.21.0.tplrender" (dict "Values" $env "context" $) | fromYaml }}
   {{- range $name, $val := $templatedEnv }}
     {{- if or (kindIs "string" $val) (kindIs "bool" $val) (kindIs "int" $val) (kindIs "float64" $val) }}
 - name: {{ $name }}

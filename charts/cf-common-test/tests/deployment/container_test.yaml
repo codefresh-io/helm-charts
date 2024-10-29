@@ -431,3 +431,15 @@ tests:
               secretKeyRef:
                 name: some-secret-one
                 key: some-key-one
+
+  - it: Test main container with image digest 
+    values:
+      - values.yaml
+    set:
+      container:
+        image:
+          digest: sha256:12345678901
+    asserts:
+      - equal:
+          path: spec.template.spec.containers[0].image
+          value: 839151377425.dkr.ecr.us-east-1.amazonaws.com/codefresh-inc/codefresh/cf-api:master@sha256:1234567890
