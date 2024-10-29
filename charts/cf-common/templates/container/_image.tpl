@@ -12,7 +12,7 @@ Usage:
 {{- $registryName := .image.registry -}}
 {{- $repositoryName := .image.repository -}}
 {{- $imageTag := .image.tag | toString -}}
-{{- $imageDigest := image.digest }}
+{{- $imageDigest := .image.digest }}
 
 {{- if $.Values.global -}}
   {{- if $.Values.global.imageRegistry -}}
