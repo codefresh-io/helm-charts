@@ -438,7 +438,7 @@ tests:
     set:
       container:
         image:
-          digest: sha256:12345678901
+          digest: sha256:1234567890
     asserts:
       - equal:
           path: spec.template.spec.containers[0].image
