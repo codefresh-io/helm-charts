@@ -205,6 +205,8 @@ container:
     tag:
     # -- Set image pull policy (`Always`, `Never`, `IfNotPresent`)
     pullPolicy:
+    # -- Set image digest
+    digest:
 
   # -- Override commands for the container
   command: []
