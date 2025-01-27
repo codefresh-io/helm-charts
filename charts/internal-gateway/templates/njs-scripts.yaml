@@ -2,7 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-njs-scritps
+  name: {{ .Release.Name }}-njs-scripts
   namespace: {{ .Release.Namespace }}
 data:
   {{- $rootContext := . }}
