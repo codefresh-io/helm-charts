@@ -128,7 +128,7 @@ nginx:
     errorLogLevel: error
     # -- Enables NGINX access logs
     accessLogEnabled: true
-    # -- Allows appending custom directives to the root block (map)
+    # -- Allows appending custom directives to the root block (string)
     rootSnippet: ""
     # -- Allows appending custom directives to the root block (map)
     rootDirectives:
