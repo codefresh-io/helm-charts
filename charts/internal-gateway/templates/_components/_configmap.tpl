@@ -19,6 +19,14 @@ data:
     pid        /tmp/nginx.pid;
     worker_rlimit_nofile {{ $nginxConfig.workerRlimitNofile }};
 
+    {{- with $nginxConfig.rootSnippet }}
+    {{ . | nindent 4 }}
+    {{- end }}
+
+    {{- range $key, $val := $nginxConfig.rootDirectives }}
+    {{ printf "%s %s;" $key $val }}
+    {{- end }}
+
     events {
       worker_connections  {{ $nginxConfig.workerConnections }};
     }

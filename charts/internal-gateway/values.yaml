@@ -1,6 +1,6 @@
 # Defines if library mode is used for the chart. No templates are generated when using this mode.
 # Added to support usage in Codefresh On-Premise Helm chart
-libraryMode: true
+libraryMode: false
 
 # -- Codefresh platform settings
 # List of services endpoints and port
@@ -128,6 +128,11 @@ nginx:
     errorLogLevel: error
     # -- Enables NGINX access logs
     accessLogEnabled: true
+    # -- Allows appending custom directives to the root block (map)
+    rootSnippet: ""
+    # -- Allows appending custom directives to the root block (map)
+    rootDirectives:
+      load_module: modules/ngx_http_js_module.so
     # -- Allows appending custom configuration to the server block (string)
     serverSnippet: ""
     # -- Allows appending custom directives to the server block (map)
@@ -148,6 +153,8 @@ nginx:
     # !! Moved into separate template at `templates/nginx/configmap.yaml`
     # @default -- See below
     file: ""
+  scriptFilesPatterns:
+  - files/njs/**
 
 # -- Misc signadot configuration
 signadot: false
@@ -193,6 +200,9 @@ container:
     config:
       path:
         - mountPath: /etc/nginx
+    njs-scripts:
+      path:
+        - mountPath: /etc/nginx/scripts
 
   resources:
     requests:
@@ -260,6 +270,9 @@ volumes:
   config:
     enabled: true
     type: configMap
+  njs-scripts:
+    enabled: true
+    type: configMap
 
 # -- HPA parameters
 # @default -- See below
@@ -300,4 +313,7 @@ serviceAccount:
 # -- RBAC parameters
 # @default -- See below
 rbac:
+  enabled: false
+
+keda:
   enabled: false

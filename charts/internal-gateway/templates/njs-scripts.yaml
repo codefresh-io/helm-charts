@@ -1,0 +1,14 @@
+{{- if not .Values.libraryMode }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ .Release.Name }}-njs-scritps
+  namespace: {{ .Release.Namespace }}
+data:
+  {{- $rootContext := . }}
+  {{- range $globPattern := $rootContext.Values.nginx.scriptFilesPatterns }}
+    {{- range $path, $_ := $rootContext.Files.Glob $globPattern }}
+  {{ base $path }}: {{ $rootContext.Files.Get $path | toYaml | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
