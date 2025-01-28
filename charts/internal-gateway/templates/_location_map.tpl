@@ -88,7 +88,7 @@ serviceEndpoints:
 {{- end }}
 
 {{- define "internal-gateway.platform-endpoints" }}
-{{- $endpointDefaults := include "internal-gateway.platform-endpoints-defaults" . | fromYaml}}
+{{- $endpointDefaults := include "internal-gateway.platform-endpoints-defaults" . | fromYaml }}
 {{- $mergedEndpoints := deepCopy $endpointDefaults }}
   {{- if .Values.codefresh.serviceEndpoints }}
     {{- $mergedEndpoints = mergeOverwrite $endpointDefaults .Values.codefresh }}
@@ -96,7 +96,7 @@ serviceEndpoints:
 {{ $mergedEndpoints | toYaml }}
 {{- end }}
 
-{{- define "internal-gateway.nginx-config-defaults"}}
+{{- define "internal-gateway.nginx-config-defaults" }}
   {{- $endpoints := include "internal-gateway.platform-endpoints" . | fromYaml }}
   {{- $presets := include "internal-gateway.location-presets" . | fromYaml }}
   {{- $_  := set $presets "locationDirectives" (mergeOverwrite $presets.locationDirectives .Values.nginx.config.locationDirectives) }}
@@ -353,7 +353,7 @@ nginx:
 {{- end }}
 
 {{- define "internal-gateway.nginx-config" }}
-{{- $configDefaults := include "internal-gateway.nginx-config-defaults" . | fromYaml}}
+{{- $configDefaults := include "internal-gateway.nginx-config-defaults" . | fromYaml }}
 {{- $mergedConfig := deepCopy $configDefaults }}
   {{- if .Values.nginx }}
     {{- $mergedConfig = mergeOverwrite $configDefaults .Values }}

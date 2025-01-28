@@ -125,5 +125,6 @@ data:
           {{- end }}
         {{- end }}
       }
+      include /etc/nginx/conf.d/*.conf;
     }
 {{- end }}
