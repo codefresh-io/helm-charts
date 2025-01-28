@@ -199,10 +199,11 @@ container:
   volumeMounts:
     config:
       path:
-        - mountPath: /etc/nginx
+      - mountPath: /etc/nginx/nginx.conf
+        subPath: nginx.conf
     njs-scripts:
       path:
-        - mountPath: /etc/nginx/scripts
+      - mountPath: /etc/nginx/scripts
 
   resources:
     requests:
