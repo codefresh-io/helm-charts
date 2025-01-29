@@ -5,7 +5,7 @@ metadata:
   name: {{ .Release.Name }}-extra-configs
   namespace: {{ .Release.Namespace }}
 data:
-  {{- $rootContext := . }}
+  {{- $rootContext := $ }}
   {{- range $globPattern := $rootContext.Values.nginx.extraConfigsPatterns }}
     {{- range $path, $_ := $rootContext.Files.Glob $globPattern }}
   {{ base $path }}: {{ tpl ($rootContext.Files.Get $path) $rootContext.Values | toYaml | nindent 4 }}
