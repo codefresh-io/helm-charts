@@ -2,8 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-njs-scripts
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "internal-gateway.fullname" . }}-njs-scripts
 data:
   {{- $rootContext := . }}
   {{- range $globPattern := $rootContext.Values.nginx.scriptFilesPatterns }}

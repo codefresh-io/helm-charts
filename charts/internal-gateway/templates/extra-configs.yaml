@@ -2,8 +2,7 @@
 apiVersion: v1
 kind: ConfigMap
 metadata:
-  name: {{ .Release.Name }}-extra-configs
-  namespace: {{ .Release.Namespace }}
+  name: {{ include "internal-gateway.fullname" . }}-extra-configs
 data:
   {{- $rootContext := $ }}
   {{- range $globPattern := $rootContext.Values.nginx.extraConfigsPatterns }}
