@@ -208,9 +208,9 @@ container:
       path:
       - mountPath: /etc/nginx/nginx.conf
         subPath: nginx.conf
-    extra-configs:
-      path:
-      - mountPath: /etc/nginx/conf.d
+    # extra-configs:
+    #   path:
+    #   - mountPath: /etc/nginx/conf.d
     njs-scripts:
       path:
       - mountPath: /etc/nginx/scripts
