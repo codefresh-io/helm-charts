@@ -26,78 +26,8 @@ locationDirectives:
   proxy_read_timeout: "60s"
 {{- end }}
 
-{{- define "internal-gateway.platform-endpoints-defaults" }}
-serviceEndpoints:
-  cfapi-auth:
-    svc: cfapi-auth
-    port: 80
-  cfapi-endpoints:
-    svc: cfapi-endpoints
-    port: 80
-  cfapi-environments:
-    svc: cfapi-environments
-    port: 80
-  cfapi-downloadlogmanager:
-    svc: cfapi-downloadlogmanager
-    port: 80
-  cfapi-gitops-resource-receiver:
-    svc: cfapi-gitops-resource-receiver
-    port: 80
-  cfapi-test-reporting:
-    svc: cfapi-test-reporting
-    port: 80
-  cfapi-kubernetesresourcemonitor:
-    svc: cfapi-kubernetesresourcemonitor
-    port: 80
-  cfapi-kubernetes-endpoints:
-    svc: cfapi-kubernetes-endpoints
-    port: 80
-  cfapi-admin:
-    svc: cfapi-admin
-    port: 80
-  cfapi-teams:
-    svc: cfapi-teams
-    port: 80
-  cfapi-ws:
-    svc: cfapi-ws
-    port: 80
-  cfui:
-    svc: cfui
-    port: 80
-  argo-platform-api-graphql:
-    svc: argo-platform-api-graphql
-    port: 80
-  argo-platform-api-events:
-    svc: argo-platform-api-events
-    port: 80
-  argo-platform-broadcaster:
-    svc: argo-platform-broadcaster
-    port: 80
-  argo-platform-ui:
-    svc: argo-platform-ui
-    port: 4200
-  argo-hub:
-    svc: argo-hub-platform
-    port: 80
-  nomios:
-    svc: nomios
-    port: 80
-  jira-addon:
-    svc: cf-jira-addon
-    port: 9000
-{{- end }}
-
-{{- define "internal-gateway.platform-endpoints" }}
-{{- $endpointDefaults := include "internal-gateway.platform-endpoints-defaults" . | fromYaml }}
-{{- $mergedEndpoints := deepCopy $endpointDefaults }}
-  {{- if .Values.codefresh.serviceEndpoints }}
-    {{- $mergedEndpoints = mergeOverwrite $endpointDefaults .Values.codefresh }}
-  {{- end }}
-{{ $mergedEndpoints | toYaml }}
-{{- end }}
-
 {{- define "internal-gateway.nginx-config-defaults" }}
-  {{- $endpoints := include "internal-gateway.platform-endpoints" . | fromYaml }}
+  {{- $endpoints := .Values.codefresh }}
   {{- $presets := include "internal-gateway.location-presets" . | fromYaml }}
   {{- $_  := set $presets "locationDirectives" (mergeOverwrite $presets.locationDirectives .Values.nginx.config.locationDirectives) }}
 nginx:
