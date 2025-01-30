@@ -59,6 +59,7 @@ codefresh:
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "jira-addon-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "jira-addon-port" }}
     workflow-logs-s3-proxy:
+      domain: logs.codefresh.io
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "workflow-logs-s3-proxy-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "workflow-logs-s3-proxy-port" }}
 {{- end }}
