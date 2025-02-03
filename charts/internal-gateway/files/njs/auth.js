@@ -1,5 +1,4 @@
 function account_name(r) {
-    // Get the variable "auth_entity"
     const auth_entity = r.variables["auth_entity"];
     if (!auth_entity) {
         r.error("account_name: auth_entity variable is missing");
@@ -7,7 +6,6 @@ function account_name(r) {
     }
     r.error("account_name: auth_entity = " + auth_entity);
 
-    // Attempt to base64-decode it
     var decoded;
     try {
         decoded = Buffer.from(auth_entity, 'base64').toString('utf8');
@@ -17,7 +15,6 @@ function account_name(r) {
         return "default";
     }
 
-    // Try to parse the decoded value as JSON
     var json;
     try {
         json = JSON.parse(decoded);
@@ -27,15 +24,20 @@ function account_name(r) {
         return "default";
     }
 
-    // Extract the account name
-    if (json.activeAccount && json.activeAccount.name) {
-        r.error("account_name: extracted account name = " + json.activeAccount.name);
-        return json.activeAccount.name;
+    // Updated JSON path based on your comment.
+    if (
+        json.authenticatedEntity &&
+        json.authenticatedEntity.activeAccount &&
+        json.authenticatedEntity.activeAccount.name
+    ) {
+        r.error("account_name: extracted account name = " + json.authenticatedEntity.activeAccount.name);
+        return json.authenticatedEntity.activeAccount.name;
     } else {
         r.error("account_name: activeAccount.name not found in JSON");
         return "default";
     }
 }
+
 
 function setAuthHeader(r) {
     let auth = r.headersIn['authorization'];
