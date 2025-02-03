@@ -12,6 +12,7 @@ function account_id(r) {
     }
 }
 
+
 function setAuthHeader(r) {
     let auth = r.headersIn['authorization'];
     if (auth) {
