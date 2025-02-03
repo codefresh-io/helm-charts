@@ -3,7 +3,7 @@ function account_id(r) {
         const auth_entity = r.variables["auth_entity"];
         const b64decoded = Buffer.from(auth_entity, 'base64');
         const json = JSON.parse(b64decoded);
-        const account_id = json.activeAccount.id;
+        const account_id = json.account.id;
 
         return account_id;
     } catch (e) {
