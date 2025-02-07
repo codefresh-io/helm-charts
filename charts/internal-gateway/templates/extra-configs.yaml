@@ -1,0 +1,13 @@
+{{- if not .Values.libraryMode }}
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "internal-gateway.fullname" . }}-extra-configs
+data:
+  {{- $rootContext := $ }}
+  {{- range $globPattern := $rootContext.Values.nginx.extraConfigsPatterns }}
+    {{- range $path, $_ := $rootContext.Files.Glob $globPattern }}
+  {{ base $path }}: {{ tpl ($rootContext.Files.Get $path) $rootContext | toYaml | nindent 4 }}
+    {{- end }}
+  {{- end }}
+{{- end }}
