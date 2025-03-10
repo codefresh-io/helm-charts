@@ -50,7 +50,7 @@ spec:
   replicas: {{ coalesce .Values.controller.replicas .Values.replicaCount | int | default 1 }}
   podManagementPolicy: {{ default "OrderedReady" .Values.controller.podManagementPolicy }}
   selector:
-    matchLabels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . )| nindent 6 }}
+    matchLabels: {{ include "cf-common-0.22.0.labels.matchLabels" .| nindent 6 }}
   serviceName: {{ include "cf-common-0.22.0.names.fullname" . }}
   updateStrategy:
     type: {{ $strategy }}
@@ -62,7 +62,7 @@ spec:
     {{- end }}
   template:
     metadata:
-      labels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . )| nindent 8 }}
+      labels: {{ include "cf-common-0.22.0.labels.matchLabels" .| nindent 8 }}
       {{- if .Values.podLabels }}
       {{- include "cf-common-0.22.0.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}
