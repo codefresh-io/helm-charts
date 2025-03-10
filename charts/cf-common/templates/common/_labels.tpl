@@ -16,7 +16,9 @@ Usage:
 {{- define "cf-common-0.22.0.labels.matchLabels" -}}
 app.kubernetes.io/name: {{ include "cf-common-0.22.0.names.name" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- if .Values.fullnameOverride }}
 app.kubernetes.io/component: {{ include "cf-common-0.22.0.names.fullname" . }}
+  {{- end }}
 {{- end -}}
 
 
