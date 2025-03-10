@@ -1,28 +1,33 @@
 {{/*
 Kubernetes standard labels
 */}}
-{{- define "cf-common-0.21.0.labels.standard" -}}
-app.kubernetes.io/name: {{ include "cf-common-0.21.0.names.name" . }}
-helm.sh/chart: {{ include "cf-common-0.21.0.names.chart" . }}
+{{- define "cf-common-0.22.0.labels.standard" -}}
+app.kubernetes.io/name: {{ include "cf-common-0.22.0.names.name" . }}
+helm.sh/chart: {{ include "cf-common-0.22.0.names.chart" . }}
 app.kubernetes.io/instance: {{ .Release.Name }}
 app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{- end -}}
 
 {{/*
 Labels to use on deploy.spec.selector.matchLabels and svc.spec.selector
+Usage:
+{{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . "component" .Values.fullNameOverride ) }}
 */}}
-{{- define "cf-common-0.21.0.labels.matchLabels" -}}
-app.kubernetes.io/name: {{ include "cf-common-0.21.0.names.name" . }}
+{{- define "cf-common-0.22.0.labels.matchLabels" -}}
+app.kubernetes.io/name: {{ include "cf-common-0.22.0.names.name" .context }}
 app.kubernetes.io/instance: {{ .Release.Name }}
+  {{- if .component }}
+app.kubernetes.io/component: {{ .component }}
+  {{- end }}
 {{- end -}}
 
 
 {{/*
 Extra labels
 Usage:
-{{ include "cf-common-0.21.0.labels.extraLabels" ( dict "Values" .Values.path.to.the.labels "context" $) }}
+{{ include "cf-common-0.22.0.labels.extraLabels" ( dict "Values" .Values.path.to.the.labels "context" $) }}
 */}}
-{{- define "cf-common-0.21.0.labels.extraLabels" -}}
+{{- define "cf-common-0.22.0.labels.extraLabels" -}}
   {{- if not (kindIs "map" .Values) -}}
   {{- fail "ERROR: labels block must be a map" -}}
   {{- end -}}
@@ -34,9 +39,9 @@ Usage:
 {{/*
 Annotations
 Usage:
-{{ include "cf-common-0.21.0.annotations" ( dict "Values" .Values.path.to.the.annotations "context" $) }}
+{{ include "cf-common-0.22.0.annotations" ( dict "Values" .Values.path.to.the.annotations "context" $) }}
 */}}
-{{- define "cf-common-0.21.0.annotations" -}}
+{{- define "cf-common-0.22.0.annotations" -}}
   {{- if not (kindIs "map" .Values) -}}
   {{- fail "ERROR: annotations block must be a map" -}}
   {{- end -}}
