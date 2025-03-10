@@ -45,7 +45,7 @@ spec:
       {{- end }}
       template:
         metadata:
-          labels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . "component" .Values.fullNameOverride ) | nindent 12 }}
+          labels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . )| nindent 12 }}
           {{- if .Values.podLabels }}
           {{- include "cf-common-0.22.0.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 12 }}
           {{- end }}

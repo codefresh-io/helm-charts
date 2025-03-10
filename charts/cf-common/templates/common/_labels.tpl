@@ -11,14 +11,11 @@ app.kubernetes.io/managed-by: {{ .Release.Service }}
 {{/*
 Labels to use on deploy.spec.selector.matchLabels and svc.spec.selector
 Usage:
-{{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . "component" .Values.fullNameOverride ) }}
+{{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . )}}
 */}}
 {{- define "cf-common-0.22.0.labels.matchLabels" -}}
 app.kubernetes.io/name: {{ include "cf-common-0.22.0.names.name" .context }}
 app.kubernetes.io/instance: {{ .Release.Name }}
-  {{- if .component }}
-app.kubernetes.io/component: {{ .component }}
-  {{- end }}
 {{- end -}}
 
 

@@ -45,7 +45,7 @@ spec:
   replicas: {{ coalesce .Values.controller.replicas .Values.replicaCount | int | default 1 }}
   {{- end }}
   selector:
-    matchLabels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . "component" .Values.fullNameOverride ) | nindent 6 }}
+    matchLabels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . )| nindent 6 }}
   strategy:
     type: {{ $strategy }}
     {{- with .Values.controller.rollingUpdate }}
@@ -61,7 +61,7 @@ spec:
     {{- end }}
   template:
     metadata:
-      labels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . "component" .Values.fullNameOverride ) | nindent 8 }}
+      labels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . )| nindent 8 }}
       {{- if .Values.podLabels }}
       {{- include "cf-common-0.22.0.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 8 }}
       {{- end }}

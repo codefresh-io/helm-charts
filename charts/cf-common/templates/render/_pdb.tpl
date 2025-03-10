@@ -25,7 +25,7 @@ spec:
   {{- fail (printf "ERROR: pdb.minAvailable or pdb.maxUnavailable is required!" ) }}
 {{- end }}
   selector:
-    matchLabels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . "component" .Values.fullNameOverride ) | nindent 6 }}
+    matchLabels: {{ include "cf-common-0.22.0.labels.matchLabels" ( dict "context" . )| nindent 6 }}
 
 {{- end -}}
 
