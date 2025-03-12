@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.21.0](https://img.shields.io/badge/Version-0.21.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.22.0](https://img.shields.io/badge/Version-0.22.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.21.0
+  version: 0.22.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -45,6 +45,7 @@ dependencies:
 | container.containerSecurityContext | object | `{}` | Set security context for container |
 | container.env | object | `{}` | Set environments variables. Helm template supported. |
 | container.envFrom | list | `[]` | Set Secrets or ConfigMaps loaded as environment variables. |
+| container.extraEnv | object | `{}` | Append extra environment variables to the container |
 | container.image | object | `{"digest":null,"pullPolicy":null,"registry":null,"repository":null,"tag":null}` | Image parameters |
 | container.image.digest | string | `nil` | Set image digest |
 | container.image.pullPolicy | string | `nil` | Set image pull policy (`Always`, `Never`, `IfNotPresent`) |

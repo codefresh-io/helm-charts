@@ -227,6 +227,8 @@ container:
   #       name: my-secret
   #   - configMapRef:
   #       name: my-config-map
+  # -- Append extra environment variables to the container
+  extraEnv: {}
 
   # -- Set volume mounts for container
   volumeMounts: {}
