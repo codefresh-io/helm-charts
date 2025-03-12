@@ -92,21 +92,21 @@ nodeSelector: {{ toYaml . | nindent 2 }}
 
 {{- $tolerations := .Values.tolerations | default list }}
 {{- $globalTolerations := .Values.global.tolerations | default list }}
+{{- if or (not (kindIs "slice" $tolerations)) (not (kindIs "slice" $globalTolerations)) }}
+  {{- fail "ERROR: tolerations block must be a list!" }}
+{{- end }}
 {{- $allToleration := concat $globalTolerations $tolerations }}
 {{- with $allToleration }}
-  {{- if not (kindIs "slice" .) }}
-    {{- fail "ERROR: tolerations block must be a list!" }}
-  {{- end }}
 tolerations: {{ toYaml . | nindent 2 }}
 {{- end }}
 
 {{- $affinity := .Values.affinity | default dict }}
 {{- $globalAffinity := .Values.global.affinity | default dict }}
+{{- if or (not (kindIs "map" $affinity)) (not (kindIs "map" $globalAffinity)) }}
+  {{- fail "ERROR: affinity block must be a map!" }}
+{{- end }}
 {{- $allAffinity := mergeOverwrite $globalAffinity $affinity }}
 {{- with $allAffinity }}
-  {{- if not (kindIs "map" .) }}
-    {{- fail "ERROR: affinity block must be a map!" }}
-  {{- end }}
 affinity: {{ toYaml . | nindent 2 }}
 {{- end }}
 
