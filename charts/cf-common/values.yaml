@@ -13,6 +13,12 @@ global:
   env: {}
   # -- Cluster domain
   clusterDomain: ""
+  # -- Set global tolerations constrains
+  tolerations: []
+  # -- Set global node selection constrains
+  nodeSelector: {}
+  # -- Set global affinity constrains
+  affinity: {}
 
 # -- Provide a name in place of chart name
 nameOverride: ""

@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.22.0](https://img.shields.io/badge/Version-0.22.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.23.0](https://img.shields.io/badge/Version-0.23.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.22.0
+  version: 0.23.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -106,11 +106,14 @@ dependencies:
 | externalSecrets | list | `[]` | Create External Secrets |
 | extraResources | list | `[]` | Array of extra objects to deploy with the release |
 | fullNameOverride | string | `""` | String to fully override app name |
-| global | object | `{"clusterDomain":"","controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":""}` | Global parameters |
+| global | object | `{"affinity":{},"clusterDomain":"","controller":{},"env":{},"imagePullSecrets":[],"imageRegistry":"","nodeSelector":{},"tolerations":[]}` | Global parameters |
+| global.affinity | object | `{}` | Set global affinity constrains |
 | global.clusterDomain | string | `""` | Cluster domain |
 | global.env | object | `{}` | Global Env vars. NO precedence over `.Values.container.env` |
 | global.imagePullSecrets | list | `[]` | Global Docker registry secret names as array |
 | global.imageRegistry | string | `""` | Global Docker image registry |
+| global.nodeSelector | object | `{}` | Set global node selection constrains |
+| global.tolerations | list | `[]` | Set global tolerations constrains |
 | hpa | object | See below | Configure autoscaling (Horizontal Pod Autoscaler) |
 | hpa.enabled | bool | `false` | Enable HPA |
 | hpa.maxReplicas | string | `nil` | Set maximum autoscaling replicas |
