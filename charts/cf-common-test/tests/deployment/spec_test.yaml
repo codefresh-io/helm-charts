@@ -147,6 +147,34 @@ tests:
           value:
             node-type: app
 
+  - it: Test global nodeSelector
+    values:
+      - values.yaml
+    set:
+      global:
+        nodeSelector:
+          alice: bob
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector
+          value:
+            alice: bob
+  
+  - it: Test deployment nodeSelector with global nodeSelector
+    values:
+      - values.yaml
+    set:
+      global:
+        nodeSelector:
+          alice: bob
+      nodeSelector:
+        alice: bar
+    asserts:
+      - equal:
+          path: spec.template.spec.nodeSelector
+          value:
+            alice: bar
+
   - it: Test deployments tolerations
     values:
       - values.yaml
@@ -162,6 +190,50 @@ tests:
             effect: NoSchedule
             key: codefresh.io
             value: app
+
+  - it: Test global tolerations
+    values:
+      - values.yaml
+    set:
+      global:
+        tolerations:
+          - effect: NoSchedule
+            key: codefresh.io
+            value: app
+    asserts:
+      - contains:
+          path: spec.template.spec.tolerations
+          content:
+            effect: NoSchedule
+            key: codefresh.io
+            value: app
+
+  - it: Test deployment tolerations with global tolerations
+    values:
+      - values.yaml
+    set:
+      global:
+        tolerations:
+          - effect: NoSchedule
+            key: worker
+            value: true
+      tolerations:
+        - effect: NoSchedule
+          key: codefresh.io
+          value: app
+    asserts:
+      - contains:
+          path: spec.template.spec.tolerations
+          content:
+            effect: NoSchedule
+            key: codefresh.io
+            value: app
+      - contains:
+          path: spec.template.spec.tolerations
+          content:
+            effect: NoSchedule
+            key: worker
+            value: true
 
   - it: Test deployments affinity
     values:
@@ -188,6 +260,79 @@ tests:
                         operator: In
                         values:
                           - app
+
+  - it: Test global affinity
+    values:
+      - values.yaml
+    set:
+      global:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: node-type
+                      operator: In
+                      values:
+                        - app
+    asserts:
+      - equal:
+          path: spec.template.spec.affinity
+          value:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: node-type
+                        operator: In
+                        values:
+                          - app
+
+  - it: Test deployment affinity with global affinity
+    values:
+      - values.yaml
+    set:
+      global:
+        affinity:
+          nodeAffinity:
+            requiredDuringSchedulingIgnoredDuringExecution:
+              nodeSelectorTerms:
+                - matchExpressions:
+                    - key: node-type
+                      operator: In
+                      values:
+                        - app
+      affinity:
+        podAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchExpressions:
+                  - key: security
+                    operator: In
+                    values:
+                      - S1
+              topologyKey: failure-domain.beta.kubernetes.io/zone
+    asserts:
+      - equal:
+          path: spec.template.spec.affinity
+          value:
+            nodeAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                nodeSelectorTerms:
+                  - matchExpressions:
+                      - key: node-type
+                        operator: In
+                        values:
+                          - app
+            podAffinity:
+              requiredDuringSchedulingIgnoredDuringExecution:
+                - labelSelector:
+                    matchExpressions:
+                      - key: security
+                        operator: In
+                        values:
+                          - S1
+                  topologyKey: failure-domain.beta.kubernetes.io/zone
 
   - it: Test deployment with sidecar container
     values:

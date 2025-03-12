@@ -1,0 +1,26 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+suite: extra env vars
+templates:
+  - templates/controller.yaml
+  - templates/secret.yaml
+tests:
+  - it: Test extraEnv env vars
+    values:
+      - values.yaml
+    template: templates/controller.yaml
+    set:
+      env:
+        ALICE: BOB
+      extraEnv:
+        FOO: $(ALICE)
+    asserts:
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: ALICE
+            value: BOB
+      - contains:
+          path: spec.template.spec.containers[0].env
+          content:
+            name: FOO
+            value: $(ALICE)

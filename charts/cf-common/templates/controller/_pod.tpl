@@ -2,13 +2,13 @@
 Renders pod spec.
 Called from contoller template.
 Usage:
-{{ include "cf-common-0.22.0.controller.pod" . }}
+{{ include "cf-common-0.23.0.controller.pod" . }}
 */}}
-{{- define "cf-common-0.22.0.controller.pod" -}}
+{{- define "cf-common-0.23.0.controller.pod" -}}
 
-{{- include "cf-common-0.22.0.image.pullSecrets" . }}
+{{- include "cf-common-0.23.0.image.pullSecrets" . }}
 
-serviceAccountName: {{ include "cf-common-0.22.0.names.serviceAccountName" . }}
+serviceAccountName: {{ include "cf-common-0.23.0.names.serviceAccountName" . }}
 
 automountServiceAccountToken: {{ .Values.automountServiceAccountToken | default true }}
 
@@ -58,43 +58,52 @@ initContainers:
   {{- range $initContainerIndex, $initContainerItem := .Values.initContainers }}
     {{- if $initContainerItem.enabled }}
     {{- $_ := set $initContainerItem "nameOverride" $initContainerIndex }}
-    {{- include "cf-common-0.22.0.container" (dict "Values" $initContainerItem "context" $) | trim | nindent 0 }}
+    {{- include "cf-common-0.23.0.container" (dict "Values" $initContainerItem "context" $) | trim | nindent 0 }}
     {{- end }}
   {{- end }}
 {{- end }}
 
 {{- with .Values.container }}
-containers: {{ include "cf-common-0.22.0.container" (dict "Values" . "context" $) | trim | nindent 0 }}
+containers: {{ include "cf-common-0.23.0.container" (dict "Values" . "context" $) | trim | nindent 0 }}
 {{- end }}
 {{- with .Values.additionalContainers }}
 {{ toYaml . | nindent 0 }}
 {{- end }}
 
-volumes:  {{ include "cf-common-0.22.0.volumes" (dict "Values" .Values.volumes "context" $) | trim | nindent 0 }}
+volumes:  {{ include "cf-common-0.23.0.volumes" (dict "Values" .Values.volumes "context" $) | trim | nindent 0 }}
 
 {{- with .Values.extraVolumes }}
-{{ include "cf-common-0.22.0.volumes" (dict "Values" . "context" $) | trim }}
+{{ include "cf-common-0.23.0.volumes" (dict "Values" . "context" $) | trim }}
 {{- end }}
 
 {{- with .Values.hostAliases }}
 hostAliases: {{ toYaml . | nindent 2 }}
 {{- end }}
 
-{{- with .Values.nodeSelector }}
+{{- $nodeSelector := .Values.nodeSelector | default dict }}
+{{- $globalNodeSelector := .Values.global.nodeSelector | default dict }}
+{{- $allNodeSelector := mergeOverwrite $globalNodeSelector $nodeSelector }}
+{{- with $allNodeSelector }}
   {{- if not (kindIs "map" .) }}
     {{- fail "ERROR: nodeSelector block must be a map!" }}
   {{- end }}
 nodeSelector: {{ toYaml . | nindent 2 }}
 {{- end }}
 
-{{- with .Values.tolerations }}
+{{- $tolerations := .Values.tolerations | default list }}
+{{- $globalTolerations := .Values.global.tolerations | default list }}
+{{- $allToleration := concat $globalTolerations $tolerations }}
+{{- with $allToleration }}
   {{- if not (kindIs "slice" .) }}
     {{- fail "ERROR: tolerations block must be a list!" }}
   {{- end }}
 tolerations: {{ toYaml . | nindent 2 }}
 {{- end }}
 
-{{- with .Values.affinity }}
+{{- $affinity := .Values.affinity | default dict }}
+{{- $globalAffinity := .Values.global.affinity | default dict }}
+{{- $allAffinity := mergeOverwrite $globalAffinity $affinity }}
+{{- with $allAffinity }}
   {{- if not (kindIs "map" .) }}
     {{- fail "ERROR: affinity block must be a map!" }}
   {{- end }}
@@ -102,7 +111,7 @@ affinity: {{ toYaml . | nindent 2 }}
 {{- end }}
 
 {{- with .Values.topologySpreadConstraints }}
-topologySpreadConstraints: {{- include "cf-common-0.22.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
+topologySpreadConstraints: {{- include "cf-common-0.23.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
 {{- end }}
 
 {{- with .Values.controller.restartPolicy }}
