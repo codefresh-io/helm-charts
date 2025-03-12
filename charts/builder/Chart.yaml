@@ -14,4 +14,4 @@ maintainers:
 dependencies:
   - name: cf-common
     repository: oci://quay.io/codefresh/charts
-    version: "0.16.0"
+    version: "0.23.0"
