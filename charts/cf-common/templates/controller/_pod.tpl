@@ -82,11 +82,11 @@ hostAliases: {{ toYaml . | nindent 2 }}
 
 {{- $nodeSelector := .Values.nodeSelector | default dict }}
 {{- $globalNodeSelector := .Values.global.nodeSelector | default dict }}
+{{- if or (not (kindIs "map" $nodeSelector)) (not (kindIs "map" $globalNodeSelector)) }}
+  {{- fail "ERROR: nodeSelector block must be a map!" }}
+{{- end }}
 {{- $allNodeSelector := mergeOverwrite $globalNodeSelector $nodeSelector }}
 {{- with $allNodeSelector }}
-  {{- if not (kindIs "map" .) }}
-    {{- fail "ERROR: nodeSelector block must be a map!" }}
-  {{- end }}
 nodeSelector: {{ toYaml . | nindent 2 }}
 {{- end }}
 
