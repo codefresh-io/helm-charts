@@ -75,6 +75,11 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
     {{- end }}
   env:
   {{- include "cf-common-0.21.0.env-vars" (dict "Values" $mergedEnv "context" $) | trim | nindent 2 }}
+  
+    {{- if .Values.extraEnv }}
+  {{- include "cf-common-0.21.0.env-vars" (dict "Values" .Values.extraEnv "context" $) | trim | nindent 2 }}
+    {{- end }}
+    
   {{- end }}
 
   {{- include "cf-common-0.21.0.ports" $ | trim | nindent 2 }}
