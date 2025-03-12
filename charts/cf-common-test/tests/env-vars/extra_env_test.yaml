@@ -9,10 +9,11 @@ tests:
       - values.yaml
     template: templates/controller.yaml
     set:
-      env:
-        ALICE: BOB
-      extraEnv:
-        FOO: $(ALICE)
+      container:
+        env:
+          ALICE: BOB
+        extraEnv:
+          FOO: $(ALICE)
     asserts:
       - contains:
           path: spec.template.spec.containers[0].env
