@@ -1,6 +1,6 @@
 # runner
 
-![Version: 1.3.0](https://img.shields.io/badge/Version-1.3.0-informational?style=flat-square)
+![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square)
 
 Helm Chart for Launch-Composition Runner (onprem)
 
@@ -16,7 +16,7 @@ Helm Chart for Launch-Composition Runner (onprem)
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://quay.io/codefresh/charts | cf-common | 0.16.0 |
+| oci://quay.io/codefresh/charts | cf-common | 0.23.0 |
 
 ## Values
 

@@ -1,7 +1,7 @@
 apiVersion: v2
 description: Helm Chart for Launch-Composition Runner (onprem)
 name: runner
-version: 1.3.0
+version: 1.4.0
 keywords:
 - codefresh
 - dind
@@ -14,4 +14,4 @@ maintainers:
 dependencies:
   - name: cf-common
     repository: oci://quay.io/codefresh/charts
-    version: "0.16.0"
+    version: "0.23.0"
