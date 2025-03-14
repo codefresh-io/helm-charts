@@ -16,7 +16,7 @@ A Helm chart for Codefresh Internal Gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://quay.io/codefresh/charts | cf-common | 0.21.0 |
+| oci://quay.io/codefresh/charts | cf-common | 0.23.0 |
 
 ## Values
 
