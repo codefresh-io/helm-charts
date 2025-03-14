@@ -287,6 +287,7 @@ volumes:
   njs-scripts:
     enabled: true
     type: configMap
+    optional: true
 
 # -- HPA parameters
 # @default -- See below
