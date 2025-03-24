@@ -1,0 +1,36 @@
+libraryMode: false
+
+global: {}
+
+controller:
+  enabled: true
+  type: deployment
+  replicas: 1
+  deployment:
+    strategy: Recreate
+
+container:
+  image:
+    registry: docker.io
+    repository: gogost/gost
+    tag: latest
+    pullPolicy: IfNotPresent
+  command:
+    - "gost"
+  args:
+    - "-L"
+    - 'rtcp://:0//internal-gateway:80'
+    - "-F"
+    - "tunnel+wss://${GOST_SERVER_HOSTNAME}:443?tunnel.id=${GOST_PLATFORM_TUNNEL_ID}&keepalive=true&ttl=15s"
+  env:
+    GOST_SERVER_HOSTNAME: f598c8b79c17fe29.gost.shared-services.cf-infra.com
+    GOST_PLATFORM_TUNNEL_ID: c5db1800-ce4c-11de-8413-6a7c5a153390
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+hpa: {}
+keda:
+  spec: {}
+  auth: {}
+pdb: {}
