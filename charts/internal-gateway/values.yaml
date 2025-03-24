@@ -63,10 +63,6 @@ codefresh:
   jira-addon-svc: cf-jira-addon
   jira-addon-port: 9000
 
-  workflow-logs-s3-proxy-domain: logs.codefresh.io
-  workflow-logs-s3-proxy-svc: workflow-logs-s3-proxy
-  workflow-logs-s3-proxy-port: 80
-
   # -- Override defaults here!
   serviceEndpoints:
     cfapi-auth: {}
@@ -158,10 +154,8 @@ nginx:
     # @default -- See below
     file: ""
   # -- Path to NJS scripts
-  scriptFilesPatterns:
-  - files/njs/**
-  extraConfigsPatterns:
-  - files/conf.d/**
+  scriptFilesPatterns: []
+  extraConfigsPatterns: []
 
 # -- Misc signadot configuration
 signadot: false
