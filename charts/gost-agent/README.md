@@ -1,4 +1,4 @@
-# ngrok-agent
+# gost-agent
 
 ![Version: 0.1.0](https://img.shields.io/badge/Version-0.1.0-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square)
 
@@ -14,7 +14,7 @@ A Helm chart for Kubernetes
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://quay.io/codefresh/charts | cf-common | 0.24.1 |
+| oci://quay.io/codefresh/charts | cf-common | 0.24.0 |
 
 ## Values
 
@@ -24,14 +24,26 @@ A Helm chart for Kubernetes
 | container.args[0] | string | `"-L"` |  |
 | container.args[1] | string | `"rtcp://:0//internal-gateway:80"` |  |
 | container.args[2] | string | `"-F"` |  |
-| container.args[3] | string | `"tunnel+wss://${GOST_SERVER_HOSTNAME}:443?tunnel.id=${GOST_PLATFORM_TUNNEL_ID}&keepalive=true&ttl=15s"` |  |
+| container.args[3] | string | `"tunnel+wss://$(GOST_SERVER_HOSTNAME):443?tunnel.id=$(GOST_PLATFORM_TUNNEL_ID)&keepalive=true&ttl=15s"` |  |
 | container.command[0] | string | `"gost"` |  |
-| container.env.GOST_PLATFORM_TUNNEL_ID | string | `"c5db1800-ce4c-11de-8413-6a7c5a153390"` |  |
-| container.env.GOST_SERVER_HOSTNAME | string | `"f598c8b79c17fe29.gost.shared-services.cf-infra.com"` |  |
+| container.env.GOST_PLATFORM_TUNNEL_HOSTNAME | string | `""` |  |
+| container.env.GOST_PLATFORM_TUNNEL_ID | string | `""` |  |
+| container.env.GOST_SERVER_HOSTNAME | string | `""` |  |
 | container.image.pullPolicy | string | `"IfNotPresent"` |  |
 | container.image.registry | string | `"docker.io"` |  |
 | container.image.repository | string | `"gogost/gost"` |  |
 | container.image.tag | string | `"latest"` |  |
+| container.probes.liveness.enabled | bool | `true` |  |
+| container.probes.liveness.exec.command[0] | string | `"wget"` |  |
+| container.probes.liveness.exec.command[1] | string | `"--server-response"` |  |
+| container.probes.liveness.exec.command[2] | string | `"--spider"` |  |
+| container.probes.liveness.exec.command[3] | string | `"https://$(GOST_PLATFORM_TUNNEL_HOSTNAME)"` |  |
+| container.probes.liveness.spec.failureThreshold | int | `2` |  |
+| container.probes.liveness.spec.initialDelaySeconds | int | `30` |  |
+| container.probes.liveness.spec.periodSeconds | int | `15` |  |
+| container.probes.liveness.spec.successThreshold | int | `1` |  |
+| container.probes.liveness.spec.timeoutSeconds | int | `15` |  |
+| container.probes.liveness.type | string | `"exec"` |  |
 | controller.deployment.strategy | string | `"Recreate"` |  |
 | controller.enabled | bool | `true` |  |
 | controller.replicas | int | `1` |  |
