@@ -27,13 +27,13 @@ container:
     GOST_PLATFORM_TUNNEL_ID: ""
     GOST_PLATFORM_TUNNEL_HOSTNAME: ""
   probes:
-    liveness: 
+    liveness:
       enabled: true
       type: exec
       exec:
         command:
           - wget
-          - --server-response 
+          - --server-response
           - --spider
           - https://$(GOST_PLATFORM_TUNNEL_HOSTNAME)
       spec:
