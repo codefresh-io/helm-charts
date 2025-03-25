@@ -53,8 +53,8 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.workerConnections | string | `"16384"` | Sets the maximum number of simultaneous connections that can be opened by a worker process. |
 | nginx.config.workerProcesses | string | `"8"` | Defines the number of worker processes. |
 | nginx.config.workerRlimitNofile | string | `"1047552"` | Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process. |
-| nginx.extraConfigsPatterns[0] | string | `"files/conf.d/**"` |  |
-| nginx.scriptFilesPatterns | list | `["files/njs/**"]` | Path to NJS scripts |
+| nginx.extraConfigsPatterns | list | `[]` |  |
+| nginx.scriptFilesPatterns | list | `[]` | Path to NJS scripts |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
 | podSecurityContext | object | See below | Pod Security Context parameters |
