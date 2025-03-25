@@ -21,10 +21,27 @@ container:
     - "-L"
     - 'rtcp://:0//internal-gateway:80'
     - "-F"
-    - "tunnel+wss://${GOST_SERVER_HOSTNAME}:443?tunnel.id=${GOST_PLATFORM_TUNNEL_ID}&keepalive=true&ttl=15s"
+    - "tunnel+wss://$(GOST_SERVER_HOSTNAME):443?tunnel.id=$(GOST_PLATFORM_TUNNEL_ID)&keepalive=true&ttl=15s"
   env:
-    GOST_SERVER_HOSTNAME: f598c8b79c17fe29.gost.shared-services.cf-infra.com
-    GOST_PLATFORM_TUNNEL_ID: c5db1800-ce4c-11de-8413-6a7c5a153390
+    GOST_SERVER_HOSTNAME: ""
+    GOST_PLATFORM_TUNNEL_ID: ""
+    GOST_PLATFORM_TUNNEL_HOSTNAME: ""
+  probes:
+    liveness: 
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - wget
+          - --server-response 
+          - --spider
+          - https://$(GOST_PLATFORM_TUNNEL_HOSTNAME)
+      spec:
+        initialDelaySeconds: 30
+        periodSeconds: 15
+        timeoutSeconds: 15
+        successThreshold: 1
+        failureThreshold: 2
 
 nodeSelector: {}
 tolerations: []
