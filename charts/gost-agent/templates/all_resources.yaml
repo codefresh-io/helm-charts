@@ -1,0 +1,5 @@
+{{- define "gost-agent.resources" -}}
+
+{{ include "gost-agent.controller" . }}
+
+{{- end -}}
