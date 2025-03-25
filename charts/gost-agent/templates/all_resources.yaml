@@ -1,5 +1,5 @@
-{{- define "ngrok-agent.resources" -}}
+{{- define "gost-agent.resources" -}}
 
-{{ include "ngrok-agent.controller" . }}
+{{ include "gost-agent.controller" . }}
 
 {{- end -}}
