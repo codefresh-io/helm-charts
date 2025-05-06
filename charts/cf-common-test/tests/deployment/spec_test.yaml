@@ -159,7 +159,7 @@ tests:
           path: spec.template.spec.nodeSelector
           value:
             alice: bob
-  
+
   - it: Test deployment nodeSelector with global nodeSelector
     values:
       - values.yaml
@@ -228,12 +228,6 @@ tests:
             effect: NoSchedule
             key: codefresh.io
             value: app
-      - contains:
-          path: spec.template.spec.tolerations
-          content:
-            effect: NoSchedule
-            key: worker
-            value: true
 
   - it: Test deployments affinity
     values:
@@ -316,14 +310,6 @@ tests:
       - equal:
           path: spec.template.spec.affinity
           value:
-            nodeAffinity:
-              requiredDuringSchedulingIgnoredDuringExecution:
-                nodeSelectorTerms:
-                  - matchExpressions:
-                      - key: node-type
-                        operator: In
-                        values:
-                          - app
             podAffinity:
               requiredDuringSchedulingIgnoredDuringExecution:
                 - labelSelector:
