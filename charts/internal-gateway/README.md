@@ -1,6 +1,6 @@
 # internal-gateway
 
-![Version: 0.10.4](https://img.shields.io/badge/Version-0.10.4-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 A Helm chart for Codefresh Internal Gateway
 
@@ -16,7 +16,7 @@ A Helm chart for Codefresh Internal Gateway
 
 | Repository | Name | Version |
 |------------|------|---------|
-| oci://quay.io/codefresh/charts | cf-common | 0.24.0 |
+| oci://quay.io/codefresh/charts/dev | cf-common | 0.26.0 |
 
 ## Values
 
