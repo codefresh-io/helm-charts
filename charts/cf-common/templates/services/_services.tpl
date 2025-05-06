@@ -91,7 +91,7 @@ spec:
     {{- if $serviceItem.extraSelectorLabels }}
   {{- include "cf-common-0.27.0.tplrender" (dict "Values" $serviceItem.extraSelectorLabels "context" $) | nindent 4 }}
     {{- end }}
-    {{- if and $serviceItem.trafficDistribution (semverCompare ">=1.31-0" (include "cf-common-0.26.0.kubeVersion" . )) }}
+    {{- if and $serviceItem.trafficDistribution (semverCompare ">=1.31-0" (include "cf-common-0.26.0.kubeVersion" $ )) }}
   trafficDistribution: {{ $serviceItem.trafficDistribution | default "PreferClose" }}
     {{- end -}}
   {{- end }}
