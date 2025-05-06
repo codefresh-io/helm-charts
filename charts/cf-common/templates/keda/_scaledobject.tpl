@@ -1,24 +1,24 @@
-{{- define "cf-common-0.24.0.keda.scaled-object" }}
+{{- define "cf-common-0.25.0.keda.scaled-object" }}
 {{- if .Values.keda.enabled }}
 
 {{- if and .Values.hpa.enabled }}
 {{- fail "ERROR: Both KEDA ScaledObject and HPA are enabled. Disable HPA or Keda ScaledObject!" }}
 {{- end }}
 
-{{- $controllerName := include "cf-common-0.24.0.names.fullname" . -}}
+{{- $controllerName := include "cf-common-0.25.0.names.fullname" . -}}
   {{- if and (hasKey .Values.controller "nameOverride") .Values.controller.nameOverride -}}
     {{- $controllerName = printf "%v-%v" $controllerName .Values.controller.nameOverride -}}
   {{- end -}}
-{{- $containerName := include "cf-common-0.24.0.names.fullname" . -}}
+{{- $containerName := include "cf-common-0.25.0.names.fullname" . -}}
   {{- if and (hasKey .Values.container "nameOverride") .Values.container.nameOverride }}
-    {{- $containerName = include "cf-common-0.24.0.tplrender" (dict "Values" .Values.container.nameOverride "context" .) -}}
+    {{- $containerName = include "cf-common-0.25.0.tplrender" (dict "Values" .Values.container.nameOverride "context" .) -}}
   {{- end }}
 
 apiVersion: keda.sh/v1alpha1
 kind: ScaledObject
 metadata:
-  name: {{ include "cf-common-0.24.0.names.fullname" . }}
-  labels: {{ include "cf-common-0.24.0.labels.standard" . | nindent 4 }}
+  name: {{ include "cf-common-0.25.0.names.fullname" . }}
+  labels: {{ include "cf-common-0.25.0.labels.standard" . | nindent 4 }}
   annotations:
   {{- with .Values.keda.spec.annotations }}
     {{- toYaml . | nindent 4 }}
@@ -56,7 +56,7 @@ spec:
   advanced:
     restoreToOriginalReplicaCount: {{ .restoreToOriginalReplicaCount | default false }}
     horizontalPodAutoscalerConfig:
-      name: {{ include "cf-common-0.24.0.names.fullname" . }}
+      name: {{ include "cf-common-0.25.0.names.fullname" . }}
       {{- with .horizontalPodAutoscalerConfig }}
         {{- toYaml . | nindent 6 }}
       {{- end -}}
@@ -70,7 +70,7 @@ spec:
     {{- end }}
     {{- if and $.Values.keda.auth.enabled }}
     authenticationRef:
-      name: {{ include "cf-common-0.24.0.names.fullname" $ }}
+      name: {{ include "cf-common-0.25.0.names.fullname" $ }}
     {{- end }}
   {{ end }}
 {{- end }}
