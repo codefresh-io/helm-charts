@@ -432,7 +432,7 @@ tests:
                 name: some-secret-one
                 key: some-key-one
 
-  - it: Test main container with image digest 
+  - it: Test main container with image digest
     values:
       - values.yaml
     set:

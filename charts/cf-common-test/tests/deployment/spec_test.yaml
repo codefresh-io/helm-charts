@@ -64,6 +64,21 @@ tests:
           content:
             name: cf-ecr-codefresh-registry
 
+  - it: Test deploymeny with global imagePullSecrets
+    release:
+      name: cf
+    values:
+      - values.yaml
+    set:
+      global:
+        imagePullSecrets:
+          - name: test-global-pull-secret
+    asserts:
+      - contains:
+          path: spec.template.spec.imagePullSecrets
+          content:
+            name: test-global-pull-secret
+
   - it: Test deployment's initContainer is present and valid
     values:
       - values.yaml
