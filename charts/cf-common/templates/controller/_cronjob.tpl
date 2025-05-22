@@ -2,23 +2,23 @@
 Renders cronjob template.
 Must be called from chart root context.
 Usage:
-{{ include "cf-common-0.25.0.controller.cronjob" . }}
+{{ include "cf-common-0.26.0.controller.cronjob" . }}
 */}}
 
-{{- define "cf-common-0.25.0.controller.cronjob" -}}
+{{- define "cf-common-0.26.0.controller.cronjob" -}}
 
 ---
 apiVersion: batch/v1
 kind: CronJob
 metadata:
-  name: {{ include "cf-common-0.25.0.names.fullname" . }}
-  labels: {{ include "cf-common-0.25.0.labels.standard" . | nindent 4 }}
+  name: {{ include "cf-common-0.26.0.names.fullname" . }}
+  labels: {{ include "cf-common-0.26.0.labels.standard" . | nindent 4 }}
   {{- if .Values.controller.labels }}
-  {{- include "cf-common-0.25.0.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
+  {{- include "cf-common-0.26.0.tplrender" (dict "Values" .Values.controller.labels "context" $) | nindent 4 }}
   {{- end }}
   {{- if .Values.controller.annotations }}
   annotations:
-  {{- include "cf-common-0.25.0.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
+  {{- include "cf-common-0.26.0.tplrender" (dict "Values" .Values.controller.annotations "context" $) | nindent 4 }}
   {{- end }}
 spec:
   concurrencyPolicy: {{ .Values.controller.cronjob.concurrencyPolicy }}
@@ -45,15 +45,15 @@ spec:
       {{- end }}
       template:
         metadata:
-          labels: {{ include "cf-common-0.25.0.labels.matchLabels" . | nindent 12 }}
+          labels: {{ include "cf-common-0.26.0.labels.matchLabels" . | nindent 12 }}
           {{- if .Values.podLabels }}
-          {{- include "cf-common-0.25.0.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 12 }}
+          {{- include "cf-common-0.26.0.tplrender" (dict "Values" .Values.podLabels "context" $) | nindent 12 }}
           {{- end }}
-          {{- with include "cf-common-0.25.0.annotations.podAnnotations" . }}
+          {{- with include "cf-common-0.26.0.annotations.podAnnotations" . }}
           annotations:
             {{- . | nindent 12 }}
           {{- end }}
-        spec: {{- include "cf-common-0.25.0.controller.pod" . | trim | nindent 10 -}}
+        spec: {{- include "cf-common-0.26.0.controller.pod" . | trim | nindent 10 -}}
       {{- with .Values.controller.cronjob.ttlSecondsAfterFinished }}
       ttlSecondsAfterFinished: {{ . }}
       {{- end }}
