@@ -2,9 +2,9 @@
 Prints full image name.
 Called from container template.
 Usage:
-{{ include "cf-common-0.26.0.image.name" (dict "image" .Values.container.image "context" $) }}
+{{ include "cf-common-0.27.0.image.name" (dict "image" .Values.container.image "context" $) }}
 */}}
-{{- define "cf-common-0.26.0.image.name" -}}
+{{- define "cf-common-0.27.0.image.name" -}}
 
 {{/* Restoring root $ context */}}
 {{- $ := .context -}}
@@ -68,9 +68,9 @@ For backward compatibility (onprem with private docker registry)
 Prints full image name.
 Must be called from chart root context.
 Usage:
-{{ include "cf-common-0.26.0.image.pullSecrets" . }}
+{{ include "cf-common-0.27.0.image.pullSecrets" . }}
 */}}
-{{- define "cf-common-0.26.0.image.pullSecrets" -}}
+{{- define "cf-common-0.27.0.image.pullSecrets" -}}
   {{- $pullSecrets := list }}
 
   {{- if .Values.global.imagePullSecrets }}
@@ -81,10 +81,10 @@ Usage:
     {{- range $index, $pullSecret := .Values.global.imagePullSecrets -}}
       {{- if and (kindIs "map" $pullSecret ) }}
         {{- if and $pullSecret.name }}
-          {{- $pullSecrets = append $pullSecrets (include "cf-common-0.26.0.tplrender" (dict "Values" $pullSecret.name "context" $)) -}}
+          {{- $pullSecrets = append $pullSecrets (include "cf-common-0.27.0.tplrender" (dict "Values" $pullSecret.name "context" $)) -}}
         {{- end }}
       {{- else }}
-        {{- $pullSecrets = append $pullSecrets (include "cf-common-0.26.0.tplrender" (dict "Values" $pullSecret "context" $)) -}}
+        {{- $pullSecrets = append $pullSecrets (include "cf-common-0.27.0.tplrender" (dict "Values" $pullSecret "context" $)) -}}
       {{- end }}
     {{- end -}}
   {{- end -}}
@@ -97,10 +97,10 @@ Usage:
     {{- range $index, $pullSecret := .Values.imagePullSecrets -}}
       {{- if and (kindIs "map" $pullSecret ) }}
         {{- if and $pullSecret.name }}
-          {{- $pullSecrets = append $pullSecrets (include "cf-common-0.26.0.tplrender" (dict "Values" $pullSecret.name "context" $)) -}}
+          {{- $pullSecrets = append $pullSecrets (include "cf-common-0.27.0.tplrender" (dict "Values" $pullSecret.name "context" $)) -}}
         {{- end }}
       {{- else }}
-        {{- $pullSecrets = append $pullSecrets (include "cf-common-0.26.0.tplrender" (dict "Values" . "context" $)) -}}
+        {{- $pullSecrets = append $pullSecrets (include "cf-common-0.27.0.tplrender" (dict "Values" . "context" $)) -}}
       {{- end }}
     {{- end -}}
   {{- end -}}
