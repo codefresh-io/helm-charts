@@ -2,13 +2,13 @@
 Renders pod spec.
 Called from contoller template.
 Usage:
-{{ include "cf-common-0.27.0.controller.pod" . }}
+{{ include "cf-common-0.28.0.controller.pod" . }}
 */}}
-{{- define "cf-common-0.27.0.controller.pod" -}}
+{{- define "cf-common-0.28.0.controller.pod" -}}
 
-{{- include "cf-common-0.27.0.image.pullSecrets" . }}
+{{- include "cf-common-0.28.0.image.pullSecrets" . }}
 
-serviceAccountName: {{ include "cf-common-0.27.0.names.serviceAccountName" . }}
+serviceAccountName: {{ include "cf-common-0.28.0.names.serviceAccountName" . }}
 
 automountServiceAccountToken: {{ .Values.automountServiceAccountToken | default true }}
 
@@ -58,22 +58,22 @@ initContainers:
   {{- range $initContainerIndex, $initContainerItem := .Values.initContainers }}
     {{- if $initContainerItem.enabled }}
     {{- $_ := set $initContainerItem "nameOverride" $initContainerIndex }}
-    {{- include "cf-common-0.27.0.container" (dict "Values" $initContainerItem "context" $) | trim | nindent 0 }}
+    {{- include "cf-common-0.28.0.container" (dict "Values" $initContainerItem "context" $) | trim | nindent 0 }}
     {{- end }}
   {{- end }}
 {{- end }}
 
 {{- with .Values.container }}
-containers: {{ include "cf-common-0.27.0.container" (dict "Values" . "context" $) | trim | nindent 0 }}
+containers: {{ include "cf-common-0.28.0.container" (dict "Values" . "context" $) | trim | nindent 0 }}
 {{- end }}
 {{- with .Values.additionalContainers }}
 {{ toYaml . | nindent 0 }}
 {{- end }}
 
-volumes:  {{ include "cf-common-0.27.0.volumes" (dict "Values" .Values.volumes "context" $) | trim | nindent 0 }}
+volumes:  {{ include "cf-common-0.28.0.volumes" (dict "Values" .Values.volumes "context" $) | trim | nindent 0 }}
 
 {{- with .Values.extraVolumes }}
-{{ include "cf-common-0.27.0.volumes" (dict "Values" . "context" $) | trim }}
+{{ include "cf-common-0.28.0.volumes" (dict "Values" . "context" $) | trim }}
 {{- end }}
 
 {{- with .Values.hostAliases }}
@@ -108,7 +108,7 @@ affinity: {{ toYaml . | nindent 2 }}
 {{- end }}
 
 {{- with .Values.topologySpreadConstraints }}
-topologySpreadConstraints: {{- include "cf-common-0.27.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
+topologySpreadConstraints: {{- include "cf-common-0.28.0.tplrender" (dict "Values" . "context" $) | nindent 2 }}
 {{- end }}
 
 {{- with .Values.controller.restartPolicy }}
