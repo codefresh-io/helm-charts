@@ -23,7 +23,7 @@ coalesce here for backward compatibility
 {{/*
 Calculate Mongo Uri (for On-Prem)
 Usage:
-{{ include "cf.common-0.27.0.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
+{{ include "cf.common-0.28.0.classic.calculateMongoUri" (dict "dbName" $.Values.global.pipelineManagerService "mongoURI" $.Values.global.mongoURI) }}
 */}}
 {{- define "cf-common-0.28.0.classic.calculateMongoUri" -}}
   {{- if contains "?" .mongoURI -}}
