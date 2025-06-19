@@ -79,7 +79,7 @@ For backward compatibility (.Values.env takes precedence over .Values.container.
     {{- if .Values.extraEnv }}
   {{- include "cf-common-0.27.0.env-vars" (dict "Values" .Values.extraEnv "context" $) | trim | nindent 2 }}
     {{- end }}
-    
+
   {{- end }}
 
   {{- include "cf-common-0.27.0.ports" $ | trim | nindent 2 }}
