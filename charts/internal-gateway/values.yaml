@@ -263,6 +263,7 @@ service:
     enabled: true
     primary: true
     type: ClusterIP
+    trafficDistribution: PreferClose
     ports:
       http:
         port: 80
