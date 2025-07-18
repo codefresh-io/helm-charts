@@ -192,7 +192,7 @@ container:
   image:
     registry: docker.io
     repository: nginxinc/nginx-unprivileged
-    tag: 1.27-alpine
+    tag: 1.29-alpine
 
   env: {}
   envFrom: []
