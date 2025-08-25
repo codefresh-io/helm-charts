@@ -54,6 +54,9 @@ codefresh:
   argo-platform-broadcaster-svc: argo-platform-broadcaster
   argo-platform-broadcaster-port: 80
 
+  argo-platform-promotion-orchestrator-svc: argo-platform-promotion-orchestrator
+  argo-platform-promotion-orchestrator-port: 80
+
   argo-hub-svc: argo-hub-platform
   argo-hub-port: 80
 
