@@ -97,7 +97,7 @@ jobs:
             # Do not run `ct install` for cf-common (library chart) or builder/runner
             exit 0
           fi
-          helm repo add cf-common https://chartmuseum.codefresh.io/cf-common
+          helm repo add cf-common oci://quay.io/codefresh/charts/cf-common
           ct install --config "ct.yaml"
 
   unittest-charts:
