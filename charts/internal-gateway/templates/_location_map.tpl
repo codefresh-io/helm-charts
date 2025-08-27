@@ -241,6 +241,18 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
+      /2.0/api/promotion-orchestrator:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "argo-platform-promotion-orchestrator" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "argo-platform-promotion-orchestrator" "port" }}
+          proxyPassSnippet:
+            {{- $presets.authHeaderSet | toYaml | nindent 12 }}
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
       /2.0:
         enabled: true
         proxy:
@@ -280,6 +292,7 @@ nginx:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
 {{- end }}
 
 {{- define "internal-gateway.nginx-config" }}
