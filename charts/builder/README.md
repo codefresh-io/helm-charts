@@ -76,6 +76,9 @@ Helm Chart for default system/root runtime Builder (onprem)
 | serviceAccount.enabled | bool | `false` |  |
 | tolerations | list | `[]` |  |
 | topologySpreadConstraints | list | `[]` |  |
+| varLibDockerVolume.accessMode | string | `nil` |  |
+| varLibDockerVolume.storageClass | string | `nil` |  |
+| varLibDockerVolume.storageSize | string | `nil` |  |
 | volumeClaimTemplates.varlibdocker.accessMode | string | `"ReadWriteOnce"` |  |
 | volumeClaimTemplates.varlibdocker.mountPath | string | `"/var/lib/docker"` |  |
 | volumeClaimTemplates.varlibdocker.size | string | `"100Gi"` |  |

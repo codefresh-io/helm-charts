@@ -8,6 +8,11 @@ global:
 
 insecureRegistries: []
 
+varLibDockerVolume:
+  accessMode:
+  storageSize:
+  storageClass:
+
 controller:
   enabled: true
   type: statefulset
