@@ -61,9 +61,9 @@ rbac:
 
 container:
   image:
-    registry: docker.io
-    repository: docker
-    tag: 24.0-dind
+    registry: quay.io
+    repository: codefresh/dind
+    tag: 26.1.4-1.28.8
     pullPolicy: IfNotPresent
 
   command:
