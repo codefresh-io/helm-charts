@@ -70,8 +70,6 @@ container:
     - "/bin/sh"
     - "-c"
     - |
-      rm -fv /var/run/docker.pid
-      mkdir -p /var/run/codefresh
       # Adding cleaner
       cp -L /opt/dind/docker-cleaner.sh /usr/local/bin/ && chmod +x /usr/local/bin/docker-cleaner.sh
       if [[ -n "${DOCKER_CLEANER_CRON}" ]]; then
@@ -79,7 +77,7 @@ container:
         echo "${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh " >> /etc/crontabs/root
         crond
       fi
-      dockerd
+      run.sh
 
   containerSecurityContext:
     privileged: true
