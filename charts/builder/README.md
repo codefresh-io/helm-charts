@@ -37,9 +37,9 @@ Helm Chart for default system/root runtime Builder (onprem)
 | container.containerSecurityContext.privileged | bool | `true` |  |
 | container.env.DOCKER_CLEANER_CRON | string | `"0 0 * * *"` |  |
 | container.image.pullPolicy | string | `"IfNotPresent"` |  |
-| container.image.registry | string | `"docker.io"` |  |
-| container.image.repository | string | `"docker"` |  |
-| container.image.tag | string | `"24.0-dind"` |  |
+| container.image.registry | string | `"quay.io"` |  |
+| container.image.repository | string | `"codefresh/dind"` |  |
+| container.image.tag | string | `"26.1.4-1.28.8"` |  |
 | container.resources.limits | object | `{}` |  |
 | container.resources.requests | object | `{}` |  |
 | container.volumeMounts.cf-certs.path[0].mountPath | string | `"/etc/ssl/cf"` |  |
