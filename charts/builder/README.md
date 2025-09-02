@@ -1,6 +1,6 @@
 # builder
 
-![Version: 1.4.0](https://img.shields.io/badge/Version-1.4.0-informational?style=flat-square)
+![Version: 2.0.0](https://img.shields.io/badge/Version-2.0.0-informational?style=flat-square)
 
 Helm Chart for default system/root runtime Builder (onprem)
 
@@ -33,7 +33,7 @@ Helm Chart for default system/root runtime Builder (onprem)
 | configMaps.config.enabled | bool | `true` |  |
 | container.command[0] | string | `"/bin/sh"` |  |
 | container.command[1] | string | `"-c"` |  |
-| container.command[2] | string | `"rm -fv /var/run/docker.pid\nmkdir -p /var/run/codefresh\n# Adding cleaner\ncp -L /opt/dind/docker-cleaner.sh /usr/local/bin/ && chmod +x /usr/local/bin/docker-cleaner.sh\nif [[ -n \"${DOCKER_CLEANER_CRON}\" ]]; then\n  echo \"Set /etc/crontabs/root - ${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh\"\n  echo \"${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh \" >> /etc/crontabs/root\n  crond\nfi\ndockerd\n"` |  |
+| container.command[2] | string | `"# Adding cleaner\ncp -L /opt/dind/docker-cleaner.sh /usr/local/bin/ && chmod +x /usr/local/bin/docker-cleaner.sh\nif [[ -n \"${DOCKER_CLEANER_CRON}\" ]]; then\n  echo \"Set /etc/crontabs/root - ${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh\"\n  echo \"${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh \" >> /etc/crontabs/root\n  crond\nfi\nrun.sh\n"` |  |
 | container.containerSecurityContext.privileged | bool | `true` |  |
 | container.env.DOCKER_CLEANER_CRON | string | `"0 0 * * *"` |  |
 | container.image.pullPolicy | string | `"IfNotPresent"` |  |
