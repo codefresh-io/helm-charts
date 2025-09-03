@@ -2,31 +2,16 @@
 global:
   imageRegistry: ""
 
-  # Backward compatibility with values/templates in cf-helm
-  # These values are defined in cf-helm `values.yaml/secrets.yaml`. But listing them here for verbosity.
   consulHost: ""
   consulService: consul-headless
   consulHttpPort: 8500
 
-# -----------------------------------------------------------------------------------------------------------------------
-# LEGACY VALUES
-# -----------------------------------------------------------------------------------------------------------------------
-
-# Backward compatibility with values/templates in cf-helm
 insecureRegistries: []
-cleaner:
-  image:
-    registry: quay.io
-    repository: codefresh/docker-cleaner
-    tag: "24.0"
-    pullPolicy: IfNotPresent
+
 varLibDockerVolume:
   accessMode:
   storageSize:
-
-# -----------------------------------------------------------------------------------------------------------------------
-# NEW VALUES
-# -----------------------------------------------------------------------------------------------------------------------
+  storageClass:
 
 controller:
   enabled: true
@@ -61,31 +46,22 @@ rbac:
 
 container:
   image:
-    registry: docker.io
-    repository: docker
-    tag: 24.0-dind
+    registry: quay.io
+    repository: codefresh/dind
+    tag: 26.1.4-1.28.8
     pullPolicy: IfNotPresent
 
   command:
     - "/bin/sh"
     - "-c"
     - |
-      rm -fv /var/run/docker.pid
-      mkdir -p /var/run/codefresh
-      # Adding cleaner
-      cp -L /opt/dind/docker-cleaner.sh /usr/local/bin/ && chmod +x /usr/local/bin/docker-cleaner.sh
-      if [[ -n "${DOCKER_CLEANER_CRON}" ]]; then
-        echo "Set /etc/crontabs/root - ${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh"
-        echo "${DOCKER_CLEANER_CRON} /usr/local/bin/docker-cleaner.sh " >> /etc/crontabs/root
-        crond
-      fi
-      dockerd
+      ./run.sh
+
+  env:
+    CLEAN_DOCKER: "true"
 
   containerSecurityContext:
     privileged: true
-
-  env:
-    DOCKER_CLEANER_CRON: "0 0 * * *"
 
   volumeMounts:
     config:
@@ -93,8 +69,6 @@ container:
       - mountPath: /etc/docker/daemon.json
         readOnly: true
         subPath: daemon.json
-      - mountPath: /opt/dind/docker-cleaner.sh
-        subPath: docker-cleaner
     cf-certs:
       path:
       - mountPath: /etc/ssl/cf
@@ -137,13 +111,6 @@ configMaps:
           "tlskey": "/etc/ssl/cf/key.pem",
           "insecure-registries" : [ {{- range $i, $e := .Values.insecureRegistries }} {{- if $i }},{{ end }} {{ $e | quote }} {{- end }} ]
         }
-
-      docker-cleaner: |
-        #!/bin/sh
-        echo "$0 - $(date)" | tee -a /var/log/cleaner.log
-        CLEANER_IMAGE={{ include (printf "cf-common-%s.image.name" (index .Subcharts "cf-common").Chart.Version ) (dict "image" .Values.cleaner.image "context" .)  }}
-        docker pull $CLEANER_IMAGE
-        docker run --rm --name rt-cleaner -v /var/run/docker.sock:/var/run/docker.sock:rw --label io.codefresh.owner=codefresh -e GRACE_PERIOD_SECONDS=86400 --cpu-shares=10 $CLEANER_IMAGE ./docker-gc >> /var/log/cleaner.log 2>&1
 
       register: |
         #!/bin/sh
