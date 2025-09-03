@@ -57,6 +57,9 @@ container:
     - |
       ./run.sh
 
+  env:
+    CLEAN_DOCKER: "true"
+
   containerSecurityContext:
     privileged: true
 

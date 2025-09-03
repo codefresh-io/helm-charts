@@ -30,6 +30,7 @@ Helm Chart for default system/root runtime Builder (onprem)
 | container.command[1] | string | `"-c"` |  |
 | container.command[2] | string | `"./run.sh\n"` |  |
 | container.containerSecurityContext.privileged | bool | `true` |  |
+| container.env.CLEAN_DOCKER | string | `"true"` |  |
 | container.image.pullPolicy | string | `"IfNotPresent"` |  |
 | container.image.registry | string | `"quay.io"` |  |
 | container.image.repository | string | `"codefresh/dind"` |  |
