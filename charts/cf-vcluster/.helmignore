@@ -21,3 +21,6 @@
 .idea/
 *.tmproj
 .vscode/
+
+# Adding schema.json file to exclude to reduce issues with Helm provider in Crossplane, strongly suggest to enable it while developing
+charts/vcluster/values.schema.json

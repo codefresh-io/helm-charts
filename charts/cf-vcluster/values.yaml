@@ -2,11 +2,14 @@ global:
   ingress:
     internal:
       enabled: false
-      annotations: {}
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
       ingressClassName: "nginx-internal"
       # -- Possibility to override backend service name for ingress. If not set default vcluster backend service will be used
-      backendService: {}
-      # backendService:
+      backendServiceOverride: {}
+      # backendServiceOverride:
       #   name: "interceptor-service"
       #   port: 80
       host:
@@ -16,11 +19,14 @@ global:
       enabled: false
       ingressClassName: "nginx-public"
       # -- Possibility to override backend service name for ingress. If not set default vcluster backend service will be used
-      backendService: {}
-      # backendService:
+      backendServiceOverride: {}
+      # backendServiceOverride:
       #   name: "interceptor-service"
       #   port: 80
-      annotations: {}
+      annotations:
+        nginx.ingress.kubernetes.io/backend-protocol: HTTPS
+        nginx.ingress.kubernetes.io/ssl-passthrough: "true"
+        nginx.ingress.kubernetes.io/ssl-redirect: "true"
       host:
         name: "{{ .Release.Name }}"
         domain: example.com
@@ -32,7 +38,6 @@ vcluster:
       - "{{ tpl (printf \"%s.%s.%s\" .Release.Name .Release.Namespace \".cluster.svc.local\") . }}"
       - "{{ tpl (printf \"%s.%s\" .Values.global.ingress.internal.host.name .Values.global.ingress.internal.host.domain) . }}"
       - "{{ tpl (printf \"%s.%s\" .Values.global.ingress.public.host.name .Values.global.ingress.public.host.domain) . }}"
-
     distro:
       k8s:
         enabled: true
@@ -42,3 +47,87 @@ vcluster:
           - --oidc-client-id=vcluster-login
           - --oidc-username-claim=email
           - --oidc-groups-claim=groups
+  sync:
+    toHost:
+      ingresses:
+        enabled: true
+      serviceAccounts:
+        enabled: true
+      storageClasses:
+        enabled: true
+      persistentVolumeClaims:
+        enabled: true
+      persistentVolumes:
+        enabled: true
+    fromHost:
+      ingressClasses:
+        enabled: true
+      nodes:
+        enabled: true
+  experimental:
+    deploy:
+      vcluster:
+        manifests: |-
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: oidc-cluster-admin
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+          - kind: Group
+            name: rnd@codefresh.io
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: oidc-cluster-admin-octopus
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+          - kind: Group
+            name: 787d1a9a-e488-4a77-bb6c-f4b2fdfd8cea # Codefresh R&D Team
+          - kind: Group
+            name: 607a9f67-422c-4ca2-b8c4-d0be213b9650 # Codefresh SA Team
+          - kind: Group
+            name: f8de82e2-cdb6-480a-8f37-9f958ea5fef5 # Codefresh Support Team
+          - kind: Group
+            name: 16b3fb37-58f2-4786-8ca8-6f58d0410687 # Codefresh OSS Team
+          - kind: Group
+            name: dc35779f-57d5-4dff-90c0-34c6e93fe7e7 # Codefresh OSS Team
+          ---
+          apiVersion: v1
+          kind: ServiceAccount
+          metadata:
+            name: codefresh-pipelines-integration-cluster-admin
+            namespace: kube-system
+          ---
+          apiVersion: v1
+          kind: Secret
+          metadata:
+            name: codefresh-pipelines-integration-cluster-admin-token
+            namespace: kube-system
+            annotations:
+              kubernetes.io/service-account.name: codefresh-pipelines-integration-cluster-admin
+          type: kubernetes.io/service-account-token
+          ---
+          kind: ClusterRoleBinding
+          apiVersion: rbac.authorization.k8s.io/v1
+          metadata:
+            name: codefresh-pipelines-integration-cluster-admin
+          roleRef:
+            apiGroup: rbac.authorization.k8s.io
+            kind: ClusterRole
+            name: cluster-admin
+          subjects:
+          - kind: ServiceAccount
+            name: codefresh-pipelines-integration-cluster-admin
+            namespace: kube-system
+  rbac:
+    clusterRole:
+      enabled: true
