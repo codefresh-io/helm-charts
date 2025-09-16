@@ -1,0 +1,8 @@
+# Test values file to deploy on rnd-sandbox vcluster host
+global:
+  ingress:
+    internal:
+      enabled: true
+      className: nginx-internal
+      host:
+        domain: rnd-sandbox.cf-infra.com
