@@ -1,0 +1,44 @@
+global:
+  ingress:
+    internal:
+      enabled: false
+      annotations: {}
+      ingressClassName: "nginx-internal"
+      # -- Possibility to override backend service name for ingress. If not set default vcluster backend service will be used
+      backendService: {}
+      # backendService:
+      #   name: "interceptor-service"
+      #   port: 80
+      host:
+        name: "{{ .Release.Name }}"
+        domain: corp.local
+    public:
+      enabled: false
+      ingressClassName: "nginx-public"
+      # -- Possibility to override backend service name for ingress. If not set default vcluster backend service will be used
+      backendService: {}
+      # backendService:
+      #   name: "interceptor-service"
+      #   port: 80
+      annotations: {}
+      host:
+        name: "{{ .Release.Name }}"
+        domain: example.com
+
+vcluster:
+  controlPlane:
+    proxy:
+      extraSANs:
+      - "{{ tpl (printf \"%s.%s.%s\" .Release.Name .Release.Namespace \".cluster.svc.local\") . }}"
+      - "{{ tpl (printf \"%s.%s\" .Values.global.ingress.internal.host.name .Values.global.ingress.internal.host.domain) . }}"
+      - "{{ tpl (printf \"%s.%s\" .Values.global.ingress.public.host.name .Values.global.ingress.public.host.domain) . }}"
+
+    distro:
+      k8s:
+        enabled: true
+        apiServer:
+          extraArgs:
+          - --oidc-issuer-url=https://dexidp.shared-services.cf-infra.com
+          - --oidc-client-id=vcluster-login
+          - --oidc-username-claim=email
+          - --oidc-groups-claim=groups
