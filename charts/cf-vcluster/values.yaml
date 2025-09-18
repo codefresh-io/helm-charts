@@ -32,6 +32,10 @@ global:
         domain: example.com
 
 vcluster:
+  exportKubeConfig:
+    # -- Automatically calculate and set the kubeconfig host value based on ingress settings
+    server: "{{- include \"cf-vcluster.kubeconfighost\" . -}}"
+    insecure: true
   controlPlane:
     proxy:
       extraSANs:
