@@ -2,7 +2,7 @@ apiVersion: v2
 name: cf-vcluster
 description: Umbrella chart over vCluster adjusted for Codefresh use cases - mainly in Crossplane compositions
 type: application
-version: 0.28.0-0
+version: 0.28.0-1
 appVersion: "0.28.0"
 dependencies:
   - name: vcluster
