@@ -1,6 +1,6 @@
 # cf-vcluster
 
-![Version: 0.28.0-2](https://img.shields.io/badge/Version-0.28.0--2-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.28.0](https://img.shields.io/badge/AppVersion-0.28.0-informational?style=flat-square)
+![Version: 0.28.0-3](https://img.shields.io/badge/Version-0.28.0--3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.28.0](https://img.shields.io/badge/AppVersion-0.28.0-informational?style=flat-square)
 
 Umbrella chart over vCluster adjusted for Codefresh use cases - mainly in Crossplane compositions
 
@@ -47,6 +47,8 @@ Umbrella chart over vCluster adjusted for Codefresh use cases - mainly in Crossp
 | vcluster.experimental.deploy.vcluster.manifests | string | `"---\nkind: ClusterRoleBinding\napiVersion: rbac.authorization.k8s.io/v1\nmetadata:\n  name: oidc-cluster-admin\nroleRef:\n  apiGroup: rbac.authorization.k8s.io\n  kind: ClusterRole\n  name: cluster-admin\nsubjects:\n- kind: Group\n  name: rnd@codefresh.io\n---\nkind: ClusterRoleBinding\napiVersion: rbac.authorization.k8s.io/v1\nmetadata:\n  name: oidc-cluster-admin-octopus\nroleRef:\n  apiGroup: rbac.authorization.k8s.io\n  kind: ClusterRole\n  name: cluster-admin\nsubjects:\n- kind: Group\n  name: 787d1a9a-e488-4a77-bb6c-f4b2fdfd8cea # Codefresh R&D Team\n- kind: Group\n  name: 607a9f67-422c-4ca2-b8c4-d0be213b9650 # Codefresh SA Team\n- kind: Group\n  name: f8de82e2-cdb6-480a-8f37-9f958ea5fef5 # Codefresh Support Team\n- kind: Group\n  name: 16b3fb37-58f2-4786-8ca8-6f58d0410687 # Codefresh OSS Team\n- kind: Group\n  name: dc35779f-57d5-4dff-90c0-34c6e93fe7e7 # Codefresh OSS Team\n---\napiVersion: v1\nkind: ServiceAccount\nmetadata:\n  name: codefresh-pipelines-integration-cluster-admin\n  namespace: kube-system\n---\napiVersion: v1\nkind: Secret\nmetadata:\n  name: codefresh-pipelines-integration-cluster-admin-token\n  namespace: kube-system\n  annotations:\n    kubernetes.io/service-account.name: codefresh-pipelines-integration-cluster-admin\ntype: kubernetes.io/service-account-token\n---\nkind: ClusterRoleBinding\napiVersion: rbac.authorization.k8s.io/v1\nmetadata:\n  name: codefresh-pipelines-integration-cluster-admin\nroleRef:\n  apiGroup: rbac.authorization.k8s.io\n  kind: ClusterRole\n  name: cluster-admin\nsubjects:\n- kind: ServiceAccount\n  name: codefresh-pipelines-integration-cluster-admin\n  namespace: kube-system"` |  |
 | vcluster.exportKubeConfig.insecure | bool | `true` |  |
 | vcluster.exportKubeConfig.server | string | `"{{- include \"cf-vcluster.kubeconfighost\" . -}}"` | Automatically calculate and set the kubeconfig host value based on ingress settings |
+| vcluster.exportKubeConfig.serviceAccount.clusterRole | string | `"cluster-admin"` |  |
+| vcluster.exportKubeConfig.serviceAccount.name | string | `"cluster-admin"` |  |
 | vcluster.rbac.clusterRole.enabled | bool | `true` |  |
 | vcluster.sync.fromHost.ingressClasses.enabled | bool | `true` |  |
 | vcluster.sync.fromHost.nodes.enabled | bool | `true` |  |

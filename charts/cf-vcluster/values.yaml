@@ -36,6 +36,9 @@ vcluster:
     # -- Automatically calculate and set the kubeconfig host value based on ingress settings
     server: "{{- include \"cf-vcluster.kubeconfighost\" . -}}"
     insecure: true
+    serviceAccount:
+      name: "cluster-admin"
+      clusterRole: "cluster-admin"
   controlPlane:
     proxy:
       extraSANs:
