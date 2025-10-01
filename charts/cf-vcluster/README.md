@@ -1,6 +1,6 @@
 # cf-vcluster
 
-![Version: 0.28.0-3](https://img.shields.io/badge/Version-0.28.0--3-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.28.0](https://img.shields.io/badge/AppVersion-0.28.0-informational?style=flat-square)
+![Version: 0.28.0-4](https://img.shields.io/badge/Version-0.28.0--4-informational?style=flat-square) ![Type: application](https://img.shields.io/badge/Type-application-informational?style=flat-square) ![AppVersion: 0.28.0](https://img.shields.io/badge/AppVersion-0.28.0-informational?style=flat-square)
 
 Umbrella chart over vCluster adjusted for Codefresh use cases - mainly in Crossplane compositions
 
@@ -20,13 +20,18 @@ Umbrella chart over vCluster adjusted for Codefresh use cases - mainly in Crossp
 
 | Key | Type | Default | Description |
 |-----|------|---------|-------------|
+| automaticScaleDown.enabled | bool | `false` |  |
+| automaticScaleDown.httpScaler | object | `{"host":"keda-add-ons-http-external-scaler.keda","port":9090}` | Scaler address on vCluster host |
+| automaticScaleDown.initialCooldownPeriod | int | `120` |  |
+| automaticScaleDown.interceptor | object | `{"host":"keda-add-ons-http-interceptor-proxy.keda","port":8443}` | Interceptor address on vCluster host |
+| automaticScaleDown.periodSeconds | int | `43200` | How many seconds of no requests to vcluster until it is scaled down to zero. Defaults to 12 hours (43200s) |
 | global.ingress.internal.annotations."nginx.ingress.kubernetes.io/backend-protocol" | string | `"HTTPS"` |  |
 | global.ingress.internal.annotations."nginx.ingress.kubernetes.io/ssl-passthrough" | string | `"true"` |  |
 | global.ingress.internal.annotations."nginx.ingress.kubernetes.io/ssl-redirect" | string | `"true"` |  |
 | global.ingress.internal.backendServiceOverride | object | `{}` | Possibility to override backend service name for ingress. If not set default vcluster backend service will be used |
 | global.ingress.internal.enabled | bool | `false` |  |
 | global.ingress.internal.host.domain | string | `"corp.local"` |  |
-| global.ingress.internal.host.name | string | `"{{ .Release.Name }}"` |  |
+| global.ingress.internal.host.name | string | `"{{ .Release.Namespace }}-vcluster"` |  |
 | global.ingress.internal.ingressClassName | string | `"nginx-internal"` |  |
 | global.ingress.public.annotations."nginx.ingress.kubernetes.io/backend-protocol" | string | `"HTTPS"` |  |
 | global.ingress.public.annotations."nginx.ingress.kubernetes.io/ssl-passthrough" | string | `"true"` |  |
@@ -34,7 +39,7 @@ Umbrella chart over vCluster adjusted for Codefresh use cases - mainly in Crossp
 | global.ingress.public.backendServiceOverride | object | `{}` | Possibility to override backend service name for ingress. If not set default vcluster backend service will be used |
 | global.ingress.public.enabled | bool | `false` |  |
 | global.ingress.public.host.domain | string | `"example.com"` |  |
-| global.ingress.public.host.name | string | `"{{ .Release.Name }}"` |  |
+| global.ingress.public.host.name | string | `"{{ .Release.Namespace }}-vcluster"` |  |
 | global.ingress.public.ingressClassName | string | `"nginx-public"` |  |
 | vcluster.controlPlane.distro.k8s.apiServer.extraArgs[0] | string | `"--oidc-issuer-url=https://dexidp.shared-services.cf-infra.com"` |  |
 | vcluster.controlPlane.distro.k8s.apiServer.extraArgs[1] | string | `"--oidc-client-id=vcluster-login"` |  |

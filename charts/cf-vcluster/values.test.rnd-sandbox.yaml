@@ -5,7 +5,7 @@ global:
       enabled: true
       className: nginx-internal
       host:
-        domain: rnd-sandbox.cf-infra.com
+        domain: vclusters.rnd-sandbox.cf-infra.com
 
 automaticScaleDown:
   enabled: true
