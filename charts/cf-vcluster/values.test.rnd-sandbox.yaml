@@ -6,3 +6,7 @@ global:
       className: nginx-internal
       host:
         domain: rnd-sandbox.cf-infra.com
+
+automaticScaleDown:
+  enabled: true
+  periodSeconds: 60

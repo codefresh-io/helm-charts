@@ -18,11 +18,11 @@ spec:
       - path: /
         pathType: {{ $.Values.vcluster.controlPlane.ingress.pathType }}
         backend:
-          {{- if $ingress.backendServiceOverride}}
+          {{- if $.Values.automaticScaleDown.enabled}}
           service:
-            name: {{ $ingress.backendServiceOverride.name }}
+            name: {{ $.Release.Name }}-keda-http-interceptor
             port:
-              number: {{ $ingress.backendServiceOverride.port }}
+              number: {{ $.Values.automaticScaleDown.interceptor.port }}
         {{- else }}
           service:
             name: {{ $.Release.Name }}
