@@ -1,4 +1,4 @@
-{{- define "cf-common-0.28.0.external-secrets" }}
+{{- define "cf-common-0.29.0.external-secrets" }}
   {{- range $i, $secret := .Values.externalSecrets }}
 apiVersion: external-secrets.io/v1beta1
 kind: ExternalSecret
@@ -31,9 +31,9 @@ spec:
   - secretKey: {{ $key.name }}
     remoteRef:
         {{- if hasKey $key "remoteSecretName"}}
-      key: {{ $key.remoteSecretName }}
+      key: {{ include "cf-common-0.29.0.tplrender" (dict "Values" $key.remoteSecretName "context" .) }}
         {{- else }}
-      key: {{ $secret.remoteSecretName }}
+      key: {{ include "cf-common-0.29.0.tplrender" (dict "Values" $key.remoteSecretName "context" .) }}
         {{- end }}
       property: {{ $key.remoteKey }}
       {{- with $key.decodingStrategy }}
