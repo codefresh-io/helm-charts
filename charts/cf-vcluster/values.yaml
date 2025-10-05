@@ -13,7 +13,7 @@ global:
       #   name: "interceptor-service"
       #   port: 80
       host:
-        name: "{{ .Release.Name }}"
+        name: "{{ .Release.Namespace }}-vcluster"
         domain: corp.local
     public:
       enabled: false
@@ -28,7 +28,7 @@ global:
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
       host:
-        name: "{{ .Release.Name }}"
+        name: "{{ .Release.Namespace }}-vcluster"
         domain: example.com
 
 vcluster:
@@ -138,3 +138,19 @@ vcluster:
   rbac:
     clusterRole:
       enabled: true
+
+# Automatic scaledown with Keda
+automaticScaleDown:
+  enabled: false
+  # How many seconds to wait until scaler is active from creation (prevent release failure)
+  initialCooldownPeriod: 120
+  # -- How many seconds of no requests to vcluster until it is scaled down to zero. Defaults to 12 hours (43200s)
+  periodSeconds: 43200
+  # -- Interceptor address on vCluster host
+  interceptor:
+    host: "keda-add-ons-http-interceptor-proxy.keda"
+    port: 8443
+  # -- Scaler address on vCluster host
+  httpScaler:
+    host: keda-add-ons-http-external-scaler.keda
+    port: 9090

@@ -1,0 +1,9 @@
+{{- if .Values.automaticScaleDown.enabled }}
+apiVersion: v1
+kind: Service
+metadata:
+  name: {{ .Release.Name }}-keda-http-interceptor
+spec:
+  type: ExternalName
+  externalName: {{ .Values.automaticScaleDown.interceptor.host}}
+{{- end }}
