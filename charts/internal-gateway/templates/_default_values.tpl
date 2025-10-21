@@ -61,4 +61,13 @@ codefresh:
     jira-addon:
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "jira-addon-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "jira-addon-port" }}
+    otel-collector-traces:
+      svc: '{{ index .Values.codefresh "otel-collector-traces-svc" }}.{{ index .Values.codefresh "otel-collector-traces-namespace" }}.svc.{{ .Values.global.clusterDomain }}'
+      port: {{ index .Values.codefresh "otel-collector-traces-port" }}
+    otel-collector-metrics:
+      svc: '{{ index .Values.codefresh "otel-collector-metrics-svc" }}.{{ index .Values.codefresh "otel-collector-metrics-namespace" }}.svc.{{ .Values.global.clusterDomain }}'
+      port: {{ index .Values.codefresh "otel-collector-metrics-port" }}
+    otel-collector-logs:
+      svc: '{{ index .Values.codefresh "otel-collector-logs-svc" }}.{{ index .Values.codefresh "otel-collector-logs-namespace" }}.svc.{{ .Values.global.clusterDomain }}'
+      port: {{ index .Values.codefresh "otel-collector-logs-port" }}
 {{- end }}

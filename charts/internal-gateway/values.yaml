@@ -66,6 +66,18 @@ codefresh:
   jira-addon-svc: cf-jira-addon
   jira-addon-port: 9000
 
+  otel-collector-traces-svc: traces-collector
+  otel-collector-traces-port: 4318
+  otel-collector-traces-namespace: monitoring
+
+  otel-collector-metrics-svc: metrics-collector
+  otel-collector-metrics-port: 4318
+  otel-collector-metrics-namespace: monitoring
+
+  otel-collector-logs-svc: logs-collector
+  otel-collector-logs-port: 4318
+  otel-collector-logs-namespace: monitoring
+
   # -- Override defaults here!
   serviceEndpoints:
     cfapi-auth: {}

@@ -217,6 +217,39 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
+      /api/otel/collector/traces:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "otel-collector-traces" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "otel-collector-traces" "port" }}
+          auth_request /api/auth/otel;
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+      
+      /api/otel/collector/metrics:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "otel-collector-metrics" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "otel-collector-metrics" "port" }}
+          auth_request /api/auth/otel;
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
+      /api/otel/collector/logs:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "otel-collector-logs" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "otel-collector-logs" "port" }}
+          auth_request /api/auth/otel;
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
       /2.0/api/graphql:
         enabled: true
         proxy:
