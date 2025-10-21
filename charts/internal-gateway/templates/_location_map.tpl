@@ -67,6 +67,25 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
+      /api/auth/otel:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-auth" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-auth" "port" }}
+          proxyPassSnippet: |
+            proxy_pass_request_body off;
+        locationSnippet: |
+          proxy_http_version 1.1;
+          proxy_set_header Upgrade $http_upgrade;
+          proxy_set_header Connection "";
+          proxy_set_header Content-Length "";
+          proxy_set_header X-Real-IP $remote_addr;
+          proxy_set_header X-Original-URI $request_uri;
+          proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+          proxy_set_header X-Forwarded-Proto $scheme;
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
       /api/auth/:
         enabled: true
         proxy:
