@@ -1,4 +1,6 @@
 {{- define "internal-gateway.location-presets" }}
+authHeaderSetOtel: |
+  auth_request /api/auth/otel;
 authHeaderSet: |
   auth_request /api/auth/authenticate;
   auth_request_set $auth_entity $upstream_http_x_cf_auth_entity;
@@ -222,7 +224,8 @@ nginx:
         proxy:
           host: {{ index $endpoints.serviceEndpoints "otel-collector-traces" "svc" }}
           port: {{ index $endpoints.serviceEndpoints "otel-collector-traces" "port" }}
-          auth_request /api/auth/otel;
+          proxyPassSnippet:
+            {{- $presets.authHeaderSetOtel | toYaml | nindent 12 }}
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
@@ -233,7 +236,8 @@ nginx:
         proxy:
           host: {{ index $endpoints.serviceEndpoints "otel-collector-metrics" "svc" }}
           port: {{ index $endpoints.serviceEndpoints "otel-collector-metrics" "port" }}
-          auth_request /api/auth/otel;
+          proxyPassSnippet:
+            {{- $presets.authHeaderSetOtel | toYaml | nindent 12 }}
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
@@ -244,7 +248,8 @@ nginx:
         proxy:
           host: {{ index $endpoints.serviceEndpoints "otel-collector-logs" "svc" }}
           port: {{ index $endpoints.serviceEndpoints "otel-collector-logs" "port" }}
-          auth_request /api/auth/otel;
+          proxyPassSnippet:
+            {{- $presets.authHeaderSetOtel | toYaml | nindent 12 }}
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
