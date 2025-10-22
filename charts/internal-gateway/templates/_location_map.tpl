@@ -23,9 +23,9 @@ locationDirectives:
   proxy_buffers: "4 128k"
   client_max_body_size: "10M"
   client_body_buffer_size: "32k"
-  proxy_connect_timeout: "5s"
-  proxy_send_timeout: "60s"
-  proxy_read_timeout: "60s"
+  proxy_connect_timeout: "60s"
+  proxy_send_timeout: "120s"
+  proxy_read_timeout: "120s"
 {{- end }}
 
 {{- define "internal-gateway.nginx-config-defaults" }}
