@@ -55,10 +55,9 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.workerRlimitNofile | string | `"1047552"` | Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process. |
 | nginx.extraConfigsPatterns | list | `[]` |  |
 | nginx.scriptFilesPatterns | list | `[]` | Path to NJS scripts |
-| otel.config.exporter.otlp.endpoint | string | `"http://localhost:4317"` |  |
-| otel.config.sampler.type | string | `"always_on"` |  |
-| otel.config.service_name | string | `"codefresh-internal-gateway"` |  |
-| otel.enabled | bool | `false` |  |
+| otel.enabled | bool | `true` |  |
+| otel.exporter.endpoint | string | `"http://localhost:4317"` |  |
+| otel.service_name | string | `"codefresh-internal-gateway"` |  |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
 | podSecurityContext | object | See below | Pod Security Context parameters |
