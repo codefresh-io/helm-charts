@@ -205,9 +205,6 @@ container:
       path:
       - mountPath: /etc/nginx/nginx.conf
         subPath: nginx.conf
-      - mountPath: /etc/nginx/opentelemetry_config.yaml
-        subPath: opentelemetry_config.yaml
-        optional: true
     # extra-configs:
     #   path:
     #   - mountPath: /etc/nginx/conf.d
