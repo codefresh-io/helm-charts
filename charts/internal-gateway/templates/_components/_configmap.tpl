@@ -14,6 +14,9 @@ metadata:
     {{- include "internal-gateway.labels" . | nindent 4 }}
 data:
   nginx.conf: |
+    {{- if .Values.otel.enabled }}
+    load_module modules/ngx_otel_module.so;
+    {{- end }}
     worker_processes {{ $nginxConfig.workerProcesses }};
     error_log  /dev/stderr {{ $nginxConfig.errorLogLevel }};
     pid        /tmp/nginx.pid;
@@ -66,6 +69,10 @@ data:
       resolver {{ $nginxConfig.resolver }};
       {{- else }}
       resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+      {{- end }}
+
+      {{- if .Values.otel.enabled }}
+        {{- tpl .Values.otel.httpSnippet . | nindent 6 }}
       {{- end }}
 
       {{- with $nginxConfig.httpSnippet }}
