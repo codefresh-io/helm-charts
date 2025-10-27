@@ -14,6 +14,9 @@ metadata:
     {{- include "internal-gateway.labels" . | nindent 4 }}
 data:
   nginx.conf: |
+    {{- if .Values.otel.enabled }}
+    load_module modules/ngx_otel_module.so;
+    {{- end }}
     worker_processes {{ $nginxConfig.workerProcesses }};
     error_log  /dev/stderr {{ $nginxConfig.errorLogLevel }};
     pid        /tmp/nginx.pid;
@@ -33,7 +36,12 @@ data:
 
     http {
       {{- if .Values.otel.enabled }}
-      opentelemetry_config /etc/nginx/opentelemetry_config.yaml;
+      otel_trace on;
+      otel_service_name {{default "codefresh-internal-gateway" .Values.otel.service_name }};
+      otel_trace_context inject;
+      otel_exporter {
+        endpoint "{{ .Values.otel.exporter.endpoint }}";
+      }
       {{- end }}
       client_body_temp_path /tmp/client_temp;
       proxy_temp_path       /tmp/proxy_temp_path;
@@ -130,8 +138,4 @@ data:
       }
       include /etc/nginx/conf.d/*.conf;
     }
-  {{- if .Values.otel.enabled }}
-  opentelemetry_config.yaml: |
-    {{ .Values.otel.config | toYaml | nindent 4 }}
-  {{- end }}
 {{- end }}

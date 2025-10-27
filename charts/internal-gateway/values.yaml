@@ -205,6 +205,9 @@ container:
       path:
       - mountPath: /etc/nginx/nginx.conf
         subPath: nginx.conf
+      - mountPath: /etc/nginx/opentelemetry_config.yaml
+        subPath: opentelemetry_config.yaml
+        optional: true
     # extra-configs:
     #   path:
     #   - mountPath: /etc/nginx/conf.d
@@ -331,11 +334,7 @@ keda:
   enabled: false
 
 otel:
-  enabled: false
-  config:
-    service_name: codefresh-internal-gateway
-    sampler:
-      type: always_on
-    exporter:
-      otlp:
-        endpoint: http://localhost:4317
+  enabled: true
+  service_name: "codefresh-internal-gateway"
+  exporter:
+    endpoint: http://localhost:4317
