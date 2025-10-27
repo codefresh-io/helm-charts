@@ -35,14 +35,6 @@ data:
     }
 
     http {
-      {{- if .Values.otel.enabled }}
-      otel_trace on;
-      otel_service_name {{default "codefresh-internal-gateway" .Values.otel.service_name }};
-      otel_trace_context inject;
-      otel_exporter {
-        endpoint "{{ .Values.otel.exporter.endpoint }}";
-      }
-      {{- end }}
       client_body_temp_path /tmp/client_temp;
       proxy_temp_path       /tmp/proxy_temp_path;
       fastcgi_temp_path     /tmp/fastcgi_temp;
@@ -77,6 +69,10 @@ data:
       resolver {{ $nginxConfig.resolver }};
       {{- else }}
       resolver {{ .Values.global.dnsService }}.{{ .Values.global.dnsNamespace }}.svc.{{ .Values.global.clusterDomain }};
+      {{- end }}
+
+      {{- if .Values.otel.enabled }}
+        {{- tpl .Values.otel.httpSnippet . | nindent 6 }}
       {{- end }}
 
       {{- with $nginxConfig.httpSnippet }}

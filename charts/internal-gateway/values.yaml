@@ -334,7 +334,17 @@ keda:
   enabled: false
 
 otel:
-  enabled: true
-  service_name: "codefresh-internal-gateway"
-  exporter:
-    endpoint: http://localhost:4317
+  enabled: false
+  # -- Path to the OpenTelemetry NGINX module - should be present in the NGINX image, images with -otel tags include it
+  modulePath: "modules/ngx_otel_module.so"
+  config:
+    service_name: "codefresh-internal-gateway"
+    endpoint: "localhost:4317"
+  # -- Snippet to be included in the http block of nginx.conf for OTEL configs. See here for available directives https://nginx.org/en/docs/ngx_otel_module.html
+  httpSnippet: |
+    otel_trace on;
+    otel_service_name {{ default "codefresh-internal-gateway"  .Values.otel.config.service_name }};
+    otel_trace_context "inject";
+    otel_exporter {
+      endpoint {{ .Values.otel.config.endpoint}};
+    }

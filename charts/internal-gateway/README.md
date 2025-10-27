@@ -55,9 +55,11 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.workerRlimitNofile | string | `"1047552"` | Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process. |
 | nginx.extraConfigsPatterns | list | `[]` |  |
 | nginx.scriptFilesPatterns | list | `[]` | Path to NJS scripts |
-| otel.enabled | bool | `true` |  |
-| otel.exporter.endpoint | string | `"http://localhost:4317"` |  |
-| otel.service_name | string | `"codefresh-internal-gateway"` |  |
+| otel.config.endpoint | string | `"localhost:4317"` |  |
+| otel.config.service_name | string | `"codefresh-internal-gateway"` |  |
+| otel.enabled | bool | `false` |  |
+| otel.httpSnippet | string | `"otel_trace on;\notel_service_name {{ default \"codefresh-internal-gateway\"  .Values.otel.config.service_name }};\notel_trace_context \"inject\";\notel_exporter {\n  endpoint {{ .Values.otel.config.endpoint}};\n}\n"` | Snippet to be included in the http block of nginx.conf for OTEL configs. See here for available directives https://nginx.org/en/docs/ngx_otel_module.html |
+| otel.modulePath | string | `"modules/ngx_otel_module.so"` | Path to the OpenTelemetry NGINX module - should be present in the NGINX image, images with -otel tags include it |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
 | podSecurityContext | object | See below | Pod Security Context parameters |
