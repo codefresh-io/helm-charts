@@ -195,7 +195,7 @@ container:
   image:
     registry: docker.io
     repository: nginxinc/nginx-unprivileged
-    tag: 1.29-alpine
+    tag: 1.29-alpine-otel
 
   env: {}
   envFrom: []
@@ -329,3 +329,13 @@ rbac:
 
 keda:
   enabled: false
+
+otel:
+  enabled: false
+  config:
+    service_name: codefresh-internal-gateway
+    sampler:
+      type: always_on
+    exporter:
+      otlp:
+        endpoint: http://localhost:4317

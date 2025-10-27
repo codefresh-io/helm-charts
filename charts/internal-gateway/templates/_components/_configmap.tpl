@@ -32,6 +32,9 @@ data:
     }
 
     http {
+      {{- if .Values.otel.enabled }}
+      opentelemetry_config /etc/nginx/opentelemetry_config.yaml;
+      {{- end }}
       client_body_temp_path /tmp/client_temp;
       proxy_temp_path       /tmp/proxy_temp_path;
       fastcgi_temp_path     /tmp/fastcgi_temp;
@@ -127,4 +130,8 @@ data:
       }
       include /etc/nginx/conf.d/*.conf;
     }
+  {{- if .Values.otel.enabled }}
+  opentelemetry_config.yaml: |
+    {{ .Values.otel.config | toYaml | nindent 4 }}
+  {{- end }}
 {{- end }}
