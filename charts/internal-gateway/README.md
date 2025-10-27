@@ -1,6 +1,6 @@
 # internal-gateway
 
-![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.12.0](https://img.shields.io/badge/Version-0.12.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 A Helm chart for Codefresh Internal Gateway
 
@@ -55,6 +55,10 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.workerRlimitNofile | string | `"1047552"` | Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process. |
 | nginx.extraConfigsPatterns | list | `[]` |  |
 | nginx.scriptFilesPatterns | list | `[]` | Path to NJS scripts |
+| otel.config.exporter.otlp.endpoint | string | `"http://localhost:4317"` |  |
+| otel.config.sampler.type | string | `"always_on"` |  |
+| otel.config.service_name | string | `"codefresh-internal-gateway"` |  |
+| otel.enabled | bool | `false` |  |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
 | podSecurityContext | object | See below | Pod Security Context parameters |
