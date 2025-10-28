@@ -341,7 +341,7 @@ otel:
   httpSnippet: |
     otel_trace on;
     otel_service_name {{ default "codefresh-internal-gateway"  .Values.otel.config.service_name }};
-    otel_trace_context "inject";
+    otel_trace_context "propagate";
     otel_exporter {
       endpoint {{ .Values.otel.config.endpoint}};
     }
