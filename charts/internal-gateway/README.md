@@ -1,6 +1,6 @@
 # internal-gateway
 
-![Version: 0.12.0](https://img.shields.io/badge/Version-0.12.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.12.1](https://img.shields.io/badge/Version-0.12.1-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 A Helm chart for Codefresh Internal Gateway
 
@@ -58,7 +58,7 @@ A Helm chart for Codefresh Internal Gateway
 | otel.config.endpoint | string | `"localhost:4317"` |  |
 | otel.config.service_name | string | `"codefresh-internal-gateway"` |  |
 | otel.enabled | bool | `false` |  |
-| otel.httpSnippet | string | `"otel_trace on;\notel_service_name {{ default \"codefresh-internal-gateway\"  .Values.otel.config.service_name }};\notel_trace_context \"inject\";\notel_exporter {\n  endpoint {{ .Values.otel.config.endpoint}};\n}\n"` | Snippet to be included in the http block of nginx.conf for OTEL configs. See here for available directives https://nginx.org/en/docs/ngx_otel_module.html |
+| otel.httpSnippet | string | `"otel_trace on;\notel_service_name {{ default \"codefresh-internal-gateway\"  .Values.otel.config.service_name }};\notel_trace_context \"propagate\";\notel_exporter {\n  endpoint {{ .Values.otel.config.endpoint}};\n}\n"` | Snippet to be included in the http block of nginx.conf for OTEL configs. See here for available directives https://nginx.org/en/docs/ngx_otel_module.html |
 | otel.modulePath | string | `"modules/ngx_otel_module.so"` | Path to the OpenTelemetry NGINX module - should be present in the NGINX image, images with -otel tags include it |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
