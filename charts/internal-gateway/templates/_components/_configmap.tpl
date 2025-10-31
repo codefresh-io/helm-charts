@@ -85,7 +85,9 @@ data:
 
       server {
         listen 8080;
+        {{- if .Values.ipv6.enabled }}
         listen [::]:8080;
+        {{- end }}
 
         {{- range $key, $val := $nginxConfig.serverDirectives }}
         {{ printf "%s %s;" $key $val }}
