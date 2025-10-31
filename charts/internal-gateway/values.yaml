@@ -2,6 +2,10 @@
 # Added to support usage in Codefresh On-Premise Helm chart
 libraryMode: false
 
+# -- Enable IPv6 support
+ipv6:
+  enabled: true
+
 # -- Codefresh platform settings
 # List of services endpoints and port
 # @default -- See below
