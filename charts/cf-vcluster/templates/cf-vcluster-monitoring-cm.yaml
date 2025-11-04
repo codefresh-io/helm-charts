@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: cf-vcluster-monitoring
+data:
+  monitoredNamespaces: |
+    {{ default list .Values.global.monitoring.monitoredNamespaces | toJson }}
+  additionalResourceAttributes: |
+    {{ default dict .Values.global.monitoring.additionalResourceAttributes | toJson  }}

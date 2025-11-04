@@ -1,0 +1,18 @@
+{{ $context := .Subcharts.vcluster }}
+apiVersion: v1
+kind: Secret
+metadata:
+  name: "vc-templated-config"
+  namespace: {{ .Release.Namespace }}
+  labels:
+    app: vcluster
+    chart: "{{ $context.Chart.Name }}-{{ $context.Chart.Version }}"
+    release: "{{ .Release.Name }}"
+    heritage: "{{ .Release.Service }}"
+  {{- if $context.Values.controlPlane.advanced.globalMetadata.annotations }}
+  annotations:
+{{ toYaml $context.Values.controlPlane.advanced.globalMetadata.annotations | indent 4 }}
+  {{- end }}
+type: Opaque
+data:
+  config.yaml: {{ tpl ($context.Values | toYaml) . | b64enc | quote }}
