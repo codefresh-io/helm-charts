@@ -167,7 +167,7 @@ vcluster:
         role:
           extraRules:
             - apiGroups: ["monitoring.coreos.com"]
-              resources: ["servicemonitors","podmonitors"]
+              resources: ["servicemonitors", "podmonitors"]
               verbs: ["create", "delete", "patch", "update", "get", "list", "watch"]
         clusterRole:
           extraRules:
