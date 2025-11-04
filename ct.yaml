@@ -3,7 +3,8 @@ remote: origin
 target-branch: master
 chart-dirs:
   - charts
-chart-repos: ["https://charts.loft.sh"]
+chart-repos:
+- vcluster=https://charts.loft.sh"
 helm-extra-args: "--timeout 600s"
 validate-yaml: true
 check-version-increment: true
