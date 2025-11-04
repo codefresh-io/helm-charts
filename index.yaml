@@ -1288,6 +1288,24 @@ entries:
     version: 0.0.0
   cf-vcluster:
   - apiVersion: v2
+    appVersion: 0.31.0
+    created: "2025-11-04T14:15:11.625609134Z"
+    dependencies:
+    - name: vcluster
+      repository: https://charts.loft.sh
+      version: v0.31.0-alpha.0
+    description: Umbrella chart over vCluster adjusted for Codefresh use cases - mainly
+      in Crossplane compositions
+    digest: 1dfcc12790c955a3bd3bb9416ad013dc4f9aa9285db08dd7e208fb3324e9de1e
+    maintainers:
+    - name: codefresh
+      url: https://codefresh-io.github.io/
+    name: cf-vcluster
+    type: application
+    urls:
+    - https://github.com/codefresh-io/helm-charts/releases/download/cf-vcluster-0.31.0-alpha.0-1/cf-vcluster-0.31.0-alpha.0-1.tgz
+    version: 0.31.0-alpha.0-1
+  - apiVersion: v2
     appVersion: 0.28.0
     created: "2025-10-05T05:41:56.59134106Z"
     dependencies:
@@ -2011,4 +2029,4 @@ entries:
     urls:
     - https://github.com/codefresh-io/helm-charts/releases/download/runner-1.3.0/runner-1.3.0.tgz
     version: 1.3.0
-generated: "2025-10-31T13:12:11.533975789Z"
+generated: "2025-11-04T14:15:11.625891001Z"
