@@ -4,7 +4,7 @@ target-branch: master
 chart-dirs:
   - charts
 chart-repos:
-- vcluster=https://charts.loft.sh"
+- https://charts.loft.sh
 helm-extra-args: "--timeout 600s"
 validate-yaml: true
 check-version-increment: true
