@@ -6,7 +6,7 @@ version: 0.30.0-1
 appVersion: "0.30.0"
 dependencies:
   - name: vcluster
-    repository:  https://charts.loft.sh
+    repository: https://charts.loft.sh
     version: 0.30.0
 maintainers:
   - name: codefresh
