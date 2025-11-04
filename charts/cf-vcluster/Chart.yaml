@@ -2,12 +2,12 @@ apiVersion: v2
 name: cf-vcluster
 description: Umbrella chart over vCluster adjusted for Codefresh use cases - mainly in Crossplane compositions
 type: application
-version: 0.30.0-1
-appVersion: "0.30.0"
+version: 0.31.0-alpha.0-1
+appVersion: "0.31.0"
 dependencies:
   - name: vcluster
     repository: https://charts.loft.sh
-    version: 0.30.0
+    version: v0.31.0-alpha.0
 maintainers:
   - name: codefresh
     url: https://codefresh-io.github.io/
