@@ -91,9 +91,9 @@ spec:
     {{- if $serviceItem.extraSelectorLabels }}
   {{- include "cf-common-0.29.0.tplrender" (dict "Values" $serviceItem.extraSelectorLabels "context" $) | nindent 4 }}
     {{- end }}
-    {{- if and $serviceItem.trafficDistribution (semverCompare ">=1.34-0" (include "cf-common-0.29.0.kubeVersion" $ )) }}
+    {{- if (semverCompare ">=1.34-0" (include "cf-common-0.29.0.kubeVersion" $ )) }}
   trafficDistribution: {{ coalesce $serviceItem.trafficDistribution "PreferSameNode" }}
-    {{- else if and $serviceItem.trafficDistribution (semverCompare ">=1.31-0" (include "cf-common-0.29.0.kubeVersion" $ )) }}
+    {{- else if (semverCompare ">=1.31-0" (include "cf-common-0.29.0.kubeVersion" $ )) }}
   trafficDistribution: {{ coalesce $serviceItem.trafficDistribution "PreferClose" }}
     {{- end -}}
   {{- end }}
