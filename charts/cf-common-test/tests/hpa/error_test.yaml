@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: hpa error handlers
 templates:
   - templates/hpa.yaml
@@ -29,4 +29,4 @@ tests:
         maxReplicas: 10
     asserts:
       - failedTemplate:
-          errorMessage: "hpa.targetMemoryUtilizationPercentage or hpa.targetCPUUtilizationPercentage is required!"
+          errorMessage: "ERROR: hpa.targetMemoryUtilizationPercentage or hpa.targetCPUUtilizationPercentage is required!"

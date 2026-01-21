@@ -5,4 +5,11 @@ global:
       enabled: true
       className: nginx-internal
       host:
-        domain: rnd-sandbox.cf-infra.com
+        domain: vclusters.rnd-sandbox.cf-infra.com
+  monitoring:
+    monitoredNamespaces: ["test-ns"]
+    additionalResourceAttributes:
+      team: rnd
+automaticScaleDown:
+  enabled: false
+  periodSeconds: 60

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: ingress spec
 templates:
   - templates/ingress.yaml
@@ -90,7 +90,7 @@ tests:
     values:
       - values.yaml
     asserts:
-      - isNull:
+      - notExists:
           path: spec.ingressClassName
 
   - it: Test with ingressClassName
@@ -109,7 +109,7 @@ tests:
     values:
       - values.yaml
     asserts:
-      - isNull:
+      - notExists:
           path: spec.tls
 
   - it: Test with tls enabled

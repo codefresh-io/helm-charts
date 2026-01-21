@@ -13,7 +13,7 @@ global:
       #   name: "interceptor-service"
       #   port: 80
       host:
-        name: "{{ .Release.Name }}"
+        name: "{{ .Release.Namespace }}-vcluster"
         domain: corp.local
     public:
       enabled: false
@@ -28,9 +28,11 @@ global:
         nginx.ingress.kubernetes.io/ssl-passthrough: "true"
         nginx.ingress.kubernetes.io/ssl-redirect: "true"
       host:
-        name: "{{ .Release.Name }}"
+        name: "{{ .Release.Namespace }}-vcluster"
         domain: example.com
-
+  monitoring:
+    monitoredNamespaces: []
+    additionalResourceAttributes: {}
 vcluster:
   exportKubeConfig:
     # -- Automatically calculate and set the kubeconfig host value based on ingress settings
@@ -42,7 +44,7 @@ vcluster:
   controlPlane:
     proxy:
       extraSANs:
-      - "{{ tpl (printf \"%s.%s.%s\" .Release.Name .Release.Namespace \".cluster.svc.local\") . }}"
+      - "{{ tpl (printf \"%s.%s.%s\" .Release.Name .Release.Namespace \"cluster.svc.local\") . }}"
       - "{{ tpl (printf \"%s.%s\" .Values.global.ingress.internal.host.name .Values.global.ingress.internal.host.domain) . }}"
       - "{{ tpl (printf \"%s.%s\" .Values.global.ingress.public.host.name .Values.global.ingress.public.host.domain) . }}"
     distro:
@@ -54,6 +56,20 @@ vcluster:
           - --oidc-client-id=vcluster-login
           - --oidc-username-claim=email
           - --oidc-groups-claim=groups
+    statefulSet:
+      # Set templated config! Always include this argument if overriding!
+      args:
+        - --config
+        - /etc/cf-vcluster/config.yaml
+      persistence:
+        addVolumes:
+        - name: templated-vcluster-config
+          secret:
+            secretName: "vc-templated-config"
+            defaultMode: 420
+        addVolumeMounts:
+        - name: templated-vcluster-config
+          mountPath: /etc/cf-vcluster
   sync:
     toHost:
       ingresses:
@@ -138,3 +154,38 @@ vcluster:
   rbac:
     clusterRole:
       enabled: true
+  integrations:
+    metricsServer:
+      enabled: true
+      nodes: true
+      pods: true
+  plugins:
+    prometheus-operator-resources:
+      image: ghcr.io/codefresh-contrib/vcluster-prometheus-operator-plugin:v0.3.0
+      imagePullPolicy: IfNotPresent
+      rbac:
+        role:
+          extraRules:
+            - apiGroups: ["monitoring.coreos.com"]
+              resources: ["servicemonitors", "podmonitors"]
+              verbs: ["create", "delete", "patch", "update", "get", "list", "watch"]
+        clusterRole:
+          extraRules:
+            - apiGroups: ["apiextensions.k8s.io"]
+              resources: ["customresourcedefinitions"]
+              verbs: ["get", "list", "watch"]
+# Automatic scaledown with Keda
+automaticScaleDown:
+  enabled: false
+  # How many seconds to wait until scaler is active from creation (prevent release failure)
+  initialCooldownPeriod: 120
+  # -- How many seconds of no requests to vcluster until it is scaled down to zero. Defaults to 12 hours (43200s)
+  periodSeconds: 43200
+  # -- Interceptor address on vCluster host
+  interceptor:
+    host: "keda-add-ons-http-interceptor-proxy.keda"
+    port: 8443
+  # -- Scaler address on vCluster host
+  httpScaler:
+    host: keda-add-ons-http-external-scaler.keda
+    port: 9090

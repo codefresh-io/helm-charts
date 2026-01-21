@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: service error handler
 templates:
   - templates/service.yaml
@@ -14,7 +14,7 @@ tests:
               protocol: ICMP
     asserts:
       - failedTemplate:
-          errorMessage: "service.main.ports.http.protocol is invalid!"
+          errorMessage: "ERROR: service.main.ports.http.protocol is invalid!"
 
   - it: Test metrics service with no port specified
     values:
@@ -40,7 +40,7 @@ tests:
           type: Something
     asserts:
       - failedTemplate:
-          errorMessage: "service.main.type is invalid service type!"
+          errorMessage: "ERROR: service.main.type is invalid service type!"
 
   - it: Test disabled service
     template: templates/service.yaml
@@ -65,4 +65,4 @@ tests:
                 protocol: HTTP
     asserts:
       - failedTemplate:
-          errorMessage: "service block must be a map!"
+          errorMessage: "ERROR: service block must be a map!"

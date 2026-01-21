@@ -1,0 +1,59 @@
+{{- if .Values.automaticScaleDown.enabled }}
+{{ $vclusterContext := (index .Subcharts "vcluster")}}
+apiVersion: http.keda.sh/v1alpha1
+kind: HTTPScaledObject
+metadata:
+    name: {{ .Release.Name }}
+    annotations:
+      # Workaround for idleReplicaCount - https://github.com/kedacore/http-add-on/pull/594
+      httpscaledobject.keda.sh/skip-scaledobject-creation: "true"
+spec:
+    hosts:
+    {{- if .Values.global.ingress.internal.enabled }}
+      - {{ tpl (printf "%s.%s" .Values.global.ingress.internal.host.name .Values.global.ingress.internal.host.domain) . }}
+    {{- else if .Values.global.ingress.public.enabled }}
+      - {{ tpl (printf "%s.%s" .Values.global.ingress.public.host.name .Values.global.ingress.public.host.domain) . }}
+    {{- else }}
+      - {{ fail "Cannot enable autoScaledown if no ingress is enabled" }}
+    {{- end }}
+    scaleTargetRef:
+      name: {{ .Release.Name }}
+      kind: {{ include "vcluster.kind" $vclusterContext }}
+      apiVersion: apps/v1
+      service: {{ .Release.Name }}
+      port: 443
+    replicas:
+      min: {{ $vclusterContext.Values.controlPlane.statefulSet.highAvailability.replicas  }}
+      max: {{ $vclusterContext.Values.controlPlane.statefulSet.highAvailability.replicas }}
+    scaledownPeriod: {{ .Values.automaticScaleDown.periodSeconds }}
+    scalingMetric:
+      requestRate:
+        granularity: 1s
+        targetValue: 1
+        window: 1m
+---
+# Workaround for idleReplicaCount - https://github.com/kedacore/http-add-on/pull/594
+apiVersion: keda.sh/v1alpha1
+kind: ScaledObject
+metadata:
+    name: {{ .Release.Name }}
+spec:
+  advanced:
+    restoreToOriginalReplicaCount: true
+    scalingModifiers: {}
+  initialCooldownPeriod: {{ .Values.automaticScaleDown.initialCooldownPeriod }}
+  cooldownPeriod: {{ .Values.automaticScaleDown.periodSeconds }}
+  maxReplicaCount: {{ $vclusterContext.Values.controlPlane.statefulSet.highAvailability.replicas }}
+  minReplicaCount: {{ $vclusterContext.Values.controlPlane.statefulSet.highAvailability.replicas }}
+  idleReplicaCount: 0
+  pollingInterval: 15
+  scaleTargetRef:
+    apiVersion: apps/v1
+    kind: {{ include "vcluster.kind" $vclusterContext }}
+    name: {{ .Release.Name }}
+  triggers:
+  - metadata:
+      httpScaledObject: {{ .Release.Name }}
+      scalerAddress: {{ printf "%s:%d" .Values.automaticScaleDown.httpScaler.host (int64 .Values.automaticScaleDown.httpScaler.port) }}
+    type: external-push
+{{- end }}

@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: KEDA ScaledObject error handlers
 templates:
   - templates/scaled-object.yaml
@@ -52,4 +52,4 @@ tests:
           enabled: true
     asserts:
       - failedTemplate:
-          errorMessage: "Both KEDA ScaledObject and HPA are enabled. Disable HPA or Keda ScaledObject!"
+          errorMessage: "ERROR: Both KEDA ScaledObject and HPA are enabled. Disable HPA or Keda ScaledObject!"

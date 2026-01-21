@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: KEDA ScaledObject metadata
 templates:
   - templates/scaled-object.yaml
@@ -32,5 +32,3 @@ tests:
           path: metadata.annotations
           value:
             autoscaling.keda.sh/paused: "true"
-
-

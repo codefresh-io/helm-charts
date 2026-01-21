@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: ingress error handler
 templates:
   - templates/ingress.yaml
@@ -15,7 +15,7 @@ tests:
               - host.domain.local
     asserts:
       - failedTemplate:
-          errorMessage: "ingress.main.tls must be a list!"
+          errorMessage: "ERROR: ingress.main.tls must be a list!"
 
   - it: Test hosts as invalid type
     values:
@@ -29,7 +29,7 @@ tests:
               - path: /path
     asserts:
       - failedTemplate:
-          errorMessage: "ingress.main.hosts must be a list!"
+          errorMessage: "ERROR: ingress.main.hosts must be a list!"
 
   - it: Test paths as invalid type
     values:
@@ -45,4 +45,4 @@ tests:
                 pathType: ImplementationSpecific
     asserts:
       - failedTemplate:
-          errorMessage: "ingress.main.hosts[].paths must be a list!"
+          errorMessage: "ERROR: ingress.main.hosts[].paths must be a list!"

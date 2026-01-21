@@ -1,6 +1,6 @@
 # internal-gateway
 
-![Version: 0.11.0](https://img.shields.io/badge/Version-0.11.0-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.12.2](https://img.shields.io/badge/Version-0.12.2-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 A Helm chart for Codefresh Internal Gateway
 
@@ -33,6 +33,7 @@ A Helm chart for Codefresh Internal Gateway
 | global.dnsService | string | `"kube-dns"` | configures DNS service name |
 | hpa | object | See below | HPA parameters |
 | ingress | object | See below | Ingress parameters |
+| ipv6 | object | `{"enabled":true}` | Enable IPv6 support |
 | keda.enabled | bool | `false` |  |
 | libraryMode | bool | `false` |  |
 | nginx.config.accessLogEnabled | bool | `true` | Enables NGINX access logs |
@@ -55,6 +56,11 @@ A Helm chart for Codefresh Internal Gateway
 | nginx.config.workerRlimitNofile | string | `"1047552"` | Changes the limit on the largest size of a core file (RLIMIT_CORE) for worker processes. Used to increase the limit without restarting the main process. |
 | nginx.extraConfigsPatterns | list | `[]` |  |
 | nginx.scriptFilesPatterns | list | `[]` | Path to NJS scripts |
+| otel.config.endpoint | string | `"localhost:4317"` |  |
+| otel.config.service_name | string | `"codefresh-internal-gateway"` |  |
+| otel.enabled | bool | `false` |  |
+| otel.httpSnippet | string | `"otel_trace on;\notel_service_name {{ default \"codefresh-internal-gateway\"  .Values.otel.config.service_name }};\notel_trace_context \"propagate\";\notel_exporter {\n  endpoint {{ .Values.otel.config.endpoint}};\n}\n"` | Snippet to be included in the http block of nginx.conf for OTEL configs. See here for available directives https://nginx.org/en/docs/ngx_otel_module.html |
+| otel.modulePath | string | `"modules/ngx_otel_module.so"` | Path to the OpenTelemetry NGINX module - should be present in the NGINX image, images with -otel tags include it |
 | pdb | object | See below | PDB parameters |
 | podAnnotations | object | See below | Pod annotations |
 | podSecurityContext | object | See below | Pod Security Context parameters |
