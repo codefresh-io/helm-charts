@@ -471,7 +471,7 @@ service:
         # the `port` value. Therefore named ports are not supported for this field
     # -- Enable trafficDistribution
     # Ref: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution
-    trafficDistribution: "PreferSameNode"
+    # trafficDistribution: "PreferSameNode"
 
 # -- Configure the Ingresses for the chart.
 # Additional Ingresses can be added by adding a dictionary key similar to the 'main' ingress.
