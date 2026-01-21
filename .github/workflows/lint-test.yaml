@@ -125,13 +125,15 @@ jobs:
 
       - name: Set up Helm
         uses: azure/setup-helm@v4.2.0
+        with:
+          version: v3.19.0
 
       - name: Run unit tests
         run: |
           echo ${{ matrix.chart }}
           helm plugin install https://github.com/helm-unittest/helm-unittest --version v0.6.3
           helm dep update ${{ matrix.chart }}
-          helm unittest --color=true --debug -f "tests/**/*_test.yaml" ${{ matrix.chart }}
+          helm unittest --color --debug -f "tests/**/*_test.yaml" ${{ matrix.chart }}
 
   push-charts-dev-cm:
     needs:
