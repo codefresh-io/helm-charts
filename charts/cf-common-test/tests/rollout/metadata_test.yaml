@@ -1,7 +1,7 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: rollout metadata
 templates:
-  - templates/rollout.yaml
+  - templates/controller.yaml
 tests:
   - it: Test rollout default metadata
     template: templates/controller.yaml
@@ -12,7 +12,7 @@ tests:
           count: 1
       - isKind:
           of: Rollout
-      - isNull:
+      - notExists:
           path: metadata.annotations
       - equal:
           path: metadata.labels
@@ -40,7 +40,7 @@ tests:
           count: 1
       - isKind:
           of: Rollout
-      - isNull:
+      - notExists:
           path: metadata.annotations
       - equal:
           path: metadata.labels
@@ -68,7 +68,7 @@ tests:
           count: 1
       - isKind:
           of: Deployment
-      - isNull:
+      - notExists:
           path: metadata.annotations
       - equal:
           path: metadata.labels

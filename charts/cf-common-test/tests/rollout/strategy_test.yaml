@@ -1,7 +1,7 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: rollout strategy
 templates:
-  - templates/rollout.yaml
+  - templates/controller.yaml
 tests:
   - it: Test rollout Canary strategy from default chart values
     template: templates/controller.yaml

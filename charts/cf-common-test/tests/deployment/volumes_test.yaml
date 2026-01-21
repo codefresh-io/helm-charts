@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: depoyment volumes test
 templates:
   - templates/controller.yaml
@@ -40,7 +40,7 @@ tests:
           type: something
     asserts:
       - failedTemplate:
-          errorMessage: "something is invalid volume type for volume my-volume!"
+          errorMessage: "ERROR: something is invalid volume type for volume my-volume!"
 
   - it: Test volumes and volumeMounts from global
     values:

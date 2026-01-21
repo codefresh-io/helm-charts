@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: deployment spec
 templates:
   - templates/controller.yaml
@@ -119,7 +119,7 @@ tests:
             pullPolicy: IfNotPresent
           command: ['sh', '-c', "sleep 60"]
     asserts:
-      - isNull:
+      - isNullOrEmpty:
           path: spec.template.spec.initContainers
 
   - it: Test deployment's initContainer with global.imageRegistry
@@ -383,7 +383,7 @@ tests:
       podSecurityContext:
         enabled: false
     asserts:
-      - isNull:
+      - notExists:
           path: spec.template.spec.securityContext
 
   - it: Test pod security context (omit enabled)
