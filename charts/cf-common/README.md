@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.28.0](https://img.shields.io/badge/Version-0.28.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.29.0](https://img.shields.io/badge/Version-0.29.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.28.0
+  version: 0.29.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -180,7 +180,7 @@ dependencies:
 | secrets.secret.stringData | object | `{}` | Secret data content. Plain text (not base64). Helm template supported. Passed through `tpl`, should be configured as string |
 | secrets.secret.type | string | `"Opaque"` | Set secret type (`Opaque`/`kubernetes.io/tls`) |
 | service | object | See below | Configure services fo the chart. Additional services can be added by adding a dictionary key similar to the 'main' service. |
-| service.main | object | `{"annotations":{},"enabled":false,"extraSelectorLabels":{},"labels":{},"ports":{"http":{"port":null,"protocol":"HTTP","targetPort":null}},"primary":true,"type":"ClusterIP"}` | Service name |
+| service.main | object | `{"annotations":{},"enabled":false,"extraSelectorLabels":{},"labels":{},"ports":{"http":{"port":null,"protocol":"HTTP","targetPort":null}},"primary":true,"trafficDistribution":"PreferSameZone","type":"ClusterIP"}` | Service name |
 | service.main.annotations | object | `{}` | Add additional annotations for the service |
 | service.main.enabled | bool | `false` | Enabled the service |
 | service.main.extraSelectorLabels | object | `{}` | Allow adding additional match labels |
@@ -191,6 +191,7 @@ dependencies:
 | service.main.ports.http.protocol | string | `"HTTP"` | Port protocol (`HTTP`/`HTTPS`/`TCP`/`UDP`) |
 | service.main.ports.http.targetPort | string | `nil` | Set a service targetPort if you wish to differ the service port from the application port. |
 | service.main.primary | bool | `true` | Make this the primary service (used in probes, notes, etc...). If there is more than 1 service, make sure that only 1 service is marked as primary. |
+| service.main.trafficDistribution | string | `"PreferSameZone"` | Enable trafficDistribution Ref: https://kubernetes.io/docs/concepts/services-networking/service/#traffic-distribution |
 | service.main.type | string | `"ClusterIP"` | Set the service type |
 | serviceAccount | object | See below | Configure Service Account |
 | serviceAccount.annotations | object | `{}` | Set annotations for Service Account |
