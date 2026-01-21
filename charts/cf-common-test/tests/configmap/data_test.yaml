@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: configmap data
 templates:
   - templates/configmap.yaml
@@ -76,9 +76,9 @@ tests:
       - isKind:
           of: ConfigMap
         documentIndex: &secondCM 1  # documentIndex count starts from 0
-      - isNotNull:
+      - exists:
           path: metadata.name
         documentIndex: *secondCM
-      - isNotNull:
+      - exists:
           path: data
         documentIndex: *secondCM

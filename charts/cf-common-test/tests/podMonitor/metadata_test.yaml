@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: pod monitor metadata
 templates:
   - templates/podMonitor.yaml
@@ -11,7 +11,7 @@ tests:
           count: 1
       - isKind:
           of: PodMonitor
-      - isNull:
+      - notExists:
           path: metadata.annotations
       - equal:
           path: metadata.labels

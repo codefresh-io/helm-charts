@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: deployment container spec
 templates:
   - templates/controller.yaml
@@ -12,7 +12,7 @@ tests:
 
   - it: Test no extra container present
     asserts:
-      - isNull:
+      - notExists:
           path: spec.template.spec.containers[1]
 
   - it: Test main container name
@@ -262,7 +262,7 @@ tests:
             timeoutSeconds: 15
             successThreshold: 1
             failureThreshold: 2
-      - isNull:
+      - notExists:
           path: spec.template.spec.containers[0].startupProbe
 
   - it: Test main container resources

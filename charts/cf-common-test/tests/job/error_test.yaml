@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: job error handlers
 templates:
   - templates/controller.yaml
@@ -7,7 +7,7 @@ tests:
     values:
       - values.yaml
     asserts:
-      - isNull:
+      - notExists:
           path: spec.selector
 
   - it: Test no selector specified when manualSelector set to true
@@ -19,4 +19,4 @@ tests:
       - values.yaml
     asserts:
       - failedTemplate:
-          errorMessage: "manualSelector is enabled! Specify `.job.selector` labels!"
+          errorMessage: "ERROR: manualSelector is enabled! Specify `.job.selector` labels!"

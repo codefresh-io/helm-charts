@@ -1,4 +1,4 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/quintush/helm-unittest/master/schema/helm-testsuite.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
 suite: KEDA TriggerAuthentication spec
 templates:
   - templates/trigger-authentication.yaml
@@ -42,5 +42,3 @@ tests:
             parameter: parameter
             name: name
             key: key
-
-
