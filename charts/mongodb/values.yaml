@@ -1,0 +1,130 @@
+# -- MongoDB authentication credentials
+auth:
+  # -- MongoDB root username
+  rootUser: root
+  # -- MongoDB root password (required)
+  rootPassword: ""
+  # -- MongoDB initial database to create
+  database: ""
+
+global: {}
+
+controller:
+  enabled: true
+  type: statefulset
+  replicas: 1
+  podManagementPolicy: OrderedReady
+
+container:
+  image:
+    registry: docker.io
+    repository: mongo
+    tag: "7.0"
+    pullPolicy: IfNotPresent
+
+  probes:
+    liveness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - mongosh
+          - --eval
+          - "db.adminCommand('ping')"
+      spec:
+        initialDelaySeconds: 30
+        periodSeconds: 20
+        timeoutSeconds: 10
+        successThreshold: 1
+        failureThreshold: 6
+    readiness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - mongosh
+          - --eval
+          - "db.adminCommand('ping')"
+      spec:
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 5
+        successThreshold: 1
+        failureThreshold: 6
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  volumeMounts:
+    config:
+      path:
+        - mountPath: /etc/mongod.conf
+          subPath: mongod.conf
+
+# -- Configure persistent storage for MongoDB data via StatefulSet volumeClaimTemplates.
+# cf-common automatically adds the volumeMount for each entry here.
+volumeClaimTemplates:
+  data:
+    mountPath: /data/db
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    storageClass:
+
+# -- MongoDB credentials secret. Automatically injected as envFrom into the container.
+secrets:
+  secret:
+    enabled: true
+    stringData: |
+      MONGO_INITDB_ROOT_USERNAME: "{{ .Values.auth.rootUser }}"
+      MONGO_INITDB_ROOT_PASSWORD: "{{ required ".Values.auth.rootPassword is required" .Values.auth.rootPassword }}"
+      {{- if .Values.auth.database }}
+      MONGO_INITDB_DATABASE: "{{ .Values.auth.database }}"
+      {{- end }}
+
+# -- MongoDB configuration file
+configMaps:
+  config:
+    enabled: true
+    data:
+      mongod.conf: |
+        storage:
+          dbPath: /data/db
+        net:
+          port: 27017
+          bindIp: 0.0.0.0
+
+volumes:
+  config:
+    enabled: true
+    type: configMap
+
+service:
+  main:
+    enabled: true
+    primary: true
+    type: ClusterIP
+    ports:
+      mongodb:
+        port: 27017
+        protocol: TCP
+
+serviceMonitor:
+  main:
+    enabled: false
+
+podSecurityContext: {}
+
+nodeSelector: {}
+tolerations: []
+affinity: {}
+
+hpa: {}
+keda:
+  spec: {}
+  auth: {}
+pdb: {}
