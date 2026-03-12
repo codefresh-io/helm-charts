@@ -112,15 +112,7 @@ service:
         port: 27017
         protocol: TCP
 
-serviceMonitor:
-  main:
-    enabled: false
-
 podSecurityContext: {}
-
 nodeSelector: {}
 tolerations: []
 affinity: {}
-
-hpa: {}
-pdb: {}
