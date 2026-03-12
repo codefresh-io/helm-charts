@@ -1,6 +1,8 @@
+fullnameOverride: mongodb
+
 auth:
   rootUser: root
-  rootPassword: ""
+  rootPassword: password
   database: ""
 
 config:
