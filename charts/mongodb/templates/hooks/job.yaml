@@ -18,7 +18,7 @@ spec:
         image: docker.io/mongo:7.0
         env:
         - name: MONGO_INITDB_ROOT_USERNAME
-          value: {{ .Values.auth.rootUsername }}
+          value: {{ .Values.auth.rootUser }}
         - name: MONGO_INITDB_ROOT_PASSWORD
           value: {{ .Values.auth.rootPassword }}
         - name: MONGO_HOSTNAME
