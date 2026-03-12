@@ -1,11 +1,14 @@
-# -- MongoDB authentication credentials
 auth:
-  # -- MongoDB root username
   rootUser: root
-  # -- MongoDB root password (required)
   rootPassword: ""
-  # -- MongoDB initial database to create
   database: ""
+
+config:
+  storage:
+    dbPath: /data/db
+  net:
+    port: 27017
+    bindIp: 0.0.0.0
 
 global: {}
 
@@ -21,6 +24,11 @@ container:
     repository: mongo
     tag: "7.0"
     pullPolicy: IfNotPresent
+
+  command:
+    - mongod
+    - "--config"
+    - "/etc/mongod.conf"
 
   probes:
     liveness:
@@ -92,11 +100,7 @@ configMaps:
     enabled: true
     data:
       mongod.conf: |
-        storage:
-          dbPath: /data/db
-        net:
-          port: 27017
-          bindIp: 0.0.0.0
+        {{- toYaml .Values.config | nindent 2 }}
 
 volumes:
   config:
