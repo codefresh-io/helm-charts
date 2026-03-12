@@ -123,7 +123,4 @@ tolerations: []
 affinity: {}
 
 hpa: {}
-keda:
-  spec: {}
-  auth: {}
 pdb: {}
