@@ -25,8 +25,7 @@ container:
     tag: "7.0"
     pullPolicy: IfNotPresent
 
-  command:
-    - mongod
+  args:
     - "--config"
     - "/etc/mongod.conf"
 
