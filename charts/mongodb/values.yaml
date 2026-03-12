@@ -73,8 +73,6 @@ container:
         - mountPath: /etc/mongod.conf
           subPath: mongod.conf
 
-# -- Configure persistent storage for MongoDB data via StatefulSet volumeClaimTemplates.
-# cf-common automatically adds the volumeMount for each entry here.
 volumeClaimTemplates:
   data:
     mountPath: /data/db
@@ -82,7 +80,6 @@ volumeClaimTemplates:
     size: 10Gi
     storageClass:
 
-# -- MongoDB credentials secret. Automatically injected as envFrom into the container.
 secrets:
   secret:
     enabled: true
@@ -93,7 +90,6 @@ secrets:
       MONGO_INITDB_DATABASE: "{{ .Values.auth.database }}"
       {{- end }}
 
-# -- MongoDB configuration file
 configMaps:
   config:
     enabled: true
