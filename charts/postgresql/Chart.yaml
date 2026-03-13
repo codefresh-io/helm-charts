@@ -1,0 +1,18 @@
+apiVersion: v2
+name: postgresql
+description: PostgreSQL database Helm chart
+version: 0.1.0
+appVersion: "17"
+type: application
+keywords:
+  - postgresql
+  - database
+  - sql
+home: https://codefresh.io/
+maintainers:
+  - name: codefresh
+    url: https://codefresh-io.github.io/
+dependencies:
+  - name: cf-common
+    repository: oci://quay.io/codefresh/charts
+    version: "0.31.0"
