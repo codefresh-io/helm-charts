@@ -1,0 +1,34 @@
+{{- if .Values.config.net.tls }}
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: mongodb-tls-init
+  annotations:
+    helm.sh/hook: post-install,post-upgrade
+    helm.sh/hook-weight: "-5"
+    helm.sh/hook-delete-policy: before-hook-creation
+spec:
+  template:
+    metadata:
+      name: mongodb-tls-init
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: mongodb-tls-init
+        image: {{ printf "%s/%s:%s" .Values.container.image.registry .Values.container.image.repository .Values.container.image.tag }}
+        imagePullPolicy: {{ .Values.container.image.pullPolicy }}
+        env:
+        - name: MONGO_INITDB_ROOT_USERNAME
+          value: {{ .Values.auth.rootUser }}
+        - name: MONGO_INITDB_ROOT_PASSWORD
+          value: {{ .Values.auth.rootPassword }}
+        - name: MONGO_HOSTNAME
+          value: {{ .Values.fullnameOverride }}
+        command:
+        - /bin/bash
+        - -c
+        - |
+          MONGO_URI="mongodb://$MONGO_INITDB_ROOT_USERNAME:$MONGO_INITDB_ROOT_PASSWORD@$MONGO_HOSTNAME:27017/?authSource=admin"
+
+          mongosh "$MONGO_URI" --eval 'db.getSiblingDB("\$external").runCommand( { createUser: "O=CfClients,CN=cfuser", roles: [ { role: "readWrite", db: "test" }, { role: "userAdminAnyDatabase", db: "admin" }, { role: "readWrite", db: "codefresh" }, { role: "readWrite", db: "pipeline-manager" }, { role: "readWrite", db: "runtime-environment-manager" }, { role: "readWrite", db: "context-manager" }, { role: "readWrite", db: "cluster-providers" }, { role: "readWrite", db: "charts-manager" }, { role: "readWrite", db: "k8s-monitor" }, { role: "readWrite", db: "read-models" }, { role: "readWrite", db: "audit" }, { role: "readWrite", db: "platform-analytics-postgres" } ], writeConcern: { w: "majority" , wtimeout: 5000 } } )'
+{{- end }}

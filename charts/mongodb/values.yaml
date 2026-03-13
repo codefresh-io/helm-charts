@@ -1,0 +1,120 @@
+fullnameOverride: mongodb
+
+auth:
+  rootUser: root
+  rootPassword: password
+  database: ""
+
+config:
+  storage:
+    dbPath: /data/db
+  net:
+    port: 27017
+    bindIp: 0.0.0.0
+
+global: {}
+
+controller:
+  enabled: true
+  type: statefulset
+  replicas: 1
+  podManagementPolicy: OrderedReady
+
+container:
+  image:
+    registry: docker.io
+    repository: mongo
+    tag: "7.0"
+    pullPolicy: IfNotPresent
+
+  args:
+    - "--config"
+    - "/etc/mongod.conf"
+
+  probes:
+    liveness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - mongosh
+          - --eval
+          - "db.adminCommand('ping')"
+      spec:
+        initialDelaySeconds: 30
+        periodSeconds: 20
+        timeoutSeconds: 10
+        successThreshold: 1
+        failureThreshold: 6
+    readiness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - mongosh
+          - --eval
+          - "db.adminCommand('ping')"
+      spec:
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 5
+        successThreshold: 1
+        failureThreshold: 6
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  volumeMounts:
+    config:
+      path:
+        - mountPath: /etc/mongod.conf
+          subPath: mongod.conf
+
+volumeClaimTemplates:
+  data:
+    mountPath: /data/db
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    storageClass:
+
+secrets:
+  secret:
+    enabled: true
+    stringData: |
+      MONGO_INITDB_ROOT_USERNAME: "{{ .Values.auth.rootUser }}"
+      MONGO_INITDB_ROOT_PASSWORD: "{{ required ".Values.auth.rootPassword is required" .Values.auth.rootPassword }}"
+      {{- if .Values.auth.database }}
+      MONGO_INITDB_DATABASE: "{{ .Values.auth.database }}"
+      {{- end }}
+
+configMaps:
+  config:
+    enabled: true
+    data:
+      mongod.conf: |
+        {{- toYaml .Values.config | nindent 2 }}
+
+volumes:
+  config:
+    enabled: true
+    type: configMap
+
+service:
+  main:
+    enabled: true
+    primary: true
+    type: ClusterIP
+    ports:
+      mongodb:
+        port: 27017
+        protocol: TCP
+
+podSecurityContext: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
