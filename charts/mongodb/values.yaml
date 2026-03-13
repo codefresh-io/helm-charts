@@ -3,6 +3,7 @@ fullnameOverride: mongodb
 auth:
   rootUser: root
   rootPassword: password
+  database: ""
 
 config:
   storage:
