@@ -1,0 +1,122 @@
+fullnameOverride: rabbitmq
+
+auth:
+  username: user
+  password: password
+  vhost: /
+
+config:
+  listeners.tcp.default: 5672
+  management.tcp.port: 15672
+  vm_memory_high_watermark.absolute: 256MiB
+  disk_free_limit.absolute: 1GB
+
+global: {}
+
+controller:
+  enabled: true
+  type: statefulset
+  replicas: 1
+  podManagementPolicy: OrderedReady
+
+container:
+  image:
+    registry: docker.io
+    repository: rabbitmq
+    tag: "4.0-management"
+    pullPolicy: IfNotPresent
+
+  args:
+    - "rabbitmq-server"
+
+  env:
+    RABBITMQ_CONFIG_FILE: /etc/rabbitmq/rabbitmq.conf
+
+  probes:
+    liveness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - rabbitmq-diagnostics
+          - ping
+      spec:
+        initialDelaySeconds: 60
+        periodSeconds: 20
+        timeoutSeconds: 10
+        successThreshold: 1
+        failureThreshold: 6
+    readiness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - rabbitmq-diagnostics
+          - ping
+      spec:
+        initialDelaySeconds: 10
+        periodSeconds: 10
+        timeoutSeconds: 5
+        successThreshold: 1
+        failureThreshold: 6
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 256Mi
+    limits:
+      cpu: 500m
+      memory: 512Mi
+
+  volumeMounts:
+    config:
+      path:
+        - mountPath: /etc/rabbitmq/rabbitmq.conf
+          subPath: rabbitmq.conf
+
+volumeClaimTemplates:
+  data:
+    mountPath: /var/lib/rabbitmq
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    storageClass:
+
+secrets:
+  secret:
+    enabled: true
+    stringData: |
+      RABBITMQ_DEFAULT_USER: "{{ .Values.auth.username }}"
+      RABBITMQ_DEFAULT_PASS: "{{ required ".Values.auth.password is required" .Values.auth.password }}"
+      RABBITMQ_DEFAULT_VHOST: "{{ .Values.auth.vhost }}"
+
+configMaps:
+  config:
+    enabled: true
+    data:
+      rabbitmq.conf: |
+        {{- range $key, $value := .Values.config }}
+        {{ $key }} = {{ $value }}
+        {{- end }}
+
+volumes:
+  config:
+    enabled: true
+    type: configMap
+
+service:
+  main:
+    enabled: true
+    primary: true
+    type: ClusterIP
+    ports:
+      amqp:
+        port: 5672
+        protocol: TCP
+      management:
+        port: 15672
+        protocol: TCP
+
+podSecurityContext: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}

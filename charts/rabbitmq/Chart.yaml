@@ -1,0 +1,18 @@
+apiVersion: v2
+name: rabbitmq
+description: RabbitMQ message broker Helm chart
+version: 0.1.0
+appVersion: "4.0"
+type: application
+keywords:
+  - rabbitmq
+  - message-broker
+  - amqp
+home: https://codefresh.io/
+maintainers:
+  - name: codefresh
+    url: https://codefresh-io.github.io/
+dependencies:
+  - name: cf-common
+    repository: oci://quay.io/codefresh/charts
+    version: "0.31.0"
