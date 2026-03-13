@@ -1,0 +1,104 @@
+fullnameOverride: redis
+
+config:
+  bind: 0.0.0.0
+  port: 6379
+  dir: /data
+  appendonly: "yes"
+  requirepass: password
+
+global: {}
+
+controller:
+  enabled: true
+  type: statefulset
+  replicas: 1
+  podManagementPolicy: OrderedReady
+
+container:
+  image:
+    registry: docker.io
+    repository: redis
+    tag: "7.4"
+    pullPolicy: IfNotPresent
+
+  args:
+    - "/etc/redis/redis.conf"
+
+  probes:
+    liveness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - redis-cli
+          - ping
+      spec:
+        initialDelaySeconds: 30
+        periodSeconds: 20
+        timeoutSeconds: 10
+        successThreshold: 1
+        failureThreshold: 6
+    readiness:
+      enabled: true
+      type: exec
+      exec:
+        command:
+          - redis-cli
+          - ping
+      spec:
+        initialDelaySeconds: 5
+        periodSeconds: 10
+        timeoutSeconds: 5
+        successThreshold: 1
+        failureThreshold: 6
+
+  resources:
+    requests:
+      cpu: 100m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+
+  volumeMounts:
+    config:
+      path:
+        - mountPath: /etc/redis/redis.conf
+          subPath: redis.conf
+
+volumeClaimTemplates:
+  data:
+    mountPath: /data
+    accessMode: ReadWriteOnce
+    size: 10Gi
+    storageClass:
+
+configMaps:
+  config:
+    enabled: true
+    data:
+      redis.conf: |
+        {{- range $key, $value := .Values.config }}
+        {{ $key }} {{ $value }}
+        {{- end }}
+
+volumes:
+  config:
+    enabled: true
+    type: configMap
+
+service:
+  main:
+    enabled: true
+    primary: true
+    type: ClusterIP
+    ports:
+      redis:
+        port: 6379
+        protocol: TCP
+
+podSecurityContext: {}
+nodeSelector: {}
+tolerations: []
+affinity: {}
