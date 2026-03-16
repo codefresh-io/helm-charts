@@ -173,9 +173,10 @@ dependencies:
 | rbac.enabled | bool | `false` | Enable RBAC resources |
 | rbac.namespaced | bool | `true` | Restrict RBAC in a single namespace instead of cluster-wide scope |
 | rbac.rules | list | `[]` | Create custom rules |
-| secrets.secret | object | `{"annotation":{},"data":{},"enabled":false,"labels":{},"nameOverride":"","stringData":{},"type":"Opaque"}` | Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts` |
+| secrets.secret | object | `{"annotation":{},"data":{},"enabled":false,"envFrom":true,"labels":{},"nameOverride":"","stringData":{},"type":"Opaque"}` | Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts` |
 | secrets.secret.annotation | object | `{}` | Add additional annotations to the secret |
 | secrets.secret.enabled | bool | `false` | Enable the secret |
+| secrets.secret.envFrom | bool | `true` | Set the secret as envFrom for the container |
 | secrets.secret.labels | object | `{}` | Add additional labels to the secret |
 | secrets.secret.nameOverride | string | `""` | Override the secret name |
 | secrets.secret.stringData | object | `{}` | Secret data content. Plain text (not base64). Helm template supported. Passed through `tpl`, should be configured as string |
