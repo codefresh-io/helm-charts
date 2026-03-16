@@ -7,13 +7,13 @@ Must be called from chart root context.
 
 {{- range $secretIndex, $secretItem := .Values.secrets }}
 
-{{- if $secretItem.nameOverride }}
-  {{- $secretName := $secretItem.nameOverride }}
-{{- else }}
-  {{- $secretName := printf "%s-%s" (include "cf-common-0.32.0.names.fullname" $) $secretIndex }}
-{{- end }}
-
+{{- $secretName := "" }}
 {{- if $secretItem.enabled }}
+  {{- if $secretItem.nameOverride }}
+    {{- $secretName = $secretItem.nameOverride }}
+  {{- else }}
+    {{- $secretName = printf "%s-%s" (include "cf-common-0.32.0.names.fullname" $) $secretIndex }}
+  {{- end }}
 ---
 apiVersion: v1
 kind: Secret
