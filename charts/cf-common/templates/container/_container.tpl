@@ -55,7 +55,8 @@ Usage:
       {{- include "cf-common-0.32.0.tplrender" (dict "Values" . "context" $) | trim | nindent 4 }}
     {{- end }}
     {{- range $secretIndex, $secretItem := $.Values.secrets }}
-      {{- if and $secretItem.envFrom $secretItem.enabled }}
+      {{- if ne $secretItem.envFrom false }}
+      {{- if $secretItem.enabled }}
         {{- $secretName := "" }}
         {{- if $secretItem.nameOverride }}
           {{- $secretName = $secretItem.nameOverride }}
@@ -64,6 +65,7 @@ Usage:
         {{- end }}
     - secretRef:
         name: {{ $secretName }}
+      {{- end }}
       {{- end }}
     {{- end }}
   {{- end }}
