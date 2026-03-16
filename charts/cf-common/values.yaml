@@ -332,6 +332,10 @@ secrets:
   secret:
     # -- Enable the secret
     enabled: false
+    # -- Override the secret name
+    nameOverride: ""
+    # -- Set the secret as envFrom for the container
+    envFrom: true
     # -- Add additional labels to the secret
     labels: {}
     # -- Add additional annotations to the secret

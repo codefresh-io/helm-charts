@@ -2,7 +2,7 @@
 
 Codefresh library chart
 
-![Version: 0.31.0](https://img.shields.io/badge/Version-0.31.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
+![Version: 0.32.0](https://img.shields.io/badge/Version-0.32.0-informational?style=flat-square) ![Type: library](https://img.shields.io/badge/Type-library-informational?style=flat-square) ![AppVersion: v0.0.0](https://img.shields.io/badge/AppVersion-v0.0.0-informational?style=flat-square)
 
 ## Installing the Chart
 
@@ -18,7 +18,7 @@ Include this chart as a dependency in your `Chart.yaml` e.g.
 # Chart.yaml
 dependencies:
 - name: cf-common
-  version: 0.31.0
+  version: 0.32.0
   repository: https://chartmuseum.codefresh.io/cf-common
 ```
 
@@ -173,10 +173,12 @@ dependencies:
 | rbac.enabled | bool | `false` | Enable RBAC resources |
 | rbac.namespaced | bool | `true` | Restrict RBAC in a single namespace instead of cluster-wide scope |
 | rbac.rules | list | `[]` | Create custom rules |
-| secrets.secret | object | `{"annotation":{},"data":{},"enabled":false,"labels":{},"stringData":{},"type":"Opaque"}` | Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts` |
+| secrets.secret | object | `{"annotation":{},"data":{},"enabled":false,"envFrom":true,"labels":{},"nameOverride":"","stringData":{},"type":"Opaque"}` | Secret name. Make sure to use the same name in `volumes` and `container.volumeMounts` |
 | secrets.secret.annotation | object | `{}` | Add additional annotations to the secret |
 | secrets.secret.enabled | bool | `false` | Enable the secret |
+| secrets.secret.envFrom | bool | `true` | Set the secret as envFrom for the container |
 | secrets.secret.labels | object | `{}` | Add additional labels to the secret |
+| secrets.secret.nameOverride | string | `""` | Override the secret name |
 | secrets.secret.stringData | object | `{}` | Secret data content. Plain text (not base64). Helm template supported. Passed through `tpl`, should be configured as string |
 | secrets.secret.type | string | `"Opaque"` | Set secret type (`Opaque`/`kubernetes.io/tls`) |
 | service | object | See below | Configure services fo the chart. Additional services can be added by adding a dictionary key similar to the 'main' service. |
