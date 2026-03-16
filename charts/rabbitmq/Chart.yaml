@@ -14,5 +14,5 @@ maintainers:
     url: https://codefresh-io.github.io/
 dependencies:
   - name: cf-common
-    repository: oci://quay.io/codefresh/charts
-    version: "0.31.0"
+    repository: oci://quay.io/codefresh/charts/dev
+    version: "0.32.0"
