@@ -1,7 +1,7 @@
 apiVersion: v2
 name: mongodb
 description: MongoDB database Helm chart
-version: 0.1.0
+version: 0.1.1
 appVersion: "7.0"
 type: application
 keywords:
@@ -14,5 +14,5 @@ maintainers:
     url: https://codefresh-io.github.io/
 dependencies:
   - name: cf-common
-    repository: oci://quay.io/codefresh/charts
-    version: "0.31.0"
+    repository: oci://quay.io/codefresh/charts/dev
+    version: "0.32.0"
