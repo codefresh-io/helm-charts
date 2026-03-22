@@ -56,9 +56,9 @@ jobs:
             TOTAL=$((HUMAN + AI + MIXED))
 
             if [[ "$TOTAL" -gt 0 ]]; then
-              HUMAN_PCT=$((HUMAN * 100 / TOTAL))
-              AI_PCT=$((AI * 100 / TOTAL))
-              MIXED_PCT=$((100 - HUMAN_PCT - AI_PCT))
+              HUMAN_PCT=$(( (HUMAN * 1000 / TOTAL + 5) / 10 ))
+              AI_PCT=$(( (AI * 1000 / TOTAL + 5) / 10 ))
+              MIXED_PCT=$(( (MIXED * 1000 / TOTAL + 5) / 10 ))
 
               # Build emoji progress bar (20 blocks)
               BAR=""
