@@ -52,13 +52,12 @@ jobs:
             HUMAN=$(echo "$STATS" | jq -r '.human_additions // 0')
             AI=$(echo "$STATS" | jq -r '.ai_additions // 0')
             MIXED=$(echo "$STATS" | jq -r '.mixed_additions // 0')
-            TOTAL_AI=$(echo "$STATS" | jq -r '.total_ai_additions // 0')
             AI_ACCEPTED=$(echo "$STATS" | jq -r '.ai_accepted // 0')
-            TOTAL=$((HUMAN + TOTAL_AI + MIXED))
+            TOTAL=$((HUMAN + AI + MIXED))
 
             if [[ "$TOTAL" -gt 0 ]]; then
               HUMAN_PCT=$((HUMAN * 100 / TOTAL))
-              AI_PCT=$((TOTAL_AI * 100 / TOTAL))
+              AI_PCT=$((AI * 100 / TOTAL))
               MIXED_PCT=$((100 - HUMAN_PCT - AI_PCT))
 
               # Build emoji progress bar (20 blocks)
@@ -68,8 +67,11 @@ jobs:
               REMAINING=$((20 - HUMAN_PCT * 20 / 100 - AI_PCT * 20 / 100))
               for ((i = 0; i < REMAINING; i++)); do BAR+="🟪"; done
 
-              # Get text output for details section
-              TEXT_OUTPUT=$(git-ai stats "$RANGE" 2>/dev/null || echo "Detailed breakdown not available")
+              # Get tool/model breakdown for details
+              BREAKDOWN=$(echo "$STATS" | jq -r '
+                .tool_model_breakdown // {} | to_entries[] |
+                "| \(.key) | \(.value.ai_additions) | \(.value.mixed_additions) |"
+              ' 2>/dev/null || true)
 
               read -r -d '' BODY <<ENDOFBODY || true
           ${MARKER}
@@ -87,11 +89,11 @@ jobs:
           > **AI-accepted lines:** ${AI_ACCEPTED} (committed without human modification)
 
           <details>
-          <summary>Detailed breakdown</summary>
+          <summary>Tool & model breakdown</summary>
 
-          \`\`\`
-          ${TEXT_OUTPUT}
-          \`\`\`
+          | Tool :: Model | AI lines | Mixed lines |
+          |---------------|----------|-------------|
+          ${BREAKDOWN}
 
           </details>
 
