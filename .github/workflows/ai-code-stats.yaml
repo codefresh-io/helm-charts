@@ -47,11 +47,13 @@ jobs:
           # Run git-ai stats and build comment body
           BODY=""
           if JSON=$(git-ai stats "$RANGE" --json 2>/dev/null); then
-            HUMAN=$(echo "$JSON" | jq -r '.human_additions // 0')
-            AI=$(echo "$JSON" | jq -r '.ai_additions // 0')
-            MIXED=$(echo "$JSON" | jq -r '.mixed_additions // 0')
-            TOTAL_AI=$(echo "$JSON" | jq -r '.total_ai_additions // 0')
-            AI_ACCEPTED=$(echo "$JSON" | jq -r '.ai_accepted // 0')
+            # Range stats are nested under .range_stats, single commit stats are flat
+            STATS=$(echo "$JSON" | jq 'if .range_stats then .range_stats else . end')
+            HUMAN=$(echo "$STATS" | jq -r '.human_additions // 0')
+            AI=$(echo "$STATS" | jq -r '.ai_additions // 0')
+            MIXED=$(echo "$STATS" | jq -r '.mixed_additions // 0')
+            TOTAL_AI=$(echo "$STATS" | jq -r '.total_ai_additions // 0')
+            AI_ACCEPTED=$(echo "$STATS" | jq -r '.ai_accepted // 0')
             TOTAL=$((HUMAN + TOTAL_AI + MIXED))
 
             if [[ "$TOTAL" -gt 0 ]]; then
