@@ -1,0 +1,153 @@
+name: AI Code Stats
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+concurrency:
+  group: ${{ github.head_ref }}-ai-code-stats
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ai-stats:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+
+      - name: Fetch Git Notes
+        run: git fetch origin "refs/notes/*:refs/notes/*" || true
+
+      - name: Install git-ai
+        run: |
+          curl -sSL https://usegitai.com/install.sh | bash
+          echo "$HOME/.git-ai/bin" >> $GITHUB_PATH
+
+      - name: Generate stats comment
+        id: stats
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          HEAD_SHA: ${{ github.event.pull_request.head.sha }}
+        run: |
+          set -euo pipefail
+          RANGE="${BASE_SHA}..${HEAD_SHA}"
+          MARKER="<!-- ai-code-stats -->"
+
+          # Run git-ai stats and build comment body
+          BODY=""
+          if JSON=$(git-ai stats "$RANGE" --json 2>/dev/null); then
+            HUMAN=$(echo "$JSON" | jq -r '.human_additions // 0')
+            AI=$(echo "$JSON" | jq -r '.ai_additions // 0')
+            MIXED=$(echo "$JSON" | jq -r '.mixed_additions // 0')
+            TOTAL_AI=$(echo "$JSON" | jq -r '.total_ai_additions // 0')
+            AI_ACCEPTED=$(echo "$JSON" | jq -r '.ai_accepted // 0')
+            TOTAL=$((HUMAN + TOTAL_AI + MIXED))
+
+            if [[ "$TOTAL" -gt 0 ]]; then
+              HUMAN_PCT=$((HUMAN * 100 / TOTAL))
+              AI_PCT=$((TOTAL_AI * 100 / TOTAL))
+              MIXED_PCT=$((100 - HUMAN_PCT - AI_PCT))
+
+              # Build emoji progress bar (20 blocks)
+              BAR=""
+              for ((i = 0; i < HUMAN_PCT * 20 / 100; i++)); do BAR+="🟦"; done
+              for ((i = 0; i < AI_PCT * 20 / 100; i++)); do BAR+="🟧"; done
+              REMAINING=$((20 - HUMAN_PCT * 20 / 100 - AI_PCT * 20 / 100))
+              for ((i = 0; i < REMAINING; i++)); do BAR+="🟪"; done
+
+              # Get text output for details section
+              TEXT_OUTPUT=$(git-ai stats "$RANGE" 2>/dev/null || echo "Detailed breakdown not available")
+
+              read -r -d '' BODY <<ENDOFBODY || true
+          ${MARKER}
+          ## 🤖 AI Code Attribution
+
+          ${BAR}
+
+          | Category | Lines | Percentage |
+          |----------|------:|:-----------|
+          | 🟦 Human | ${HUMAN} | ${HUMAN_PCT}% |
+          | 🟧 AI-generated | ${AI} | ${AI_PCT}% |
+          | 🟪 Mixed (AI + Human edits) | ${MIXED} | ${MIXED_PCT}% |
+          | **Total** | **${TOTAL}** | |
+
+          > **AI-accepted lines:** ${AI_ACCEPTED} (committed without human modification)
+
+          <details>
+          <summary>Detailed breakdown</summary>
+
+          \`\`\`
+          ${TEXT_OUTPUT}
+          \`\`\`
+
+          </details>
+
+          ---
+          <sub>Powered by <a href="https://usegitai.com">git-ai</a> | Commit range: <code>${RANGE}</code></sub>
+          ENDOFBODY
+            fi
+          fi
+
+          # Fallback: no data
+          if [[ -z "$BODY" ]]; then
+            read -r -d '' BODY <<ENDOFBODY || true
+          ${MARKER}
+          ## 🤖 AI Code Attribution
+
+          > ℹ️ **No AI attribution data found** for this PR.
+          >
+          > This means either:
+          > - The commits were written without an AI coding agent, or
+          > - The AI agent was not configured with [git-ai](https://usegitai.com) to record attribution data.
+          >
+          > To start tracking AI contributions, install git-ai locally:
+          > \`\`\`
+          > curl -sSL https://usegitai.com/install.sh | bash
+          > \`\`\`
+
+          ---
+          <sub>Powered by <a href="https://usegitai.com">git-ai</a> | Commit range: <code>${RANGE}</code></sub>
+          ENDOFBODY
+          fi
+
+          echo "--- Generated comment body ---"
+          echo "$BODY"
+
+          # Save to GITHUB_OUTPUT for next step
+          {
+            echo "body<<GHEOF"
+            echo "$BODY"
+            echo "GHEOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Post or update PR comment
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+          COMMENT_BODY: ${{ steps.stats.outputs.body }}
+        run: |
+          set -euo pipefail
+          MARKER="<!-- ai-code-stats -->"
+
+          EXISTING_COMMENT_ID=$(gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
+            --jq ".[] | select(.body | contains(\"${MARKER}\")) | .id" | head -1)
+
+          if [[ -n "$EXISTING_COMMENT_ID" ]]; then
+            gh api "repos/${{ github.repository }}/issues/comments/${EXISTING_COMMENT_ID}" \
+              --method PATCH --field body="$COMMENT_BODY"
+            echo "Updated existing comment ${EXISTING_COMMENT_ID}"
+          else
+            gh pr comment "$PR_NUMBER" --body "$COMMENT_BODY"
+            echo "Created new comment"
+          fi
