@@ -1,0 +1,14 @@
+name: AI Code Stats README
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - closed
+
+jobs:
+  ai-stats-readme:
+    if: github.event.pull_request.merged == true
+    uses: codefresh-io/shared-github-workflows/.github/workflows/ai-code-stats-readme.yaml@main
+    secrets: inherit
