@@ -40,14 +40,12 @@ jobs:
           BASE_SHA: ${{ github.event.pull_request.base.sha }}
           HEAD_SHA: ${{ github.event.pull_request.head.sha }}
         run: |
-          set -euo pipefail
+          set -eu
           RANGE="${BASE_SHA}..${HEAD_SHA}"
           MARKER="<!-- ai-code-stats -->"
 
-          # Run git-ai stats and build comment body
           BODY=""
           if JSON=$(git-ai stats "$RANGE" --json 2>/dev/null); then
-            # Range stats are nested under .range_stats, single commit stats are flat
             STATS=$(echo "$JSON" | jq 'if .range_stats then .range_stats else . end')
             HUMAN=$(echo "$STATS" | jq -r '.human_additions // 0')
             AI=$(echo "$STATS" | jq -r '.ai_additions // 0')
@@ -55,25 +53,23 @@ jobs:
             AI_ACCEPTED=$(echo "$STATS" | jq -r '.ai_accepted // 0')
             TOTAL=$((HUMAN + AI + MIXED))
 
-            if [[ "$TOTAL" -gt 0 ]]; then
+            if [ "$TOTAL" -gt 0 ]; then
               HUMAN_PCT=$(( (HUMAN * 1000 / TOTAL + 5) / 10 ))
               AI_PCT=$(( (AI * 1000 / TOTAL + 5) / 10 ))
               MIXED_PCT=$(( (MIXED * 1000 / TOTAL + 5) / 10 ))
 
               # Build emoji progress bar (20 blocks)
               BAR=""
-              for ((i = 0; i < HUMAN_PCT * 20 / 100; i++)); do BAR+="🟦"; done
-              for ((i = 0; i < AI_PCT * 20 / 100; i++)); do BAR+="🟧"; done
-              for ((i = 0; i < MIXED_PCT * 20 / 100; i++)); do BAR+="🟪"; done
+              i=0; while [ $i -lt $((HUMAN_PCT * 20 / 100)) ]; do BAR="${BAR}🟦"; i=$((i+1)); done
+              i=0; while [ $i -lt $((AI_PCT * 20 / 100)) ]; do BAR="${BAR}🟧"; i=$((i+1)); done
+              i=0; while [ $i -lt $((MIXED_PCT * 20 / 100)) ]; do BAR="${BAR}🟪"; i=$((i+1)); done
 
-              # Get tool/model breakdown for details
               BREAKDOWN=$(echo "$STATS" | jq -r '
                 .tool_model_breakdown // {} | to_entries[] |
                 "| \(.key) | \(.value.ai_additions) | \(.value.mixed_additions) |"
               ' 2>/dev/null || true)
 
-              read -r -d '' BODY <<ENDOFBODY || true
-          ${MARKER}
+              BODY="${MARKER}
           ## 🤖 AI Code Attribution
 
           ${BAR}
@@ -97,15 +93,12 @@ jobs:
           </details>
 
           ---
-          <sub>Powered by <a href="https://usegitai.com">git-ai</a> | Commit range: <code>${RANGE}</code></sub>
-          ENDOFBODY
+          <sub>Powered by <a href=\"https://usegitai.com\">git-ai</a> | Commit range: <code>${RANGE}</code></sub>"
             fi
           fi
 
-          # Fallback: no data
-          if [[ -z "$BODY" ]]; then
-            read -r -d '' BODY <<ENDOFBODY || true
-          ${MARKER}
+          if [ -z "$BODY" ]; then
+            BODY="${MARKER}
           ## 🤖 AI Code Attribution
 
           > ℹ️ **No AI attribution data found** for this PR.
@@ -120,14 +113,12 @@ jobs:
           > \`\`\`
 
           ---
-          <sub>Powered by <a href="https://usegitai.com">git-ai</a> | Commit range: <code>${RANGE}</code></sub>
-          ENDOFBODY
+          <sub>Powered by <a href=\"https://usegitai.com\">git-ai</a> | Commit range: <code>${RANGE}</code></sub>"
           fi
 
           echo "--- Generated comment body ---"
           echo "$BODY"
 
-          # Save to GITHUB_OUTPUT for next step
           {
             echo "body<<GHEOF"
             echo "$BODY"
@@ -140,13 +131,13 @@ jobs:
           PR_NUMBER: ${{ github.event.pull_request.number }}
           COMMENT_BODY: ${{ steps.stats.outputs.body }}
         run: |
-          set -euo pipefail
+          set -eu
           MARKER="<!-- ai-code-stats -->"
 
           EXISTING_COMMENT_ID=$(gh api "repos/${{ github.repository }}/issues/${PR_NUMBER}/comments" \
             --jq ".[] | select(.body | contains(\"${MARKER}\")) | .id" | head -1)
 
-          if [[ -n "$EXISTING_COMMENT_ID" ]]; then
+          if [ -n "$EXISTING_COMMENT_ID" ]; then
             gh api "repos/${{ github.repository }}/issues/comments/${EXISTING_COMMENT_ID}" \
               --method PATCH --field body="$COMMENT_BODY"
             echo "Updated existing comment ${EXISTING_COMMENT_ID}"
