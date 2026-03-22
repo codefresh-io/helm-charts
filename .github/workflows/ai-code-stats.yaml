@@ -22,6 +22,9 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/codefresh/git-ai:0.0.1-featadd-git-ai-container
+      credentials:
+        username: ${{ secrets.QUAY_USERNAME }}
+        password: ${{ secrets.QUAY_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
