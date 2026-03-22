@@ -3,7 +3,7 @@ name: AI Code Stats README
 on:
   push:
     branches:
-      - test-git-ai
+      - git-ai-init
 
 permissions:
   contents: write
@@ -106,7 +106,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v5
         with:
-          ref: test-git-ai
+          ref: git-ai-init
 
       - name: Update README
         env:
