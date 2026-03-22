@@ -1,139 +1,14 @@
 name: AI Code Stats README
 
 on:
-  push:
+  pull_request:
     branches:
-      - git-ai-init
-
-permissions:
-  contents: write
+      - master
+    types:
+      - closed
 
 jobs:
-  generate-stats:
-    runs-on: ubuntu-latest
-    container:
-      image: quay.io/codefresh/git-ai:0.0.1-featadd-git-ai-container
-      credentials:
-        username: ${{ secrets.QUAY_USERNAME }}
-        password: ${{ secrets.QUAY_PASSWORD }}
-    outputs:
-      stats-section: ${{ steps.stats.outputs.body }}
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          fetch-depth: 0
-
-      - name: Fetch Git Notes
-        run: |
-          git config --global --add safe.directory "$GITHUB_WORKSPACE"
-          git fetch origin "refs/notes/*:refs/notes/*" || true
-
-      - name: Generate stats
-        id: stats
-        run: |
-          set -eu
-
-          BODY=""
-          FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
-          if JSON=$(git-ai stats "${FIRST_COMMIT}..HEAD" --json 2>/dev/null); then
-            STATS=$(echo "$JSON" | jq 'if .range_stats then .range_stats else . end')
-            HUMAN=$(echo "$STATS" | jq -r '.human_additions // 0')
-            AI=$(echo "$STATS" | jq -r '.ai_additions // 0')
-            MIXED=$(echo "$STATS" | jq -r '.mixed_additions // 0')
-            AI_ACCEPTED=$(echo "$STATS" | jq -r '.ai_accepted // 0')
-            TOTAL=$((HUMAN + AI + MIXED))
-
-            if [ "$TOTAL" -gt 0 ]; then
-              HUMAN_PCT=$(( (HUMAN * 1000 / TOTAL + 5) / 10 ))
-              AI_PCT=$(( (AI * 1000 / TOTAL + 5) / 10 ))
-              MIXED_PCT=$(( (MIXED * 1000 / TOTAL + 5) / 10 ))
-
-              BAR=""
-              i=0; while [ $i -lt $((HUMAN_PCT * 20 / 100)) ]; do BAR="${BAR}🟦"; i=$((i+1)); done
-              i=0; while [ $i -lt $((AI_PCT * 20 / 100)) ]; do BAR="${BAR}🟧"; i=$((i+1)); done
-              i=0; while [ $i -lt $((MIXED_PCT * 20 / 100)) ]; do BAR="${BAR}🟪"; i=$((i+1)); done
-
-              BREAKDOWN=$(echo "$STATS" | jq -r '
-                .tool_model_breakdown // {} | to_entries[] |
-                "| \(.key) | \(.value.ai_additions) | \(.value.mixed_additions) |"
-              ' 2>/dev/null || true)
-
-              BODY="## 🤖 AI Code Attribution
-
-          ${BAR}
-
-          | Category | Lines | Percentage |
-          |----------|------:|:-----------|
-          | 🟦 Human | ${HUMAN} | ${HUMAN_PCT}% |
-          | 🟧 AI-generated | ${AI} | ${AI_PCT}% |
-          | 🟪 Mixed (AI + Human edits) | ${MIXED} | ${MIXED_PCT}% |
-          | **Total** | **${TOTAL}** | |
-
-          > **AI-accepted lines:** ${AI_ACCEPTED} (committed without human modification)
-
-          <details>
-          <summary>Tool & model breakdown</summary>
-
-          | Tool :: Model | AI lines | Mixed lines |
-          |---------------|----------|-------------|
-          ${BREAKDOWN}
-
-          </details>
-
-          <sub>Powered by <a href=\"https://usegitai.com\">git-ai</a></sub>"
-            fi
-          fi
-
-          if [ -z "$BODY" ]; then
-            BODY="## 🤖 AI Code Attribution
-
-          > No AI attribution data available yet."
-          fi
-
-          echo "--- Generated stats ---"
-          echo "$BODY"
-
-          {
-            echo "body<<GHEOF"
-            echo "$BODY"
-            echo "GHEOF"
-          } >> "$GITHUB_OUTPUT"
-
-  update-readme:
-    runs-on: ubuntu-latest
-    needs: generate-stats
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v5
-        with:
-          ref: git-ai-init
-
-      - name: Update README
-        env:
-          STATS_SECTION: ${{ needs.generate-stats.outputs.stats-section }}
-        run: |
-          set -eu
-
-          # Write stats to temp file
-          {
-            echo "<!-- ai-stats-start -->"
-            echo "$STATS_SECTION"
-            echo "<!-- ai-stats-end -->"
-          } > /tmp/stats-block.md
-
-          # Replace content between markers using sed
-          sed -i '/<!-- ai-stats-start -->/,/<!-- ai-stats-end -->/{ /<!-- ai-stats-start -->/{ r /tmp/stats-block.md
-          d }; /<!-- ai-stats-end -->/d; d }' README.md
-
-          echo "--- Updated README ---"
-          cat README.md
-
-      - name: Commit and push
-        run: |
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add README.md
-          git diff --cached --quiet && echo "No changes to commit" && exit 0
-          git commit -m "docs: update AI code attribution stats in README"
-          git push
+  ai-stats-readme:
+    if: github.event.pull_request.merged == true
+    uses: codefresh-io/shared-github-workflows/.github/workflows/ai-code-stats-readme.yaml@main
+    secrets: inherit
