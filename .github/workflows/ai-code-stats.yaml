@@ -22,6 +22,7 @@ jobs:
     runs-on: ubuntu-latest
     container:
       image: quay.io/codefresh/curl
+      options: --user root
     steps:
       - name: Install dependencies
         shell: sh
