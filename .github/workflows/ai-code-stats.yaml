@@ -34,7 +34,9 @@ jobs:
           fetch-depth: 0
 
       - name: Fetch Git Notes
-        run: git fetch origin "refs/notes/*:refs/notes/*" || true
+        run: |
+          git config --global --add safe.directory "$GITHUB_WORKSPACE"
+          git fetch origin "refs/notes/*:refs/notes/*" || true
 
       - name: Generate stats comment
         id: stats
