@@ -35,7 +35,8 @@ jobs:
           set -eu
 
           BODY=""
-          if JSON=$(git-ai stats "e83c5163316f89bfbde7d9ab23ca2e25604af290..HEAD" --json 2>/dev/null); then
+          FIRST_COMMIT=$(git rev-list --max-parents=0 HEAD)
+          if JSON=$(git-ai stats "${FIRST_COMMIT}..HEAD" --json 2>/dev/null); then
             STATS=$(echo "$JSON" | jq 'if .range_stats then .range_stats else . end')
             HUMAN=$(echo "$STATS" | jq -r '.human_additions // 0')
             AI=$(echo "$STATS" | jq -r '.ai_additions // 0')
