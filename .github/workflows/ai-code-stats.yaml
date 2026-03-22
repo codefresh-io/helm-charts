@@ -18,13 +18,15 @@ permissions:
   pull-requests: write
 
 jobs:
-  ai-stats:
+  generate-stats:
     runs-on: ubuntu-latest
     container:
       image: quay.io/codefresh/git-ai:0.0.1-featadd-git-ai-container
       credentials:
         username: ${{ secrets.QUAY_USERNAME }}
         password: ${{ secrets.QUAY_PASSWORD }}
+    outputs:
+      comment-body: ${{ steps.stats.outputs.body }}
     steps:
       - name: Checkout
         uses: actions/checkout@v5
@@ -125,11 +127,15 @@ jobs:
             echo "GHEOF"
           } >> "$GITHUB_OUTPUT"
 
+  post-comment:
+    runs-on: ubuntu-latest
+    needs: generate-stats
+    steps:
       - name: Post or update PR comment
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           PR_NUMBER: ${{ github.event.pull_request.number }}
-          COMMENT_BODY: ${{ steps.stats.outputs.body }}
+          COMMENT_BODY: ${{ needs.generate-stats.outputs.comment-body }}
         run: |
           set -eu
           MARKER="<!-- ai-code-stats -->"
