@@ -1,0 +1,10 @@
+This is a dummy file written by AI to test the git-ai attribution workflow.
+
+It contains multiple lines so that git-ai can track the AI-written additions
+and the workflow can display meaningful statistics in the PR comment.
+
+Line 6: AI-generated content for testing purposes.
+Line 7: More AI-generated content.
+Line 8: Testing the progress bar visualization.
+Line 9: Testing the table display.
+Line 10: Final line of AI-generated test content.
