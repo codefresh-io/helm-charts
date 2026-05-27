@@ -10,3 +10,5 @@ validate-yaml: true
 check-version-increment: true
 excluded-charts:
   - cf-common-test
+  - codefresh-tunnel-client
+  - codefresh-tunnel-server

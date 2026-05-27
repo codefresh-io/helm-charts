@@ -1,0 +1,18 @@
+apiVersion: v2
+name: codefresh-tunnel-server
+description: Codefresh tunnel server for ingressless operation of runtimes
+type: application
+version: 0.3.0
+appVersion: 0.3.0
+dependencies:
+- name: redis
+  version: 16.13.2
+  repository: https://charts.bitnami.com/bitnami
+  condition: redis.enabled
+- name: redis-cluster
+  version: 7.6.4
+  repository: https://charts.bitnami.com/bitnami
+  condition: redis-cluster.enabled
+maintainers:
+  - name: codefresh
+    url: https://codefresh-io.github.io/
