@@ -13,3 +13,6 @@ dependencies:
   version: 7.6.4
   repository: https://charts.bitnami.com/bitnami
   condition: redis-cluster.enabled
+maintainers:
+  - name: codefresh
+    url: https://codefresh-io.github.io/
