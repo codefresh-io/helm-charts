@@ -68,7 +68,7 @@ nginx:
       /echo/:
         enabled: true
         proxy:
-          host: echo-app
+          host: echo-app.pre-prod-classic-platform.svc.cluster.local
           port: 80
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
