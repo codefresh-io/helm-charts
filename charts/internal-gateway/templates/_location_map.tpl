@@ -65,6 +65,16 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
+      /echo:
+        enabled: true
+        proxy:
+          host: echo-app
+          port: 80
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
       /api/auth/:
         enabled: true
         proxy:
