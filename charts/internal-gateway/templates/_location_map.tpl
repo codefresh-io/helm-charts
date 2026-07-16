@@ -70,8 +70,8 @@ nginx:
         proxy:
           host: {{ index $endpoints.serviceEndpoints "echo" "svc" }}
           port: {{ index $endpoints.serviceEndpoints "echo" "port" }}
-        locationSnippet: |
-          proxy_http_version 1.1;
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
