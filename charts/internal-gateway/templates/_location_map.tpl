@@ -65,7 +65,7 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
-      /echo/:
+      /echo:
         enabled: true
         proxy:
           host: echo-app.pre-prod-classic-platform.svc.cluster.local
