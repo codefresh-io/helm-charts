@@ -68,7 +68,7 @@ nginx:
       /echo:
         enabled: true
         proxy:
-          host: echo-app.pre-prod-classic-platform.svc.cluster.local
+          host: {{ index $endpoints.serviceEndpoints "echo" "svc" }}
           port: 80
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}

@@ -61,4 +61,7 @@ codefresh:
     jira-addon:
       svc: '{{ .Release.Name }}-{{ index .Values.codefresh "jira-addon-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
       port: {{ index .Values.codefresh "jira-addon-port" }}
+    echo:
+      svc: '{{ .Release.Name }}-{{ index .Values.codefresh "echo-svc" }}.{{ .Release.Namespace }}.svc.{{ .Values.global.clusterDomain }}'
+      port: {{ index .Values.codefresh "echo-port" }}
 {{- end }}
