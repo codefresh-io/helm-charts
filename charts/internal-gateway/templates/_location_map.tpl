@@ -69,7 +69,7 @@ nginx:
         enabled: true
         proxy:
           host: {{ index $endpoints.serviceEndpoints "echo" "svc" }}
-          port: 80
+          port: {{ index $endpoints.serviceEndpoints "echo" "port" }}
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
         locationDirectives:
