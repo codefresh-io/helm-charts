@@ -84,7 +84,6 @@ nginx:
             proxy_next_upstream error timeout invalid_header http_502 http_503 http_504;
             proxy_next_upstream_tries 2;
             proxy_next_upstream_timeout 3s;
-            proxy_connect_timeout 2s;
             proxy_next_upstream non_idempotent;
         locationSnippet:
           {{- $presets.locationSnippet | toYaml | nindent 10 }}
