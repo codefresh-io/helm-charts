@@ -47,6 +47,8 @@ data:
       default_type application/octet-stream;
       log_format   {{ $nginxConfig.logFormat }}
 
+      log_format   {{ $nginxConfig.debugLogFormat }}
+
       {{- if $nginxConfig.verboseLogging }}
       access_log   /dev/stderr  main;
       {{- else }}
