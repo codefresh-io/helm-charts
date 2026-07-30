@@ -125,6 +125,7 @@ nginx:
     # -- NGINX log format
     logFormat: |-
       main escape=json '{ "time": "$time_iso8601", "remote_addr": "$proxy_protocol_addr", "x-forward-for": "$proxy_add_x_forwarded_for", "remote_user": "$remote_user", "bytes_sent": $bytes_sent, "request_time": $request_time, "status": $status, "vhost": "$host", "request_proto": "$server_protocol", "path": "$uri", "request_query": "$args", "request_length": $request_length, "duration": $request_time, "method": "$request_method", "http_referrer": "$http_referer", "http_user_agent": "$http_user_agent", "http_x_github_delivery": "$http_x_github_delivery", "http_x_hook_uuid": "$http_x_hook_uuid", "metadata": { "correlationId": "$request_id", "service": "ingress", "time": "$time_iso8601" } }';
+      agent_debug escape=json '{ "time": "$time_iso8601", "remote_addr": "$proxy_protocol_addr", "method": "$request_method", "uri": "$uri", "status": $status, "upstream_addr": "$upstream_addr", "upstream_status": "$upstream_status", "upstream_connect_time": "$upstream_connect_time", "upstream_response_time": "$upstream_response_time", "request_time": $request_time, "request_id": "$request_id" }';
     # E.g.
     # logFormat: |-
     #   main '$remote_addr - $remote_user [$time_local]  $status '
