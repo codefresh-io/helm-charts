@@ -81,6 +81,7 @@ nginx:
           host: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "svc" }}
           port: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "port" }}
           proxyPassSnippet: |
+            access_log /dev/stderr main;
             proxy_next_upstream error timeout invalid_header http_502 http_503 http_504;
             proxy_next_upstream_tries 2;
             proxy_next_upstream_timeout 3s;
