@@ -184,3 +184,6 @@ jobs:
         helm package ${{ matrix.chart }} --version $CHART_VERSION
 
         helm push $CHART_NAME-$CHART_VERSION.tgz oci://quay.io/codefresh/charts/dev
+
+        helm package ${{ matrix.chart }} --version $CHART_VERSION-$GITHUB_SHORT_SHA
+        helm push $CHART_NAME-$CHART_VERSION-$GITHUB_SHORT_SHA.tgz oci://quay.io/codefresh/charts/dev

@@ -75,6 +75,22 @@ nginx:
         locationDirectives:
           {{- $presets.locationDirectives | toYaml | nindent 10 }}
 
+      /api/agent/:
+        enabled: true
+        proxy:
+          host: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "svc" }}
+          port: {{ index $endpoints.serviceEndpoints "cfapi-endpoints" "port" }}
+          proxyPassSnippet: |
+            proxy_next_upstream error timeout invalid_header http_502 http_503 http_504;
+            proxy_next_upstream_tries 2;
+            proxy_next_upstream_timeout 3s;
+            proxy_connect_timeout 2s;
+            proxy_next_upstream non_idempotent;
+        locationSnippet:
+          {{- $presets.locationSnippet | toYaml | nindent 10 }}
+        locationDirectives:
+          {{- $presets.locationDirectives | toYaml | nindent 10 }}
+
       /api/:
         enabled: true
         proxy:
