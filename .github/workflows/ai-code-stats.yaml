@@ -1,0 +1,23 @@
+name: AI Code Stats
+
+on:
+  pull_request:
+    branches:
+      - master
+    types:
+      - opened
+      - reopened
+      - synchronize
+
+concurrency:
+  group: ${{ github.head_ref }}-ai-code-stats
+  cancel-in-progress: true
+
+permissions:
+  contents: read
+  pull-requests: write
+
+jobs:
+  ai-stats:
+    uses: codefresh-io/shared-github-workflows/.github/workflows/ai-code-stats-pr.yaml@main
+    secrets: inherit
