@@ -21,3 +21,19 @@ Return the appropriate apiVersion for HPA
   {{- print "autoscaling/v2" -}}
 {{- end -}}
 {{- end -}}
+
+{{/*
+Return the appropriate apiVersion for External Secrets
+(created for the migration from external-secrets.io/v1beta1 to v1)
+*/}}
+{{- define "cf-common-0.34.0.apiVersion.externalSecrets" -}}
+{{- if .Values.apiVersionOverrides -}}
+  {{- if .Values.apiVersionOverrides.externalSecrets -}}
+    {{- print .Values.apiVersionOverrides.externalSecrets -}}
+  {{- else -}}
+    {{- print "external-secrets.io/v1" -}}
+  {{- end -}}
+{{- else -}}
+  {{- print "external-secrets.io/v1" -}}
+{{- end -}}
+{{- end -}}
