@@ -37,7 +37,12 @@ additionalContainers: []
 
 extraResources: []
 
-externalSecrets: []
+externalSecrets:
+  - name: test-es
+    keys:
+      - name: KEY1
+        remoteSecretName: my-secret
+        remoteKey: password
 
 keda:
   spec: {}
