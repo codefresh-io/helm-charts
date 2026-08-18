@@ -34,7 +34,7 @@ spec:
         {{- if hasKey $key "remoteSecretName"}}
       key: {{ printf "%s" (include "cf-common-0.35.0.tplrender" (dict "Values" $key.remoteSecretName "context" $)) }}
         {{- else }}
-      key: {{ printf "%s" (include "cf-common-0.35.0.tplrender" (dict "Values" $key.remoteSecretName "context" $)) }}
+      key: {{ printf "%s" (include "cf-common-0.35.0.tplrender" (dict "Values" $secret.remoteSecretName "context" $)) }}
         {{- end }}
       property: {{ $key.remoteKey }}
       {{- with $key.decodingStrategy }}

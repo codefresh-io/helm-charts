@@ -159,3 +159,16 @@ tests:
           path: metadata.name
           value: es-two
         documentIndex: 1
+
+  - it: Should fallback to remoteSecretName if keys[].remoteSecretName is not provided
+    set:
+      externalSecrets:
+        - name: test-es
+          keys:
+            - name: KEY1
+              remoteKey: password
+          remoteSecretName: my-secret
+    asserts:
+      - equal:
+          path: spec.data[0].remoteRef.key
+          value: my-secret
