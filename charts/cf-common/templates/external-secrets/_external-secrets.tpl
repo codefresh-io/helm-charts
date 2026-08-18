@@ -1,7 +1,7 @@
 {{- define "cf-common-0.35.0.external-secrets" }}
   {{- $templatedExternalSecrets := include "cf-common-0.35.0.tplrender" (dict "Values" .Values.externalSecrets "context" $) | fromYaml }}
   {{- range $i, $secret := .Values.externalSecrets }}
-apiVersion: {{ include "cf-common-0.35.0.apiVersion.externalSecrets" . }}
+apiVersion: {{ include "cf-common-0.35.0.apiVersion.externalSecrets" $ }}
 kind: ExternalSecret
 metadata:
   name: {{ $secret.name }}
