@@ -1,0 +1,36 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: external secrets metadata
+templates:
+  - templates/external-secrets.yaml
+tests:
+  - it: Test default external secret metadata
+    set:
+      externalSecrets:
+        - name: test-es
+          keys: []
+    asserts:
+      - hasDocuments:
+          count: 1
+      - notExists:
+          path: metadata.labels
+      - notExists:
+          path: metadata.annotations
+
+  - it: Test custom external secret metadata
+    set:
+      externalSecrets:
+        - name: test-es
+          labels:
+            foo: bar
+          annotations:
+            alice: bob
+          keys: []
+    asserts:
+      - equal:
+          path: metadata.labels
+          value:
+            foo: bar
+      - equal:
+          path: metadata.annotations
+          value:
+            alice: bob

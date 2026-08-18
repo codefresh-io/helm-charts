@@ -1,0 +1,25 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/helm-unittest/helm-unittest/main/schema/helm-testsuite.json
+suite: external secrets error handlers
+templates:
+  - templates/external-secrets.yaml
+tests:
+  - it: Test with no external secrets
+    set:
+      externalSecrets: []
+    asserts:
+      - hasDocuments:
+          count: 0
+
+  - it: Test external secret with no keys or keysFrom
+    set:
+      externalSecrets:
+        - name: test-es
+    asserts:
+      - hasDocuments:
+          count: 1
+      - equal:
+          path: spec.data
+          value: []
+      - equal:
+          path: spec.dataFrom
+          value: []
