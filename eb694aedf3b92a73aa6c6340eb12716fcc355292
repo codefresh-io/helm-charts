@@ -1,0 +1,16 @@
+charts/internal-gateway/values.yaml
+  h_104939d4aa3383 202
+charts/internal-gateway/Chart.yaml
+  h_104939d4aa3383 5
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.5.11",
+  "base_commit_sha": "eb694aedf3b92a73aa6c6340eb12716fcc355292",
+  "prompts": {},
+  "humans": {
+    "h_104939d4aa3383": {
+      "author": "Vasil Sudakou <vasil.sudakov@codefresh.io>"
+    }
+  }
+}
