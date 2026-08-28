@@ -199,7 +199,7 @@ container:
   image:
     registry: docker.io
     repository: nginxinc/nginx-unprivileged
-    tag: 1.31.2-alpine-otel
+    tag: 1.31.4-alpine-otel
 
   env: {}
   envFrom: []
