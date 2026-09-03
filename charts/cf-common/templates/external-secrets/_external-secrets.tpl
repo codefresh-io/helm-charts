@@ -1,7 +1,7 @@
-{{- define "cf-common-0.34.0.external-secrets" }}
-  {{- $templatedExternalSecrets := include "cf-common-0.34.0.tplrender" (dict "Values" .Values.externalSecrets "context" $) | fromYaml }}
+{{- define "cf-common-0.35.0.external-secrets" }}
+  {{- $templatedExternalSecrets := include "cf-common-0.35.0.tplrender" (dict "Values" .Values.externalSecrets "context" $) | fromYaml }}
   {{- range $i, $secret := .Values.externalSecrets }}
-apiVersion: external-secrets.io/v1beta1
+apiVersion: {{ include "cf-common-0.35.0.apiVersion.externalSecrets" $ }}
 kind: ExternalSecret
 metadata:
   name: {{ $secret.name }}
@@ -32,9 +32,9 @@ spec:
   - secretKey: {{ $key.name }}
     remoteRef:
         {{- if hasKey $key "remoteSecretName"}}
-      key: {{ printf "%s" (include "cf-common-0.34.0.tplrender" (dict "Values" $key.remoteSecretName "context" $)) }}
+      key: {{ printf "%s" (include "cf-common-0.35.0.tplrender" (dict "Values" $key.remoteSecretName "context" $)) }}
         {{- else }}
-      key: {{ printf "%s" (include "cf-common-0.34.0.tplrender" (dict "Values" $key.remoteSecretName "context" $)) }}
+      key: {{ printf "%s" (include "cf-common-0.35.0.tplrender" (dict "Values" $secret.remoteSecretName "context" $)) }}
         {{- end }}
       property: {{ $key.remoteKey }}
       {{- with $key.decodingStrategy }}
@@ -48,7 +48,7 @@ spec:
   dataFrom:
     {{- range $i, $key := $secret.keysFrom }}
   - extract:
-      key: {{ printf "%s" (include "cf-common-0.34.0.tplrender" (dict "Values" $key.remoteSecretName "context" $)) | default (printf "%s" (include "cf-common-0.34.0.tplrender" (dict "Values" $secret.remoteSecretName "context" $))) }}
+      key: {{ printf "%s" (include "cf-common-0.35.0.tplrender" (dict "Values" $key.remoteSecretName "context" $)) | default (printf "%s" (include "cf-common-0.35.0.tplrender" (dict "Values" $secret.remoteSecretName "context" $))) }}
       {{- with $key.decodingStrategy }}
       decodingStrategy: {{ . }}
       {{- end }}
