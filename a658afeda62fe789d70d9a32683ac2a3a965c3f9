@@ -1,0 +1,23 @@
+.github/workflows/ai-code-stats.yaml
+  6de5e7f1f7a142e3 25-27
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.1.17",
+  "base_commit_sha": "a658afeda62fe789d70d9a32683ac2a3a965c3f9",
+  "prompts": {
+    "6de5e7f1f7a142e3": {
+      "agent_id": {
+        "tool": "claude",
+        "id": "90ad1602-69fb-4a76-901d-50bd6d8ce548",
+        "model": "claude-opus-4-6"
+      },
+      "human_author": "yair leshem <yair.leshem@octopus.com>",
+      "messages": [],
+      "total_additions": 3,
+      "total_deletions": 0,
+      "accepted_lines": 3,
+      "overriden_lines": 0
+    }
+  }
+}
