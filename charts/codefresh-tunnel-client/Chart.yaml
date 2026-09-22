@@ -2,8 +2,8 @@ apiVersion: v2
 name: codefresh-tunnel-client
 description: Codefresh tunnel client for ingressless operation of runtimes
 type: application
-version: 0.1.25
-appVersion: "4733af0"
+version: 0.1.26
+appVersion: "bfc8825"
 maintainers:
   - name: codefresh
     url: https://codefresh-io.github.io/

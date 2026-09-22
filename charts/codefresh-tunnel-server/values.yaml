@@ -5,7 +5,7 @@ server:
   image:
     repository: quay.io/codefresh/frps
     pullPolicy: IfNotPresent
-    tag: "4733af0"
+    tag: "bfc8825"
   resources: {}
 
 plugin:
