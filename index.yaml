@@ -1509,6 +1509,19 @@ entries:
     version: 0.28.0-0
   codefresh-tunnel-client:
   - apiVersion: v2
+    appVersion: bfc8825
+    created: "2026-09-22T12:43:01.77274467Z"
+    description: Codefresh tunnel client for ingressless operation of runtimes
+    digest: 7128c5385bf0b6b28fe62c69342bc6ed04bf97f65ef1f24c9371f89da98acf07
+    maintainers:
+    - name: codefresh
+      url: https://codefresh-io.github.io/
+    name: codefresh-tunnel-client
+    type: application
+    urls:
+    - https://github.com/codefresh-io/helm-charts/releases/download/codefresh-tunnel-client-0.1.26/codefresh-tunnel-client-0.1.26.tgz
+    version: 0.1.26
+  - apiVersion: v2
     appVersion: 4733af0
     created: "2026-06-24T12:08:18.393222754Z"
     description: Codefresh tunnel client for ingressless operation of runtimes
@@ -1535,6 +1548,28 @@ entries:
     - https://github.com/codefresh-io/helm-charts/releases/download/codefresh-tunnel-client-0.1.24/codefresh-tunnel-client-0.1.24.tgz
     version: 0.1.24
   codefresh-tunnel-server:
+  - apiVersion: v2
+    appVersion: bfc8825
+    created: "2026-09-22T12:43:01.946695513Z"
+    dependencies:
+    - condition: redis.enabled
+      name: redis
+      repository: https://charts.bitnami.com/bitnami
+      version: 16.13.2
+    - condition: redis-cluster.enabled
+      name: redis-cluster
+      repository: https://charts.bitnami.com/bitnami
+      version: 7.6.4
+    description: Codefresh tunnel server for ingressless operation of runtimes
+    digest: 649bb974e4d8aafd3ab994a0dd580f11f0c1928ca7dff5a5ec4254be9d07606a
+    maintainers:
+    - name: codefresh
+      url: https://codefresh-io.github.io/
+    name: codefresh-tunnel-server
+    type: application
+    urls:
+    - https://github.com/codefresh-io/helm-charts/releases/download/codefresh-tunnel-server-0.3.2/codefresh-tunnel-server-0.3.2.tgz
+    version: 0.3.2
   - apiVersion: v2
     appVersion: 4733af0
     created: "2026-06-24T12:08:18.663620884Z"
@@ -2433,4 +2468,4 @@ entries:
     urls:
     - https://github.com/codefresh-io/helm-charts/releases/download/runner-1.3.0/runner-1.3.0.tgz
     version: 1.3.0
-generated: "2026-09-03T12:17:18.507877285Z"
+generated: "2026-09-22T12:43:01.946981778Z"
