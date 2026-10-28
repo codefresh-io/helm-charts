@@ -1,0 +1,18 @@
+charts/internal-gateway/README.md
+  h_51acfbafc7319b 3
+charts/internal-gateway/Chart.yaml
+  h_51acfbafc7319b 5
+charts/internal-gateway/values.yaml
+  h_51acfbafc7319b 201-202
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "1456d26405761cf0cc96dc40107ce624e2c6baf1",
+  "prompts": {},
+  "humans": {
+    "h_51acfbafc7319b": {
+      "author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}
