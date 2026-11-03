@@ -1,0 +1,20 @@
+charts/codefresh-tunnel-server/Chart.yaml
+  h_51acfbafc7319b 5-6
+charts/codefresh-tunnel-client/Chart.yaml
+  h_51acfbafc7319b 5-6
+charts/codefresh-tunnel-server/values.yaml
+  h_51acfbafc7319b 8
+charts/codefresh-tunnel-client/values.yaml
+  h_51acfbafc7319b 10
+---
+{
+  "schema_version": "authorship/3.0.0",
+  "git_ai_version": "1.7.5",
+  "base_commit_sha": "7fa74c293cebd0a9fd0e92eb3146b0d666f1dfc0",
+  "prompts": {},
+  "humans": {
+    "h_51acfbafc7319b": {
+      "author": "vitaliichyrka <vitalii.chyrka@codefresh.io>"
+    }
+  }
+}
