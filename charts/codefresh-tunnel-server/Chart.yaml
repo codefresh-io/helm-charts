@@ -2,8 +2,8 @@ apiVersion: v2
 name: codefresh-tunnel-server
 description: Codefresh tunnel server for ingressless operation of runtimes
 type: application
-version: 0.3.2
-appVersion: "bfc8825"
+version: 0.3.3
+appVersion: "19c6a85"
 dependencies:
 - name: redis
   version: 16.13.2
